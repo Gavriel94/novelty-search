@@ -1,22 +1,11 @@
 from agents.forager import Forager
 from agents.hunter import Hunter
-from agents.plant import Plant
+from agents.food import Food
+from agents.ravine import Ravine
 
-f1 = Forager('f1', 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 'M')
+f1 = Forager(id='f1', hunger=3.0, bravery=3.0, agility=10.0, perception=3.0, strength=3.0, endurance=10.0, sex='M')
 f2 = Forager('f2', 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 'F')
+o = f1.produce_offspring(f2)
+snack = Food()
 
-shrub = Plant(name='shrub', sustenance_granted=0.8)
-
-f1.get_attributes()
-for i in range(3):
-    f1.hunger_increase()
-f1.get_attributes()
-
-print('-'*50+'\n')
-
-f2.get_attributes()
-f2.eat(shrub)
-f2.get_attributes()
-
-f1.die()
-f1.get_attributes()
+print(snack)
