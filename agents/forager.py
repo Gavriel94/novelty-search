@@ -4,6 +4,7 @@ from .plant import Plant
 from typing import Union
 from math import isclose
 from random import choice as rdm_choice
+import json
 
 class Forager(Mammal):
     def __init__(self, id: str, hunger: float, bravery: float, agility: float, 
@@ -14,10 +15,13 @@ class Forager(Mammal):
         super().__init__(id, hunger, bravery, agility, 
                         perception, strength, endurance)
         self.sex = sex
-        self.compatability_threshold = self.__compatibility_threshold()
+        self.compatability_threshold = self.__calculate_compatibility_threshold()
         self.alive = True
+        with open('agents/forager_config.json', 'r') as config:
+            config = open('agents/forager_config.json')
+            self.config = json.load(config)
     
-    def eat(self, food: Plant) -> None:
+    def eat(self, plant: Plant) -> None:
         """
         Satiates the forager. Alters attributes.
         Going down:
@@ -29,13 +33,43 @@ class Forager(Mammal):
             - perception
             - endurance
         """
-        sustenance = food.sustenance()
-        self.hunger += sustenance
-        self.__attribute_adjustment(sustenance=sustenance, eating=True)
-        # TODO rebalance attributes using the amount of sustenance as a combinator
-        # TODO This algorithm must also be applied to "get hungry", with the same combinator
+        self.__check_death()
+        print(f'{self.id} ate the {plant.name}\n')
+        combinator = plant.sustenance_granted
         
-    def is_compatible_with(self, partner: 'Forager', max_diff: float) -> bool:
+        self.hunger -= combinator
+        self.bravery -= combinator / 2
+        
+        self.agility += combinator / 2
+        self.perception += combinator / 2
+        self.strength += combinator / 2
+        self.endurance += combinator / 2
+        
+    def hunger_increase(self) -> None:
+        """
+        The forager gets hungrier. Alters attributes.     
+        Going up:
+            - hunger
+            - bravery 
+        Going down:
+            - agility
+            - perception
+            - strength
+            - endurance
+        """
+        self.__check_death()
+        combinator = self.config['hunger_combinator']
+        
+        self.hunger += combinator
+        self.bravery += combinator / 2
+        
+        self.agility -= combinator / 2
+        self.perception -= combinator / 2
+        self.strength -= combinator / 2
+        self.endurance -= combinator / 2
+        print(f'{self.id}\'s hunger increased.\n')
+        
+    def is_compatible_with(self, partner: 'Forager') -> bool:
         """
         Calculates comatilibity between two foragers.
 
@@ -47,13 +81,16 @@ class Forager(Mammal):
         Returns:
             bool: True, if compatible.
         """
-        # Recalculate threshold as Forager may have rebalanced attributes
-        self.__compatibility_threshold()
+        self.__check_death()
+        partner.__check_death()
+        # Recalculate thresholds as Foragers may have rebalanced attributes
+        self.__calculate_compatibility_threshold()
+        partner.__calculate_compatibility_threshold()
         if (self.sex == 'M' and partner.sex == 'F' or 
             self.sex == 'F' and partner.sex == 'M'):
             if isclose(self.compatability_threshold, 
                        partner.compatability_threshold, 
-                       rel_tol=max_diff):
+                       rel_tol=self.config['compat_diff']):
                 return True
             else:
                 return False
@@ -63,14 +100,15 @@ class Forager(Mammal):
     def produce_offspring(self, partner: 'Forager') -> 'Forager':
         """
         Calculate compatibility threshold using a combination of attributes
-        needs more thinking, to deal with male/female differently but this can wait
         """
+        self.__check_death()
+        partner.__check_death()
         # ID is generated in relation to parents names 
         M_id = self.id if self.sex == 'M' else partner.id
         F_id = self.id if self.sex == 'F' else partner.id
-        id = f'of_{M_id}{F_id}'
+        o_id = f'of_{M_id}{F_id}'
         # Choose attributes stochastically
-        offspring = Forager(id=id, 
+        offspring = Forager(id=o_id, 
                             hunger=rdm_choice([1.0, 2.0, 3.0, 4.0, 5.0]), 
                             bravery=rdm_choice([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 
                                                 6.0, 7.0, 8.0, 9.0, 10.0]), 
@@ -83,32 +121,15 @@ class Forager(Mammal):
                             endurance=rdm_choice([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 
                                                 6.0, 7.0, 8.0, 9.0, 10.0]),  
                             sex=rdm_choice(['M', 'F']))
+        print(f'{M_id} and {F_id} produced offspring {o_id}.\n')
         return offspring
-
-    def increase_hunger(self) -> None:
-        """
-        The forager gets hungrier. Alters attributes.     
-        Going up:
-            - hunger
-            - bravery 
-        Going down:
-            - strength
-            - agility
-            - perception
-            - endurance
-            - agility
-        """
-        # Forager gets hungrier, and more brave
-        self.hunger += 0.3
-        
-        
-        pass
     
     def fight_or_flee(self, hunter: Hunter):
         """
         Determines if the forager will fight or flee. 
         Calculate value based on a combination of bravery, strength, endurance and agility
         """
+        self.__check_death()
         pass
     
     def fight(self, hunter: Hunter):
@@ -117,6 +138,7 @@ class Forager(Mammal):
         imagining this like a dice roll, if the forager has a 25% chance of winning the rng has to get one number in the range of 4 (rng picks `1` from `1, 2, 3, 4`. 50% chance then the rng has two numbers: (`1, 2` from `1, 2, 3, 4`), 75% then rng has 3 numbers etc)
         have to use attribute values to find the initial chance of winning, then do the dice roll.
         """
+        self.__check_death()
         pass
     
     def flee(self, hunter: Hunter):
@@ -124,6 +146,7 @@ class Forager(Mammal):
         Can get caught if endurance/agility is low.
         Same logic as fight but forager ends up in a different place of the environment, the predator remains. 
         """
+        self.__check_death()
         pass
     
     def die(self) -> bool:
@@ -133,36 +156,14 @@ class Forager(Mammal):
         self.alive = False
         return True
     
-    def __attribute_adjustment(self, sustenance: int, eating: bool) -> None:
-        if eating:
-            """
-            Going down:
-                - hunger
-                - bravery 
-            Going up:
-                - strength
-                - agility
-                - perception
-                - endurance
-                - agility
-            """
-            pass
-        else:
-            """
-            Going up:
-                - hunger
-                - bravery 
-            Going down:
-                - strength
-                - agility
-                - perception
-                - endurance
-                - agility
-            """
-            pass
-        pass
+    def __check_death(self) -> 'InvalidForager':
+        """
+        Check to ensure dead foragers do not perform actions.
+        """
+        if self.alive == False:
+            raise InvalidForager(self.id)
     
-    def __compatibility_threshold(self) -> None:
+    def __calculate_compatibility_threshold(self) -> None:
         """
         The "attractiveness" of the forager. 
         """
@@ -174,3 +175,10 @@ class Forager(Mammal):
     def __str__(self) -> str:
         return f'Forager {self.id}'
     
+class InvalidForager(Exception):
+    """
+    Ensures dead foragers do not perform actions, maintaining integrity.
+    """
+    def __init__(self, forager_id):
+        self.message = f'Forager {forager_id} should not be performing any actions.'
+        super().__init__(self.message)
