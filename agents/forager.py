@@ -1,10 +1,10 @@
 from .mammal import Mammal
 from .hunter import Hunter
-from .plant import Plant
-from typing import Union
+from .food import Food
+from .ravine import Ravine
 from math import isclose
 from random import choice as rdm_choice
-import json
+import tomllib
 
 class Forager(Mammal):
     def __init__(self, id: str, hunger: float, bravery: float, agility: float, 
@@ -17,25 +17,31 @@ class Forager(Mammal):
         self.sex = sex
         self.compatability_threshold = self.__calculate_compatibility_threshold()
         self.alive = True
-        with open('agents/forager_config.json', 'r') as config:
-            config = open('agents/forager_config.json')
-            self.config = json.load(config)
+        with open('agents/forager_config.toml', 'rb') as f:
+            self.config = tomllib.load(f)
+            if (self.config['compat_diff'] > 1.0 or 
+                self.config['compat_diff'] < 0):
+                raise ValueError('config: compat_diff out of range 0-1.')
+            if (self.config['hunger_combinator'] > 1.0 or
+                self.config['hunger_combinator'] < 0):
+                raise ValueError('config: hunger_combinator out of range 0-1.')
+                
     
-    def eat(self, plant: Plant) -> None:
+    def eat(self, food: Food) -> None:
         """
-        Satiates the forager. Alters attributes.
+        Satiates the forager and alters attributes.
         Going down:
             - hunger
             - bravery 
         Going up:
-            - strength
             - agility
             - perception
+            - strength
             - endurance
         """
         self.__check_death()
-        print(f'{self.id} ate the {plant.name}\n')
-        combinator = plant.sustenance_granted
+        print(f'{self.id} ate the {food.name}\n')
+        combinator = food.sustenance_granted
         
         self.hunger -= combinator
         self.bravery -= combinator / 2
@@ -47,7 +53,7 @@ class Forager(Mammal):
         
     def hunger_increase(self) -> None:
         """
-        The forager gets hungrier. Alters attributes.     
+        The forager gets hungrier and alters attributes.     
         Going up:
             - hunger
             - bravery 
@@ -71,12 +77,14 @@ class Forager(Mammal):
         
     def is_compatible_with(self, partner: 'Forager') -> bool:
         """
-        Calculates comatilibity between two foragers.
+        Calculates comatilibity between two foragers using a combination
+        of bravery, strength and perception and `compat_diff` defined in
+        the config file. The higher the compat_diff, the less "fussy"
+        the forager is.
 
         Args:
             partner (Forager): Potential mate.
-            max_diff (float): Difference between foragers compatibility 
-            thresholds. Larger max_diff means the forager is less "fussy". 
+            max_diff (float): Acceptable difference between thresholds. 
             
         Returns:
             bool: True, if compatible.
@@ -124,37 +132,53 @@ class Forager(Mammal):
         print(f'{M_id} and {F_id} produced offspring {o_id}.\n')
         return offspring
     
-    def fight_or_flee(self, hunter: Hunter):
+    def engage_hunter(self, hunter: Hunter) -> bool:
+        # if bravery > 5 then fight
+        # if fight, calculate a value based on strength, endurance and agility
+        # if flee, calculate a value based on endurance, agility and perception
         """
-        Determines if the forager will fight or flee. 
-        Calculate value based on a combination of bravery, strength, endurance and agility
-        """
-        self.__check_death()
-        pass
-    
-    def fight(self, hunter: Hunter):
-        """
-        Fight the hunter. compare strength of forager and hunter
-        imagining this like a dice roll, if the forager has a 25% chance of winning the rng has to get one number in the range of 4 (rng picks `1` from `1, 2, 3, 4`. 50% chance then the rng has two numbers: (`1, 2` from `1, 2, 3, 4`), 75% then rng has 3 numbers etc)
+        if the forager has a 25% chance of winning the 
+        rng has to get one number in the range of 4 (rng picks `1` from `1, 2, 3, 4`. 
+        50% chance then the rng has two numbers: (`1, 2` from `1, 2, 3, 4`), 
+        75% then rng has 3 numbers etc)
         have to use attribute values to find the initial chance of winning, then do the dice roll.
         """
         self.__check_death()
-        pass
+        if self.bravery > 5:
+            return self.__fight_hunter(hunter)
+        else:
+            return self.__flee_hunter(hunter)
     
-    def flee(self, hunter: Hunter):
+    def traverse_ravine(self, ravine: Ravine) -> bool:
         """
-        Can get caught if endurance/agility is low.
-        Same logic as fight but forager ends up in a different place of the environment, the predator remains. 
+        Evaluates the chance of crossing the ravine.
+
+        Args:
+            ravine (Ravine): The ravine the forager must cross.
+
+        Returns:
+            bool: True if successful, False if not.
         """
         self.__check_death()
-        pass
+        weights = {
+            'agility': 0.4,
+            'endurance': 0.3,
+            'perception': 0.3
+        }
+        weighted_sum = (self.agility * weights['agility'] + 
+                        self.endurance * weights['endurance'] + 
+                        self.perception * weights['perception'])
+        crossing_probability = weighted_sum / 10
+        if crossing_probability > ravine.skill_required:
+            return True
+        else:
+            return False
     
     def die(self) -> bool:
         """
         The forager did not survive.
         """
         self.alive = False
-        return True
     
     def __check_death(self) -> 'InvalidForager':
         """
@@ -165,19 +189,42 @@ class Forager(Mammal):
     
     def __calculate_compatibility_threshold(self) -> None:
         """
-        The "attractiveness" of the forager. 
+        The "attractiveness" of the forager.
         """
         self.compatability_threshold = (self.bravery + 
                                         self.strength + 
                                         (self.perception * 1.5))
         return self.compatability_threshold
+    
+    def __fight_hunter(self, hunter: Hunter) -> bool:
+        """
+        if the forager has a 25% chance of winning the 
+        rng has to get one number in the range of 4 (rng picks `1` from `1, 2, 3, 4`. 
+        50% chance then the rng has two numbers: (`1, 2` from `1, 2, 3, 4`), 
+        75% then rng has 3 numbers etc)
+        have to use attribute values to find the initial chance of winning, then do the dice roll.
+        """
+        # calculate a value based on strength, endurance and agility
+        pass
+    
+    def __flee_hunter(self, hunter: Hunter) -> bool:
+        """
+        if the forager has a 25% chance of winning the 
+        rng has to get one number in the range of 4 (rng picks `1` from `1, 2, 3, 4`. 
+        50% chance then the rng has two numbers: (`1, 2` from `1, 2, 3, 4`), 
+        75% then rng has 3 numbers etc)
+        have to use attribute values to find the initial chance of winning, then do the dice roll.
+        """
+        # calculate a value based on endurance, agility and perception
+        pass
         
     def __str__(self) -> str:
         return f'Forager {self.id}'
     
 class InvalidForager(Exception):
     """
-    Ensures dead foragers do not perform actions, maintaining integrity.
+    Ensures dead foragers do not perform actions.
+    Mainly used for testing.
     """
     def __init__(self, forager_id):
         self.message = f'Forager {forager_id} should not be performing any actions.'
