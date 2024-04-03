@@ -20,7 +20,8 @@ class Mammal():
         min_value = 0
         max_value = 10
         if not isinstance(arg, float):
-            raise TypeError(f'{arg_name.title()} must be a floating point number.')
+            raise TypeError(
+                f'{arg_name.title()} must be a floating point number.')
         if arg < min_value or arg > max_value:
             raise ValueError(f'{arg_name.title()} must be in range 0-10.')
         return arg
@@ -34,12 +35,14 @@ class Mammal():
         t_length = 28 + v_length
         att = 'Attribute'
         val = 'Value'
-        print('*' + '-' * t_length + '*')
+        h_line = '*' + '-' * t_length + '*'
+        print(h_line)
         print(f'| {att:<23} | {val:>{v_length}} |')
-        print('*' + '-' * t_length + '*')
+        print(h_line)
         for key, value in vars(self).items():
             if isinstance(value, (float, int)) and key != 'alive':
-                print(f'| {key.title():<23} | {str(round(value, 2)):>{v_length}} |')
+                print(f'| {key.title():<23} | '
+                      f'{str(round(value, 2)):>{v_length}} |')
             else:
                 if key == 'alive':
                     if value == 1:
@@ -52,5 +55,5 @@ class Mammal():
                     continue
                 else:
                     print(f'| {key.title():<23} | {str(value):>{v_length}} |')
-        print('*' + '-' * t_length + '*' + '\n')
+        print(h_line + '\n')
                 
