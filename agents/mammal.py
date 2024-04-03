@@ -48,7 +48,9 @@ class Mammal():
                     else:
                         al = 'No'
                         print(f'| {key.title():<23} | {al:>{v_length}} |')
+                elif key == 'config':
+                    continue
                 else:
                     print(f'| {key.title():<23} | {str(value):>{v_length}} |')
-        print('*' + '-' * t_length + '*')
+        print('*' + '-' * t_length + '*' + '\n')
                 
