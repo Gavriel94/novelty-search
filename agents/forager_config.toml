@@ -1,3 +1,8 @@
+
+hunger = 3.0
+
+bravery = 3.0
+
 # The acceptable difference between two foragers compatibility_thresholds
 # A higher compat makes the foragers less "fussy"
 # higher compat_diff promotes diversity (if i get round to encoding a smart reproduction method)
