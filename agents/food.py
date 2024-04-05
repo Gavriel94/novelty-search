@@ -13,8 +13,10 @@ class Food():
         Close to emulating nature.
         """
         food_dict = {
+            'pumpkin': 0.8,
             'peach': 0.4,
             'yucca': 0.3,
+            'mushroom': 0.3,
             'shrub': 0.2,
             'flower': 0.1,
             'berry': 0.1,
