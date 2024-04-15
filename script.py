@@ -18,5 +18,5 @@ as3 = Food()
 g = Grid(10, 10)
 
 g.setup_environment([r1, r2, f1, f2, h1, h2, h3, as1, as2, as3])
-g.run_simulation(steps=10, replace=True)
-g.get_forager_logs(save_as_txt=False)
+g.run_simulation(steps=10, replace_agent=True, display_attributes=True)
+# g.get_forager_logs(save_as_txt=False)
