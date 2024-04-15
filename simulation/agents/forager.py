@@ -118,8 +118,7 @@ class Forager(Mammal):
         """
         self.__check_death()
         
-        self.__add_to_log(f'{self.id} ate the {food.name}.\n')
-        
+        self.old_hunger = self.hunger
         self.hunger = max((self.hunger - food.sustenance_granted), 0.0)
         self.bravery = max((self.hunger - food.sustenance_granted / 2), 0.0)
         
@@ -127,7 +126,8 @@ class Forager(Mammal):
         self.perception = min((self.perception + food.sustenance_granted / 2), 10.0)
         self.strength = min((self.strength + food.sustenance_granted / 2), 10.0)
         self.endurance = min((self.endurance + food.sustenance_granted / 2), 10.0)
-        
+        self.__log_statement(f'{self.id} ate the {food.name}.\n{self.id}\'s hunger decreased. ({self.old_hunger:.2f} -> {self.hunger:.2f}).\n')
+    
     def hunger_increase(self) -> None:
         """
         Alters attributes.\n
@@ -141,7 +141,7 @@ class Forager(Mammal):
             - bravery
         """
         self.__check_death()
-        
+        self.old_hunger = self.hunger
         self.hunger = min((self.hunger + self.hunger_combin), 10)
         self.bravery = min((self.bravery + self.hunger_combin / 2), 10)
         
@@ -150,10 +150,10 @@ class Forager(Mammal):
         self.strength = max((self.strength - self.hunger_combin / 2), 0)
         self.endurance = max((self.endurance - self.hunger_combin / 2), 0)
         if self.hunger == 10:
-            self.__add_to_log(f'{self.id} starved.\n')
+            self.__log_statement(f'{self.id} starved.\n')
             self.alive = False
         else:
-            self.__add_to_log(f'{self.id}\'s hunger increased.\n')
+            self.__log_statement(f'{self.id}\'s hunger increased. ({self.old_hunger:.2f} -> {self.hunger:.2f}).\n')
     
     def engage_hunter(self, hunter: Hunter) -> bool:
         """
@@ -193,11 +193,11 @@ class Forager(Mammal):
                         self.perception * weights['perception'])
         crossing_probability = weighted_sum / 10
         if crossing_probability > ravine.skill_required:
-            self.__add_to_log(f'{self.id} successfully '
+            self.__log_statement(f'{self.id} successfully '
                               f'crossed ravine {ravine.id}\n')
             return True
         else:
-            self.__add_to_log(f'{self.id} fails to '
+            self.__log_statement(f'{self.id} fails to '
                               f'cross ravine {ravine.id}.\n')
             return False
         
@@ -239,9 +239,35 @@ class Forager(Mammal):
         partner.__check_death()
         # Choose attributes stochastically
         offspring = Forager()
-        self.__add_to_log(f'{self.id} and {partner.id} '
+        self.__log_statement(f'{self.id} and {partner.id} '
                           f'produced offspring {offspring.id}.\n')
         return offspring
+    
+    def log_dynamic_attributes(self, display: bool) -> None:
+        """
+        Saves dynamic attributes to analyse changes over time.
+        """
+        attributes_at_timestep = {
+            'id': self.id,
+            'hunger': self.hunger,
+            'bravery': self.bravery,
+            'agility': self.agility,
+            'perception': self.perception,
+            'strength': self.strength,
+            'endurance': self.endurance,
+            'timestep': len(self.attribute_log)
+        }
+        self.attribute_log.append([attributes_at_timestep])
+        if display:
+            a = dict(self.attribute_log[-1][0])
+            for key, value in a.items():
+                if isinstance(value, str):
+                    print(f'{key.title()}: {value}')
+                elif key == 'timestep':
+                    continue
+                else:
+                    print(f'{key.title()}: {value:.2f} - ')
+            print()
     
     def get_log(self, save_as_txt: bool) -> list | None:
         """
@@ -296,10 +322,10 @@ class Forager(Mammal):
                                hunter.endurance * weights['endurance'])
         if self_weighted_sum > hunter_weighted_sum:
             hunter.alive = False
-            self.__add_to_log(f'{self.id} beat hunter {hunter.id}.\n')
+            self.__log_statement(f'{self.id} beat hunter {hunter.id}.\n')
         else:
             self.alive = False
-            self.__add_to_log(f'{self.id} lost to hunter {hunter.id}.\n')
+            self.__log_statement(f'{self.id} lost to hunter {hunter.id}.\n')
         return (self.alive, 'fight')
     
     def __flee_hunter(self, hunter: Hunter) -> Tuple[bool, str]:
@@ -320,10 +346,10 @@ class Forager(Mammal):
                                hunter.endurance * weights['endurance'] +
                                hunter.perception * weights['perception'])
         if self_weighted_sum > hunter_weighted_sum:
-            self.__add_to_log(f'{self.id} fled hunter {hunter.id}.\n')
+            self.__log_statement(f'{self.id} fled hunter {hunter.id}.\n')
         else:
             self.alive = False
-            self.__add_to_log(f'{self.id} was caught by hunter {hunter.id}.\n')
+            self.__log_statement(f'{self.id} was caught by hunter {hunter.id}.\n')
         return (self.alive, 'flee')
     
     def __validate(self, att: float, max: float) -> float | ValueError:
@@ -340,13 +366,13 @@ class Forager(Mammal):
                                  'hunger or bravery?')
         return att
     
-    def __add_to_log(self, statement: str) -> None:
+    def __log_statement(self, statement: str) -> None:
         """
         Saves and outputs forager actions to stdout.
         """
         print(statement)
         self.log.append(statement)
-    
+        
     def __str__(self) -> str:
         return f'Forager {self.id}.\n'
     
