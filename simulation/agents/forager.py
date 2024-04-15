@@ -1,11 +1,14 @@
-from .mammal import Mammal
-from .hunter import Hunter
-from .food import Food
-from .ravine import Ravine
 from math import isclose
 from random import randrange, choice
 import tomllib
 from typing import Tuple
+
+from .mammal import Mammal
+from .food import Food
+from .hunter import Hunter
+from .ravine import Ravine
+# from ..environment.grid import Grid
+
 
 class Forager(Mammal):
     def __init__(self, sex: str = None):
@@ -19,20 +22,87 @@ class Forager(Mammal):
         # Set attributes from config file
         with open('simulation/agents/forager_config.toml', 'rb') as f:
             self.config = tomllib.load(f)
-            self.hunger = self.__validate_cfg(self.config['hunger'], 10.0)
-            self.bravery = self.__validate_cfg(self.config['bravery'], 10.0)
-            self.compat_diff = self.__validate_cfg(self.config['compat_diff'], 1)
-            self.hunger_combinator = self.__validate_cfg(self.config['hunger_combinator'], 1)
+            self.hunger = self.__validate(self.config['hunger'], 10.0)
+            self.bravery = self.__validate(self.config['bravery'], 10.0)
+            self.compat_diff = self.__validate(self.config['compat_diff'], 1)
+            self.hunger_combin = self.__validate(self.config['hunger_combinator'], 1)
         
         # sex is either random or set on init
         if sex == None:
             self.sex = choice(['M', 'F'])
-        elif sex != None and sex not in ['M', 'F']:
+        else:
+            self.sex = sex
+        if self.sex != 'M' and self.sex != 'F':
             raise ValueError('Sex must be \'M\' or \'F\'')
         # Set default attributes
         self.compatability_threshold = self.__get_compatibility()
         self.alive = True
         self.type = 'Forager'
+        # Current coordinates of forager
+        self.current_location = None
+        self.last_location = None
+        self.explored_coordinates = []
+        self.log = []
+        self.attribute_log = []
+        
+    # region get next move 
+    def get_next_move(self, environment) -> Tuple[int, int]:
+        # get vague idea of where food is
+        # choice of explore or go for food
+        # have a memory of places explored
+        # needs to return current_location and x,y of where to go
+        # then Grid.move_object can be used.
+        # foragers can determine if exploring, eating or mating are priorities
+        # ? maybe just have a "find_nearest_food()" function
+        def get_layout():
+            """
+            Inspects the environment to find food.
+            """
+            food_locations = []
+            for y in range(environment.height):
+                for x in range(environment.width):
+                    if isinstance(environment.grid[y][x], Food):
+                        food_locations.append((x,y))
+            return food_locations
+        
+        def get_distance(food_loc):
+            """
+            Gets the manhattan distance between the forager and food.
+            """
+            return (abs(food_loc[0] - self.current_location[0]) + 
+                    abs(food_loc[1] - self.current_location[1]))
+            
+        def move_to_food(food_location):
+            """
+            Get's coordinates one step closer to food.
+            """
+            new_x, new_y = 0, 0
+            if (abs(food_location[0] - self.current_location[0]) > 
+                abs(food_location[1] - self.current_location[1])):
+                if food_location[0] > self.current_location[0]:
+                    new_x = 1
+                elif food_location[0] < self.current_location[0]:
+                    new_x = -1
+                new_x += self.current_location[0]
+                return new_x, self.current_location[1]
+            else:
+                if food_location[1] > self.current_location[1]:
+                    new_y = 1
+                elif food_location[1] < self.current_location[1]:
+                    new_y = -1
+                new_y += self.current_location[1]
+                return self.current_location[0], new_y
+        
+        food_locations = get_layout()
+        closest_food = None
+        closest_distance = float('inf')
+        for food_loc in food_locations:
+            distance = get_distance(food_loc)
+            if distance < closest_distance:
+                closest_distance = distance
+                closest_food = food_loc
+        
+        return move_to_food(closest_food)
         
     def eat(self, food: Food) -> None:
         """
@@ -47,7 +117,9 @@ class Forager(Mammal):
             - endurance
         """
         self.__check_death()
-        print(f'{self.id} ate the {food.name}\n')
+        
+        self.__add_to_log(f'{self.id} ate the {food.name}.\n')
+        
         self.hunger = max((self.hunger - food.sustenance_granted), 0.0)
         self.bravery = max((self.hunger - food.sustenance_granted / 2), 0.0)
         
@@ -70,18 +142,64 @@ class Forager(Mammal):
         """
         self.__check_death()
         
-        self.hunger = min((self.hunger + self.hunger_combinator), 10)
-        self.bravery = min((self.bravery + self.hunger_combinator / 2), 10)
+        self.hunger = min((self.hunger + self.hunger_combin), 10)
+        self.bravery = min((self.bravery + self.hunger_combin / 2), 10)
         
-        self.agility = max((self.agility - self.hunger_combinator / 2), 0)
-        self.perception = max((self.perception - self.hunger_combinator / 2), 0)
-        self.strength = max((self.strength - self.hunger_combinator / 2), 0)
-        self.endurance = max((self.endurance - self.hunger_combinator / 2), 0)
+        self.agility = max((self.agility - self.hunger_combin / 2), 0)
+        self.perception = max((self.perception - self.hunger_combin / 2), 0)
+        self.strength = max((self.strength - self.hunger_combin / 2), 0)
+        self.endurance = max((self.endurance - self.hunger_combin / 2), 0)
         if self.hunger == 10:
-            print(f'{self.id} starved.\n')
+            self.__add_to_log(f'{self.id} starved.\n')
             self.alive = False
         else:
-            print(f'{self.id}\'s hunger increased.\n')
+            self.__add_to_log(f'{self.id}\'s hunger increased.\n')
+    
+    def engage_hunter(self, hunter: Hunter) -> bool:
+        """
+        Determines foragers action when coming across a hunter.
+
+        Args:
+            hunter (Hunter): The opposing hunter.
+
+        Returns:
+            bool, str: Status of forager, and if it fought or fled.
+        """
+        self.__check_death()
+        # ? This could probably be nicer
+        if self.bravery > 5:
+            return self.__fight_hunter(hunter)
+        else:
+            return self.__flee_hunter(hunter)
+    
+    def traverse_ravine(self, ravine: Ravine) -> bool:
+        """
+        Evaluates the chance of crossing the ravine.
+
+        Args:
+            ravine (Ravine): The ravine the forager must cross.
+
+        Returns:
+            bool: True if successful, False if not.
+        """
+        self.__check_death()
+        weights = {
+            'agility': 0.4,
+            'endurance': 0.3,
+            'perception': 0.3
+        }
+        weighted_sum = (self.agility * weights['agility'] + 
+                        self.endurance * weights['endurance'] + 
+                        self.perception * weights['perception'])
+        crossing_probability = weighted_sum / 10
+        if crossing_probability > ravine.skill_required:
+            self.__add_to_log(f'{self.id} successfully '
+                              f'crossed ravine {ravine.id}\n')
+            return True
+        else:
+            self.__add_to_log(f'{self.id} fails to '
+                              f'cross ravine {ravine.id}.\n')
+            return False
         
     def is_compatible_with(self, partner: 'Forager') -> bool:
         """
@@ -121,52 +239,27 @@ class Forager(Mammal):
         partner.__check_death()
         # Choose attributes stochastically
         offspring = Forager()
-        print(f'{self.id} and {partner.id} produced offspring {offspring.id}.\n')
+        self.__add_to_log(f'{self.id} and {partner.id} '
+                          f'produced offspring {offspring.id}.\n')
         return offspring
     
-    def engage_hunter(self, hunter: Hunter) -> bool:
+    def get_log(self, save_as_txt: bool) -> list | None:
         """
-        Determines foragers action when coming across a hunter.
+        Returns the actions of the forager as a list of strings or
+        saves them in a txt file.
 
         Args:
-            hunter (Hunter): The opposing hunter.
+            save_as_txt (bool): Save actions as a txt file
 
         Returns:
-            bool: True if the forager 
+            list | None: List of strings or None if the file is saved as txt
         """
-        self.__check_death()
-        # ? This could probably be nicer
-        if self.bravery > 5:
-            return self.__fight_hunter(hunter)
-        else:
-            return self.__flee_hunter(hunter)
-    
-    def traverse_ravine(self, ravine: Ravine) -> bool:
-        """
-        Evaluates the chance of crossing the ravine.
-
-        Args:
-            ravine (Ravine): The ravine the forager must cross.
-
-        Returns:
-            bool: True if successful, False if not.
-        """
-        self.__check_death()
-        weights = {
-            'agility': 0.4,
-            'endurance': 0.3,
-            'perception': 0.3
-        }
-        weighted_sum = (self.agility * weights['agility'] + 
-                        self.endurance * weights['endurance'] + 
-                        self.perception * weights['perception'])
-        crossing_probability = weighted_sum / 10
-        if crossing_probability > ravine.skill_required:
-            print(f'Forager {self.id} successfully crossed ravine {ravine.id}\n')
-            return True
-        else:
-            print(f'Forager {self.id} fails to cross ravine {ravine.id}.\n')
-            return False
+        if not save_as_txt:
+            return self.log
+        else: 
+            with open(f'simulation/logs/{self.id}_log.txt', 'r') as f:
+                for line in self.log:
+                    f.write(line)
     
     def __check_death(self) -> 'InvalidForager':
         """
@@ -203,8 +296,10 @@ class Forager(Mammal):
                                hunter.endurance * weights['endurance'])
         if self_weighted_sum > hunter_weighted_sum:
             hunter.alive = False
+            self.__add_to_log(f'{self.id} beat hunter {hunter.id}.\n')
         else:
             self.alive = False
+            self.__add_to_log(f'{self.id} lost to hunter {hunter.id}.\n')
         return (self.alive, 'fight')
     
     def __flee_hunter(self, hunter: Hunter) -> Tuple[bool, str]:
@@ -225,15 +320,13 @@ class Forager(Mammal):
                                hunter.endurance * weights['endurance'] +
                                hunter.perception * weights['perception'])
         if self_weighted_sum > hunter_weighted_sum:
-            return (True, 'flee')    
+            self.__add_to_log(f'{self.id} fled hunter {hunter.id}.\n')
         else:
             self.alive = False
-            return (False, 'flee')
-        
-    def __str__(self) -> str:
-        return f'Forager {self.id}.\n'
+            self.__add_to_log(f'{self.id} was caught by hunter {hunter.id}.\n')
+        return (self.alive, 'flee')
     
-    def __validate_cfg(self, att: float, max: float) -> float | ValueError:
+    def __validate(self, att: float, max: float) -> float | ValueError:
         """
         Ensures attributes in configuration file are within range.
         """
@@ -247,10 +340,20 @@ class Forager(Mammal):
                                  'hunger or bravery?')
         return att
     
+    def __add_to_log(self, statement: str) -> None:
+        """
+        Saves and outputs forager actions to stdout.
+        """
+        print(statement)
+        self.log.append(statement)
+    
+    def __str__(self) -> str:
+        return f'Forager {self.id}.\n'
+    
 class InvalidForager(Exception):
     """
     Ensures dead foragers do not perform actions.
     """
     def __init__(self, forager_id):
-        self.message = f'Forager {forager_id} should not be inactive.'
+        self.message = f'{forager_id} should be inactive.'
         super().__init__(self.message)
