@@ -17,6 +17,7 @@ class Grid():
         self.area = self.width * self.height
         self.foragers = []
         self.hunters = []
+        self.grid_history = []
         
     def setup_environment(self, objects: list) -> None:
         """
@@ -40,13 +41,25 @@ class Grid():
             Hunter: 'H',
             Food: '*'
         }
-        for row in self.grid:
-            print(" ".join([d.get(type(cell), '.') for cell in row]))
+        grid_copy = [row[:] for row in self.grid]
+        self.grid_history.append(grid_copy)
+        
+        if len(self.grid_history) > 1:
+            previous_grid = self.grid_history[-2]
+            current_grid = self.grid_history[-1]
+            print(f"{'Previous Timestep':>8}      {'Current Timestep':<8}")
+            for prev_row, current_row in zip(previous_grid, current_grid):
+                previous_row_str = " ".join([d.get(type(cell), '.') for cell in prev_row])
+                current_row_str = " ".join([d.get(type(cell), '.') for cell in current_row])
+                print(f'{previous_row_str}    {current_row_str}')
+        else:
+            for row in self.grid:
+                print(" ".join([d.get(type(cell), '.') for cell in row]))
                     
     def run_simulation(self, 
                        steps: int, 
                        replace_agent: bool, 
-                       display_forager_attributes: bool) -> None:
+                       display_attributes: bool) -> None:
         """
         Runs the simulation.
 
@@ -61,16 +74,18 @@ class Grid():
             MoveError: Simulation ends if an invalid move has been made.
         """
         for step in range(steps):
-            print(f'Time {step}')
+            print('*' + '-' * 52 + '*')
+            print(f"| {'Time':>26} {step:<24}|")
+            print('*' + '-' * 52 + '*')
             self.display_grid()
-            print('\n')
+            print('*' + '-' * 52 + '*')
+            # print('\n')
             for forager in self.foragers:
                 if not forager.alive:
                     continue
-                forager.display_attributes()
+                forager.log_dynamic_attributes(display_attributes)
                 to_x, to_y = forager.get_next_move(self)
                 target_loc = self.grid[to_y][to_x]
-                # forager.display_attributes()
                 # Forager eats food and new food appears somewhere randomly
                 # ! this chain of events for steps can be changed!
                 if isinstance(target_loc, Food):
@@ -94,6 +109,9 @@ class Grid():
                     self.__forager_step(forager, to_x, to_y)
                 else:
                     raise MoveError
+                print('*' + '-' * 52 + '*')
+            if step < steps:
+                print('\n'*3) 
     
     def get_forager_logs(self, save_as_txt: bool):
         print('-' * 72, '\n')

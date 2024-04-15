@@ -62,6 +62,8 @@ class Mammal():
                     continue
                 elif key == 'log':
                     continue
+                elif key == 'attribute_log':
+                    continue
                 else:
                     print(f'| {key.title():<23} | {str(value):>{v_length}} |')
         print(h_line + '\n')
