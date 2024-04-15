@@ -4,7 +4,6 @@ from simulation.agents.food import Food
 from simulation.agents.ravine import Ravine
 from simulation.environment.grid import Grid
 
-stuff = []
 r1 = Ravine()
 r2 = Ravine()
 f1 = Forager(sex='M')
@@ -16,11 +15,8 @@ as1 = Food()
 as2 = Food()
 as3 = Food()
 
-stuff.extend([r1, r2, f1, f2, h1, h2, h3, as1, as2, as3])
-
 g = Grid(10, 10)
-g.setup_environment(stuff)
 
-# g.setup_environment(stuff)
-
-g.display_grid()
+g.setup_environment([r1, r2, f1, f2, h1, h2, h3, as1, as2, as3])
+g.run_simulation(steps=10, replace=True)
+g.get_forager_logs(save_as_txt=False)
