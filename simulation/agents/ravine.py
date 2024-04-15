@@ -4,7 +4,7 @@ import shortuuid
 class Ravine():
     """
     The Ravine is an obstacle in the environment. 
-    Foragers can only get around them with the right attributes.
+    Foragers with the right attributes can jump over them.
     """
     def __init__(self, width: int = None, height: int = None):
         self.id = self.generate_id()

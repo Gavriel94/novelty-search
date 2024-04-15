@@ -11,9 +11,9 @@ class Mammal():
         self.agility = self.validate_arg(agility, 'agility')
         self.perception = self.validate_arg(perception, 'perception')
         self.strength = self.validate_arg(strength, 'strength')
-        self.endurance = self.validate_arg(endurance, 'endurance')        
+        self.endurance = self.validate_arg(endurance, 'endurance')     
     
-    def validate_arg(self, arg: float, arg_name: str) -> float:
+    def validate_arg(self, arg_value: float, arg_name: str) -> float:
         """
         Ensure attributes are the correct type and in the right range. 
 
@@ -23,12 +23,12 @@ class Mammal():
         """
         min_value = 0
         max_value = 10
-        if not isinstance(arg, float):
+        if not isinstance(arg_value, float):
             raise TypeError(
                 f'{arg_name.title()} must be a floating point number.')
-        if arg < min_value or arg > max_value:
+        if arg_value < min_value or arg_value > max_value:
             raise ValueError(f'{arg_name.title()} must be in range 0-10.')
-        return arg
+        return arg_value
     
     def generate_id(self) -> str:
         return shortuuid.random(length=4)
@@ -59,6 +59,8 @@ class Mammal():
                         al = 'No'
                         print(f'| {key.title():<23} | {al:>{v_length}} |')
                 elif key == 'config':
+                    continue
+                elif key == 'log':
                     continue
                 else:
                     print(f'| {key.title():<23} | {str(value):>{v_length}} |')
