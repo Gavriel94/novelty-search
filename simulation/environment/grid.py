@@ -62,6 +62,8 @@ class Grid():
                        display_attributes: bool) -> None:
         """
         Runs the simulation.
+        Hunters move before foragers do. 
+        Hunters do not engage with any objects.
 
         Args:
             steps (int): Number of simulation steps.
@@ -79,7 +81,24 @@ class Grid():
             print('*' + '-' * 52 + '*')
             self.display_grid()
             print('*' + '-' * 52 + '*')
-            # print('\n')
+            
+            for hunter in self.hunters:
+                if not hunter.alive:
+                    continue
+                from_xy, to_xy = hunter.get_next_move(self.grid, self.height, self.width)
+                if to_xy == from_xy:
+                    print(f'Hunter {hunter.id} stayed still')
+                    continue
+                else:
+                    print(f'Hunter {hunter.id} moved from {(from_xy)} to {(to_xy)}')
+                    from_x = from_xy[0]
+                    from_y = from_xy[1]
+                    new_x = to_xy[0] 
+                    new_y = to_xy[1]
+                
+                    self.grid[new_y][new_x] = self.grid[from_y][from_x]
+                    self.grid[from_y][from_x] = None
+                
             for forager in self.foragers:
                 if not forager.alive:
                     continue
@@ -110,8 +129,7 @@ class Grid():
                 else:
                     raise MoveError
                 print('*' + '-' * 52 + '*')
-            if step < steps:
-                print('\n'*3) 
+            print('\n'*3) 
     
     def get_forager_logs(self, save_as_txt: bool):
         print('-' * 72, '\n')
