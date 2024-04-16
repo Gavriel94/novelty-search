@@ -55,25 +55,31 @@ class Forager(Mammal):
         """
         if self.current_target == None:
             self.set_target_coords(environment)
-        # self.set_target_coords(environment)
+        
+        # finds new target if targeted food is eaten by another forager 
+        if ('food' in self.current_target.split(' ') or 
+            'sustenance' in self.current_target.split(' ') and 
+            environment.grid[self.target_coordinates[1]][self.target_coordinates[0]]):
+            self.current_target = None
+            self.target_coordinates = None
+            self.set_target_coords(environment)
+        
+        # find coordinate of next step
         next_step = self.__get_next_coordinates(self.target_coordinates) 
         
-        # If the next step is the target step, clear target coordinates
-        # to be reset on next function call
+        # resets target variables to find a new target next time
         if next_step == self.target_coordinates:
             self.current_target = None
             self.target_coordinates = None
-        
-        # # if food at target step has been eaten, find a new target   
-        # if 'food' in self.current_target or 'sustenance' in self.current_target and environment.grid[next_step[1]][next_step[0]] == None:
-        #     self.target_coordinates = None
-        #     self.set_target_coords(environment)
-        #     next_step = self.__get_next_coordinates(self.target_coordinates)
             
         return next_step
     
     def set_target_coords(self, environment):
         """
+        This is like the brain of the forager. This determines the foragers actions.
+        * The definition for novel search should be in here!
+        gets the coordinates the forager needs to get food/a mate
+        
         Can find food or foragers ordered by distance, 
         forager compatibility and food sustenance given
         
@@ -238,7 +244,7 @@ class Forager(Mammal):
                                                 'nearest forager', 'furthest forager',
                                                 'most sustenance', 'most compatible mate'])
         
-        self.__log_statement(f'Forager {self.id} is looking for the {self.current_target}')
+        self.__log_statement(f'Forager {self.id} is looking for the {self.current_target}.\n')
         
         if self.current_target == 'nearest food':
             self.target_coordinates = nearest_food()
@@ -381,7 +387,7 @@ class Forager(Mammal):
                                      f'and {partner.id} ({partner.sex}: {partner.compatability_threshold:.2f}) are compatible.\n')
                 return True
             else:
-                self.__log_statement(f'{self.id} ({self.compatability_threshold}) '
+                self.__log_statement(f'{self.id} ({self.compatability_threshold:.2f}) '
                                      f'and {partner.id} ({partner.compatability_threshold:.2f}) '
                                      'are not compatible.\n')
                 return False
