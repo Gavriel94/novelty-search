@@ -49,16 +49,17 @@ class Forager(Mammal):
         self.log = []
         self.attribute_log = []
     
-    # TODO refactor this
     # region get next move 
-    def get_next_move(self, environment) -> Tuple[int, int]:
-        # get vague idea of where food is
-        # choice of explore or go for food
-        # have a memory of places explored
-        # needs to return current_location and x,y of where to go
-        # then Grid.move_object can be used.
-        # foragers can determine if exploring, eating or mating are priorities
-        # ? maybe just have a "find_nearest_food()" function
+    def get_next_step(self, environment) -> Tuple[int, int]:
+        """
+        Decides on a plan and works out 
+
+        Args:
+            environment (_type_): _description_
+
+        Returns:
+            Tuple[int, int]: _description_
+        """
         def find_locations(object_class: Food | Forager) -> list:
             """
             List of (x,y) coordinates for each Food object.
@@ -133,44 +134,46 @@ class Forager(Mammal):
             objs = sort_by_furthest(locations)
             return objs[0]
         
-        def get_nearest_food():
+        def nearest_food():
             food_locations = find_locations(Food)
             return get_nearest(food_locations)
         
-        def get_furthest_food():
+        def furthest_food():
             food_locations = find_locations(Food)
             return get_furthest(food_locations)
         
-        def get_nearest_forager():
+        def nearest_forager():
             forager_locations = find_locations(Forager)
             return get_nearest(forager_locations)
         
-        def get_furthest_forager():
+        def furthest_forager():
             forager_locations = find_locations(Forager)
             return get_furthest(forager_locations)
         
-        self.current_decision = random.choice(['nearest food', 'furthest food', 
-                                 'nearest forager', 'furthest forager'])
-        
         # attributes should lead foragers to making decisions but
         # there must be stochasticity involved as well
-        # self.target_location = decision
-        # TODO make a decision out from the available options
-        # self.target_location = get_coordinates(decision)
-        if self.current_coordinates == self.target_coordinates or self.target_coordinates == None:
+            
+        if self.target_coordinates == None:
             # make a new decision
+            # TODO utilise forager attributes and add stochasticity
+            self.current_decision = random.choice(['nearest food', 'furthest food', 
+                                                   'nearest forager', 'furthest forager'])
+            
             self.__log_statement(f'Forager {self.id} is looking for the {self.current_decision}')
             
-        if self.current_decision == 'nearest food':
-            self.target_coordinates = get_nearest_food()
-        elif self.current_decision == 'furthest food':
-            self.target_coordinates = get_furthest_food()
-        elif self.current_decision == 'nearest forager':
-            self.target_coordinates = get_nearest_forager()
-        elif self.current_decision == 'furthest forager':
-            self.target_coordinates = get_furthest_forager()
-            
-        return get_next_step_to(self.target_coordinates)
+            if self.current_decision == 'nearest food':
+                self.target_coordinates = nearest_food()
+            elif self.current_decision == 'furthest food':
+                self.target_coordinates = furthest_food()
+            elif self.current_decision == 'nearest forager':
+                self.target_coordinates = nearest_forager()
+            elif self.current_decision == 'furthest forager':
+                self.target_coordinates = furthest_forager()
+        
+        next_step = get_next_step_to(self.target_coordinates) 
+        if next_step == self.target_coordinates:
+            self.target_coordinates = None
+        return next_step
         
     def eat(self, food: Food) -> None:
         """
@@ -293,10 +296,13 @@ class Forager(Mammal):
             if isclose(self.compatability_threshold, 
                        partner.compatability_threshold, 
                        rel_tol=self.config['compat_diff']):
+                self.__log_statement(f'{self.id} and {partner.id} are compatible.\n')
                 return True
             else:
+                self.__log_statement(f'{self.id} and {partner.id} are not compatible.\n')
                 return False
         else:
+            self.__log_statement(f'{self.id} and {partner.id} are not compatible.\n')
             return False
     
     def produce_offspring(self, partner: 'Forager') -> 'Forager':
