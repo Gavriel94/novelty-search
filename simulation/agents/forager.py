@@ -431,7 +431,13 @@ class Forager(Mammal):
                 elif key == 'timestep':
                     continue
                 else:
-                    print(f'{key.title()}: {value:.2f} - ')
+                    icon = ' '
+                    if len(self.attribute_log) > 1:
+                        if dict(self.attribute_log[-2][0])[key] > value:
+                            icon = '-'
+                        else:
+                            icon = '+'
+                    print(f'{key.title()}: {value:.2f} {icon}')
             print()
     
     def get_log(self, save_as_txt: bool) -> list | None:
