@@ -79,18 +79,17 @@ class Grid():
             print('*' + '-' * 52 + '*')
             print(f"| {'Time':>26} {step:<24}|")
             print('*' + '-' * 52 + '*')
-            self.display_grid()
-            print('*' + '-' * 52 + '*')
+            # self.display_grid()
+            # print('*' + '-' * 52 + '*')
             
             for hunter in self.hunters:
                 if not hunter.alive:
                     continue
                 from_xy, to_xy = hunter.get_next_move(self.grid, self.height, self.width)
                 if to_xy == from_xy:
-                    print(f'Hunter {hunter.id} stayed still')
                     continue
                 else:
-                    print(f'Hunter {hunter.id} moved from {(from_xy)} to {(to_xy)}')
+                    # print(f'Hunter {hunter.id} moved from {(from_xy)} to {(to_xy)}')
                     from_x = from_xy[0]
                     from_y = from_xy[1]
                     new_x = to_xy[0] 
@@ -103,10 +102,9 @@ class Grid():
                 if not forager.alive:
                     continue
                 forager.log_dynamic_attributes(display_attributes)
-                to_x, to_y = forager.get_next_move(self)
+                to_x, to_y = forager.get_next_step(self)
                 target_loc = self.grid[to_y][to_x]
-                # Forager eats food and new food appears somewhere randomly
-                # ! this chain of events for steps can be changed!
+                # Forager eats food
                 if isinstance(target_loc, Food):
                     self.__forager_finds_food(forager, to_x, to_y, replace_agent)
                 # Forager engages hunter
@@ -129,6 +127,8 @@ class Grid():
                 else:
                     raise MoveError
                 print('*' + '-' * 52 + '*')
+            self.display_grid()
+            print('*' + '-' * 52 + '*')
             print('\n'*3) 
     
     def get_forager_logs(self, save_as_txt: bool):
@@ -382,10 +382,10 @@ class Grid():
         potential_mate = self.grid[to_y][to_x]
         if forager.is_compatible_with(potential_mate):
             offspring = forager.produce_offspring(potential_mate)
-            print(f'Forager {forager.id} and {potential_mate.id} produced offspring {offspring.id}.\n')
             self.__place_object(offspring)
         else:
-            print(f'Forager {forager.id} and {potential_mate.id} are incompatible.\n')
+            # foragers are incompatible, decide on something else to do.
+            forager.current_decision = None
     
     def __forager_step(self, 
                        forager: Forager, 
