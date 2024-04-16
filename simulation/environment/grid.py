@@ -18,43 +18,6 @@ class Grid():
         self.foragers = []
         self.hunters = []
         self.grid_history = []
-        
-    def setup_environment(self, objects: list) -> None:
-        """
-        Distributes a collection of objects on the grid. 
-
-        Args:
-            objects (list): Iterable collection of objects.
-        """
-        if len(objects) > self.area:
-            raise GridFull
-        for object in objects:
-            self.__place_object(object)
-            
-    def display_grid(self) -> None:
-        """
-        Displays the grid and its inhabitants in the console.
-        """
-        d = {
-            Forager: 'F',
-            Ravine: 'R',
-            Hunter: 'H',
-            Food: '*'
-        }
-        grid_copy = [row[:] for row in self.grid]
-        self.grid_history.append(grid_copy)
-        
-        if len(self.grid_history) > 1:
-            previous_grid = self.grid_history[-2]
-            current_grid = self.grid_history[-1]
-            print(f"{'Previous Timestep':>8}      {'Current Timestep':<8}")
-            for prev_row, current_row in zip(previous_grid, current_grid):
-                previous_row_str = " ".join([d.get(type(cell), '.') for cell in prev_row])
-                current_row_str = " ".join([d.get(type(cell), '.') for cell in current_row])
-                print(f'{previous_row_str}    {current_row_str}')
-        else:
-            for row in self.grid:
-                print(" ".join([d.get(type(cell), '.') for cell in row]))
                     
     def run_simulation(self, 
                        steps: int, 
@@ -130,6 +93,44 @@ class Grid():
             self.display_grid()
             print('*' + '-' * 52 + '*')
             print('\n'*3) 
+            
+    def setup_environment(self, objects: list) -> None:
+        """
+        Distributes a collection of objects on the grid. 
+
+        Args:
+            objects (list): Iterable collection of objects.
+        """
+        if len(objects) > self.area:
+            raise GridFull
+        for object in objects:
+            self.__place_object(object)
+            
+    def display_grid(self) -> None:
+        """
+        Displays the grid and its inhabitants in the console.
+        """
+        d = {
+            Forager: 'F',
+            Ravine: 'R',
+            Hunter: 'H',
+            Food: '*'
+        }
+        grid_copy = [row[:] for row in self.grid]
+        self.grid_history.append(grid_copy)
+        
+        if len(self.grid_history) > 1:
+            previous_grid = self.grid_history[-2]
+            current_grid = self.grid_history[-1]
+            print(f"{f'Step {len(self.grid_history) - 1}':>12}     ------->     {f'Step {len(self.grid_history)}':<8}")
+            print()
+            for prev_row, current_row in zip(previous_grid, current_grid):
+                previous_row_str = " ".join([d.get(type(cell), '.') for cell in prev_row])
+                current_row_str = " ".join([d.get(type(cell), '.') for cell in current_row])
+                print(f'{previous_row_str}    {current_row_str}')
+        else:
+            for row in self.grid:
+                print(" ".join([d.get(type(cell), '.') for cell in row]))
     
     def get_forager_logs(self, save_as_txt: bool):
         print('-' * 72, '\n')
@@ -385,7 +386,7 @@ class Grid():
             self.__place_object(offspring)
         else:
             # foragers are incompatible, decide on something else to do.
-            forager.current_decision = None
+            forager.current_target = None
     
     def __forager_step(self, 
                        forager: Forager, 
