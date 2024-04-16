@@ -1,7 +1,9 @@
 import random
+import shortuuid
 
 class Food():
     def __init__(self):
+        self.id = self.__generate_id()
         self.name, self.sustenance_granted = self.create_food()
     
     def create_food(self) -> None:
@@ -23,6 +25,9 @@ class Food():
         }
         name, sus = random.choice(list(food_dict.items()))
         return name, sus
+    
+    def __generate_id(self) -> str:
+        return shortuuid.random(length=4)
         
     def __str__(self) -> str:
         return (f'{self.name.title()}: '

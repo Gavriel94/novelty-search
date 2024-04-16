@@ -59,10 +59,8 @@ class Hunter(Mammal):
                             # cell to the right is empty
                             elif 0 <= x + 1 <= grid_width and grid[y][x + 1] == None:
                                 potential_moves.append((x + 1, y))
-            if len(potential_moves) > 0:
-                new_position = random.choice(potential_moves)
-            else:
-                potential_moves.append(current_position)
+                new_position = (random.choice(potential_moves) 
+                                if len(potential_moves) > 0 else current_position)
             return current_position, new_position
         
     def __str__(self) -> str:

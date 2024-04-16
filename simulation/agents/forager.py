@@ -1,4 +1,5 @@
 from math import isclose
+import random
 from random import randrange, choice
 import tomllib
 from typing import Tuple
@@ -39,70 +40,140 @@ class Forager(Mammal):
         self.alive = True
         self.type = 'Forager'
         # Current coordinates of forager
-        self.current_location = None
+        self.current_coordinates = None
+        self.target_coordinates = None
+        self.current_decision = None
+        
         self.last_location = None
         self.explored_coordinates = []
         self.log = []
         self.attribute_log = []
-        
+    
     # region get next move 
-    def get_next_move(self, environment) -> Tuple[int, int]:
-        # get vague idea of where food is
-        # choice of explore or go for food
-        # have a memory of places explored
-        # needs to return current_location and x,y of where to go
-        # then Grid.move_object can be used.
-        # foragers can determine if exploring, eating or mating are priorities
-        # ? maybe just have a "find_nearest_food()" function
-        def get_layout():
+    def get_next_step(self, environment) -> Tuple[int, int]:
+        """
+        Decides on a plan and works out 
+
+        Args:
+            environment (_type_): _description_
+
+        Returns:
+            Tuple[int, int]: _description_
+        """
+        def find_locations(object_class: Food | Forager) -> list:
             """
-            Inspects the environment to find food.
+            List of (x,y) coordinates for each Food object.
             """
-            food_locations = []
+            locations = []
             for y in range(environment.height):
                 for x in range(environment.width):
-                    if isinstance(environment.grid[y][x], Food):
-                        food_locations.append((x,y))
-            return food_locations
+                    if isinstance(environment.grid[y][x], object_class):
+                        forager = environment.grid[y][x]
+                        if forager.id == self.id:
+                            continue
+                        locations.append((x,y))
+            return locations
         
-        def get_distance(food_loc):
+        def manhattan_distance(object_loc):
             """
-            Gets the manhattan distance between the forager and food.
+            Manhattan distance between self and object.
+
+            Args:
+                object_loc (tuple(int,int)): x, y coordinate of object.
             """
-            return (abs(food_loc[0] - self.current_location[0]) + 
-                    abs(food_loc[1] - self.current_location[1]))
+            return (abs(object_loc[0] - self.current_coordinates[0]) + 
+                    abs(object_loc[1] - self.current_coordinates[1]))
             
-        def move_to_food(food_location):
+        def get_next_step_to(object_loc):
             """
-            Get's coordinates one step closer to food.
+            Get's coordinates of step closer to object.
+            
+            Args:
+                object_loc (tuple(int,int)): x, y coordinate of object.
             """
+            # TODO document this properly
             new_x, new_y = 0, 0
-            if (abs(food_location[0] - self.current_location[0]) > 
-                abs(food_location[1] - self.current_location[1])):
-                if food_location[0] > self.current_location[0]:
+            if (abs(object_loc[0] - self.current_coordinates[0]) > 
+                abs(object_loc[1] - self.current_coordinates[1])):
+                if object_loc[0] > self.current_coordinates[0]:
                     new_x = 1
-                elif food_location[0] < self.current_location[0]:
+                elif object_loc[0] < self.current_coordinates[0]:
                     new_x = -1
-                new_x += self.current_location[0]
-                return new_x, self.current_location[1]
+                new_x += self.current_coordinates[0]
+                return new_x, self.current_coordinates[1]
             else:
-                if food_location[1] > self.current_location[1]:
+                if object_loc[1] > self.current_coordinates[1]:
                     new_y = 1
-                elif food_location[1] < self.current_location[1]:
+                elif object_loc[1] < self.current_coordinates[1]:
                     new_y = -1
-                new_y += self.current_location[1]
-                return self.current_location[0], new_y
+                new_y += self.current_coordinates[1]
+                return self.current_coordinates[0], new_y
         
-        food_locations = get_layout()
-        closest_food = None
-        closest_distance = float('inf')
-        for food_loc in food_locations:
-            distance = get_distance(food_loc)
-            if distance < closest_distance:
-                closest_distance = distance
-                closest_food = food_loc
+        def sort_by_nearest(locations):
+            objs = []
+            closest_obj = None
+            shortest_distance = float('inf')    
+            for obj_loc in locations:
+                distance = manhattan_distance(obj_loc)
+                if distance < shortest_distance:
+                    shortest_distance = distance
+                    closest_obj = obj_loc
+                    objs.append(closest_obj)
+            return objs
         
-        return move_to_food(closest_food)
+        def sort_by_furthest(locations):
+            objs = sort_by_nearest(locations)
+            objs.reverse()
+            return objs
+        
+        def get_nearest(locations):
+            objs = sort_by_nearest(locations)
+            return objs[0]
+        
+        def get_furthest(locations):
+            objs = sort_by_furthest(locations)
+            return objs[0]
+        
+        def nearest_food():
+            food_locations = find_locations(Food)
+            return get_nearest(food_locations)
+        
+        def furthest_food():
+            food_locations = find_locations(Food)
+            return get_furthest(food_locations)
+        
+        def nearest_forager():
+            forager_locations = find_locations(Forager)
+            return get_nearest(forager_locations)
+        
+        def furthest_forager():
+            forager_locations = find_locations(Forager)
+            return get_furthest(forager_locations)
+        
+        # attributes should lead foragers to making decisions but
+        # there must be stochasticity involved as well
+            
+        if self.target_coordinates == None:
+            # make a new decision
+            # TODO utilise forager attributes and add stochasticity
+            self.current_decision = random.choice(['nearest food', 'furthest food', 
+                                                   'nearest forager', 'furthest forager'])
+            
+            self.__log_statement(f'Forager {self.id} is looking for the {self.current_decision}')
+            
+            if self.current_decision == 'nearest food':
+                self.target_coordinates = nearest_food()
+            elif self.current_decision == 'furthest food':
+                self.target_coordinates = furthest_food()
+            elif self.current_decision == 'nearest forager':
+                self.target_coordinates = nearest_forager()
+            elif self.current_decision == 'furthest forager':
+                self.target_coordinates = furthest_forager()
+        
+        next_step = get_next_step_to(self.target_coordinates) 
+        if next_step == self.target_coordinates:
+            self.target_coordinates = None
+        return next_step
         
     def eat(self, food: Food) -> None:
         """
@@ -225,10 +296,13 @@ class Forager(Mammal):
             if isclose(self.compatability_threshold, 
                        partner.compatability_threshold, 
                        rel_tol=self.config['compat_diff']):
+                self.__log_statement(f'{self.id} and {partner.id} are compatible.\n')
                 return True
             else:
+                self.__log_statement(f'{self.id} and {partner.id} are not compatible.\n')
                 return False
         else:
+            self.__log_statement(f'{self.id} and {partner.id} are not compatible.\n')
             return False
     
     def produce_offspring(self, partner: 'Forager') -> 'Forager':
