@@ -1,4 +1,5 @@
 from math import isclose
+import random
 from random import randrange, choice
 import tomllib
 from typing import Tuple
@@ -39,12 +40,16 @@ class Forager(Mammal):
         self.alive = True
         self.type = 'Forager'
         # Current coordinates of forager
-        self.current_location = None
+        self.current_coordinates = None
+        self.target_coordinates = None
+        self.current_decision = None
+        
         self.last_location = None
         self.explored_coordinates = []
         self.log = []
         self.attribute_log = []
-        
+    
+    # TODO refactor this
     # region get next move 
     def get_next_move(self, environment) -> Tuple[int, int]:
         # get vague idea of where food is
@@ -54,55 +59,118 @@ class Forager(Mammal):
         # then Grid.move_object can be used.
         # foragers can determine if exploring, eating or mating are priorities
         # ? maybe just have a "find_nearest_food()" function
-        def get_layout():
+        def find_locations(object_class: Food | Forager) -> list:
             """
-            Inspects the environment to find food.
+            List of (x,y) coordinates for each Food object.
             """
-            food_locations = []
+            locations = []
             for y in range(environment.height):
                 for x in range(environment.width):
-                    if isinstance(environment.grid[y][x], Food):
-                        food_locations.append((x,y))
-            return food_locations
+                    if isinstance(environment.grid[y][x], object_class):
+                        forager = environment.grid[y][x]
+                        if forager.id == self.id:
+                            continue
+                        locations.append((x,y))
+            return locations
         
-        def get_distance(food_loc):
+        def manhattan_distance(object_loc):
             """
-            Gets the manhattan distance between the forager and food.
+            Manhattan distance between self and object.
+
+            Args:
+                object_loc (tuple(int,int)): x, y coordinate of object.
             """
-            return (abs(food_loc[0] - self.current_location[0]) + 
-                    abs(food_loc[1] - self.current_location[1]))
+            return (abs(object_loc[0] - self.current_coordinates[0]) + 
+                    abs(object_loc[1] - self.current_coordinates[1]))
             
-        def move_to_food(food_location):
+        def get_next_step_to(object_loc):
             """
-            Get's coordinates one step closer to food.
+            Get's coordinates of step closer to object.
+            
+            Args:
+                object_loc (tuple(int,int)): x, y coordinate of object.
             """
+            # TODO document this properly
             new_x, new_y = 0, 0
-            if (abs(food_location[0] - self.current_location[0]) > 
-                abs(food_location[1] - self.current_location[1])):
-                if food_location[0] > self.current_location[0]:
+            if (abs(object_loc[0] - self.current_coordinates[0]) > 
+                abs(object_loc[1] - self.current_coordinates[1])):
+                if object_loc[0] > self.current_coordinates[0]:
                     new_x = 1
-                elif food_location[0] < self.current_location[0]:
+                elif object_loc[0] < self.current_coordinates[0]:
                     new_x = -1
-                new_x += self.current_location[0]
-                return new_x, self.current_location[1]
+                new_x += self.current_coordinates[0]
+                return new_x, self.current_coordinates[1]
             else:
-                if food_location[1] > self.current_location[1]:
+                if object_loc[1] > self.current_coordinates[1]:
                     new_y = 1
-                elif food_location[1] < self.current_location[1]:
+                elif object_loc[1] < self.current_coordinates[1]:
                     new_y = -1
-                new_y += self.current_location[1]
-                return self.current_location[0], new_y
+                new_y += self.current_coordinates[1]
+                return self.current_coordinates[0], new_y
         
-        food_locations = get_layout()
-        closest_food = None
-        closest_distance = float('inf')
-        for food_loc in food_locations:
-            distance = get_distance(food_loc)
-            if distance < closest_distance:
-                closest_distance = distance
-                closest_food = food_loc
+        def sort_by_nearest(locations):
+            objs = []
+            closest_obj = None
+            shortest_distance = float('inf')    
+            for obj_loc in locations:
+                distance = manhattan_distance(obj_loc)
+                if distance < shortest_distance:
+                    shortest_distance = distance
+                    closest_obj = obj_loc
+                    objs.append(closest_obj)
+            return objs
         
-        return move_to_food(closest_food)
+        def sort_by_furthest(locations):
+            objs = sort_by_nearest(locations)
+            objs.reverse()
+            return objs
+        
+        def get_nearest(locations):
+            objs = sort_by_nearest(locations)
+            return objs[0]
+        
+        def get_furthest(locations):
+            objs = sort_by_furthest(locations)
+            return objs[0]
+        
+        def get_nearest_food():
+            food_locations = find_locations(Food)
+            return get_nearest(food_locations)
+        
+        def get_furthest_food():
+            food_locations = find_locations(Food)
+            return get_furthest(food_locations)
+        
+        def get_nearest_forager():
+            forager_locations = find_locations(Forager)
+            return get_nearest(forager_locations)
+        
+        def get_furthest_forager():
+            forager_locations = find_locations(Forager)
+            return get_furthest(forager_locations)
+        
+        self.current_decision = random.choice(['nearest food', 'furthest food', 
+                                 'nearest forager', 'furthest forager'])
+        
+        # attributes should lead foragers to making decisions but
+        # there must be stochasticity involved as well
+        # self.target_location = decision
+        # TODO make a decision out from the available options
+        # self.target_location = get_coordinates(decision)
+        if self.current_coordinates == self.target_coordinates or self.target_coordinates == None:
+            # make a new decision
+            self.__log_statement(f'Forager {self.id} is looking for the {self.current_decision}')
+            
+        if self.current_decision == 'nearest food':
+            self.target_coordinates = get_nearest_food()
+        elif self.current_decision == 'furthest food':
+            self.target_coordinates = get_furthest_food()
+        elif self.current_decision == 'nearest forager':
+            self.target_coordinates = get_nearest_forager()
+        elif self.current_decision == 'furthest forager':
+            self.target_coordinates = get_furthest_forager()
+            
+        return get_next_step_to(self.target_coordinates)
         
     def eat(self, food: Food) -> None:
         """
