@@ -2,7 +2,7 @@ from simulation.agents.forager import Forager
 from simulation.agents.hunter import Hunter
 from simulation.agents.food import Food
 from simulation.agents.ravine import Ravine
-from simulation.environment.grid import Grid
+from simulation.grid import Grid
 
 r1 = Ravine()
 r2 = Ravine()
