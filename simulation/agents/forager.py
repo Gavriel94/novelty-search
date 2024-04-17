@@ -51,16 +51,6 @@ class Forager(Mammal):
         # Unused attributes
         # self.last_location = None
         # self.explored_coordinates = []
-        
-    def set_motivation(self) -> None:
-        """
-        The novelty search function
-        """
-        self.motivation = random.choice(['nearest food', 'furthest food', 
-                                         'nearest forager', 'furthest forager',
-                                         'most sustenance', 'most compatible mate'])
-        
-        self.__log_statement(f'Forager {self.id} is looking for the {self.motivation}.\n')
 
     def get_next_step(self, environment) -> Tuple[int, int]:
         """
@@ -73,8 +63,10 @@ class Forager(Mammal):
             Tuple[int, int]: x, y coordinate to move the forager to.
         """
         actions = ForagerActions(environment, self)
+        
         if self.motivation == None:
-            self.set_motivation()
+            self.motivation = actions.set_motivation()
+            self.__log_statement(f'Forager {self.id} is looking for the {self.motivation}.\n')
             
         if self.motivation == 'nearest food':
             self.target_coords = actions.nearest_food()
@@ -413,15 +405,36 @@ class Forager(Mammal):
 
 # TODO document this
 class ForagerActions():
+    """
+    The "brain" of the Forager. 
+    
+    ForagerActions is responsible for setting the motivation of the 
+    forager, and calculating the steps to reach it.
+    """
     def __init__(self, environment, forager):
         self.environment = environment
         self.current_forager = forager
+        # All foods and foragers in the environment
         self.foods = self.find(Food)
         self.foragers = self.find(Forager)
         
+    def set_motivation(self) -> None:
+        """
+        The novelty search function.
+        Right now it picks a motivation at random but this should be informed by attributes, 
+        stochasticity and based somewhat off the last decision as well? 
+        
+        Does there need to be some mechanism for reward based on previous moves?
+        """
+        # TODO this
+        motivation = random.choice(['nearest food', 'furthest food', 
+                                         'nearest forager', 'furthest forager',
+                                         'most sustenance', 'most compatible mate'])
+        return motivation
+        
     def find(self, object_class: Food | Forager) -> list:
         """
-        List of (x,y) coordinates for each class object.
+        List of (x,y) coordinates for food or forager objects.
         """
         objs = []
         for y in range(self.environment.height):
@@ -444,6 +457,12 @@ class ForagerActions():
         return objs
         
     def nearest_food(self):
+        """
+        Finds the (x,y) coordinate of the nearest food.
+
+        Returns:
+            tuple: (x,y)
+        """
         food_locations = []
         for food in self.foods:
             food_locations.append(food['location'])
@@ -453,6 +472,12 @@ class ForagerActions():
         return output
     
     def furthest_food(self):
+        """
+        Finds the (x,y) coordinate of the furthest food.
+
+        Returns:
+            tuple: (x,y)
+        """
         food_locations = []
         for food in self.foods:
             food_locations.append(food['location'])
@@ -462,6 +487,12 @@ class ForagerActions():
         return output
     
     def most_sustenance(self):
+        """
+        Finds the (x,y) coordinate of the most sustenance giving food.
+
+        Returns:
+            tuple: (x,y)
+        """
         food_locations = []
         food_sus = float('inf')
         for food in self.foods:
@@ -474,6 +505,12 @@ class ForagerActions():
         return output
                 
     def nearest_forager(self):
+        """
+        Finds the (x,y) coordinate of the nearest forager.
+
+        Returns:
+            tuple: (x,y)
+        """
         if len(self.foragers) == 0:
             self.current_forager.__log_statement(f'{self.current_forager.id} cannot find any potential mates.\n'
                                     'Looking for nearest food instead.')
@@ -491,6 +528,12 @@ class ForagerActions():
             return output
     
     def furthest_forager(self):
+        """
+        Finds the (x,y) coordinate of the furthest forager.
+
+        Returns:
+            tuple: (x,y)
+        """
         if len(self.foragers) == 0:
             self.current_forager.__log_statement(f'{self.current_forager.id} cannot find any potential mates.\n'
                                     'Looking for furthest food instead.')
@@ -508,7 +551,13 @@ class ForagerActions():
             return self.get_furthest(forager_locations)
         
     def most_compatible(self):
-        # TODO change food in variable name to forager
+        """
+        Finds the (x,y) coordinate of the forager with the most similar
+        compatibility threshold.
+
+        Returns:
+            tuple: (x,y)
+        """
         if len(self.foragers) == 0:
             self.current_forager.__log_statement(f'{self.current_forager.id} cannot find any potential mates.\n'
                     'Looking for most sustenance instead.')
@@ -527,7 +576,7 @@ class ForagerActions():
         
     def manhattan_distance(self, object_loc):
         """
-        Manhattan distance between self and object.
+        Manhattan distance between self.current_forager and object.
 
         Args:
             object_loc (tuple(int,int)): x, y coordinate of object.
@@ -536,6 +585,15 @@ class ForagerActions():
                 abs(object_loc[1] - self.current_forager.current_coords[1]))
     
     def sort_by_nearest(self, locations):
+        """
+        Sort a list of food or forager objects in ascending order
+
+        Args:
+            locations (list): list of (x,y) coordinates
+
+        Returns:
+            list: ordered list of (x,y) coordinates
+        """
         objs = []
         closest_obj = None
         shortest_distance = float('inf')    
@@ -548,15 +606,42 @@ class ForagerActions():
         return objs
     
     def sort_by_furthest(self, locations):
+        """
+        Sort a list of food or forager objects in descending order
+
+        Args:
+            locations (list): list of (x,y) coordinates
+
+        Returns:
+            list: ordered list of (x,y) coordinates
+        """
         objs = self.sort_by_nearest(locations)
         objs.reverse()
         return objs
     
     def get_nearest(self, locations):
+        """
+        Get the nearest object
+
+        Args:
+            locations (list): list of (x,y) coordinates
+
+        Returns:
+            tuple: (x,y) coordinate of the nearest object
+        """
         objs = self.sort_by_nearest(locations)
         return objs[0]
     
     def get_furthest(self, locations):
+        """
+        Get the furthest object
+
+        Args:
+            locations (list): list of (x,y) coordinates
+
+        Returns:
+            tuple: (x,y) coordinate of the furthest object
+        """
         objs = self.sort_by_furthest(locations)
         return objs[0]
     
@@ -569,6 +654,9 @@ class InvalidForager(Exception):
         super().__init__(self.message)
         
 class TargetError(Exception):
+    """
+    Ensure the Forager has a motivation.
+    """
     def __init__(self, message):
         super().__init__(message)
         
