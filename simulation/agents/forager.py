@@ -85,6 +85,7 @@ class Forager(Mammal):
         
         next_step = self.__get_next_coordinates(self.target_coords)
         if next_step == self.target_coords:
+            self.__log_statement(f'Forager {self.id} has reached the {self.motivation}.')
             self.motivation = None
         return next_step
             
