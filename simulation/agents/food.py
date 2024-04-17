@@ -30,6 +30,5 @@ class Food():
         return shortuuid.random(length=4)
         
     def __str__(self) -> str:
-        return (f'{self.name.title()}: '
-    f'{self.sustenance_granted} sustenance.\n')
+        return (f'{self.name.title()}: {self.sustenance_granted} sustenance.\n')
         
