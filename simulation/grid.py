@@ -38,10 +38,10 @@ class Grid():
         Raises:
             MoveError: Simulation ends if an invalid move has been made.
         """
-        for step in range(steps):
-            print('*' + '-' * 52 + '*')
-            print(f"| {'Step'} {step:<30} {len(self.foragers):>5} Foragers |")
-            print('*' + '-' * 52 + '*')
+        for i, step in enumerate(range(steps)):
+            print('*' + '*' * 52 + '*')
+            print(f"{'Step'} {step:<45} ")
+            # print('*' + '*' * 52 + '*')
             # self.display_grid()
             # print('*' + '-' * 52 + '*')
             
@@ -61,14 +61,13 @@ class Grid():
                     self.grid[new_y][new_x] = self.grid[from_y][from_x]
                     self.grid[from_y][from_x] = None
             
-            for forager in self.foragers:
+            for i, forager in enumerate(self.foragers):
                 if step % 10 == 0:
                     forager.mated_with.clear()
                     forager.uncompatible_with.clear()
                 if not forager.alive:
                     continue
-                print()
-                forager.log_dynamic_attributes(display_attributes)
+                forager.log_dynamic_attributes(display_attributes, i)
                 print()
                 to_x, to_y = forager.get_next_step(self)
                 target_loc = self.grid[to_y][to_x]
@@ -103,10 +102,10 @@ class Grid():
                 else:
                     raise MoveError
                 print('-' * 54)
-            self.display_grid()
+            self.display_grid(step)
             print('*' + '-' * 52 + '*')
             if step != steps - 1:                
-                print('\n'*3) 
+                print() 
             
     def setup_environment(self, objects: list) -> None:
         """
@@ -120,7 +119,7 @@ class Grid():
         for object in objects:
             self.__place_object(object)
             
-    def display_grid(self) -> None:
+    def display_grid(self, step) -> None:
         """
         Displays the grid and its inhabitants in the console.
         """
@@ -135,6 +134,8 @@ class Grid():
         if len(self.grid_history) > 1:
             previous_grid = self.grid_history[-2]
             current_grid = self.grid
+            print()
+            print(f'Step {step} Map\n')
             # print(f"{f'Step {len(self.grid_history) - 1}':>12}     ------->     {f'Step {len(self.grid_history)}':<8}")
             # print(f"{f'Step {len(self.grid_history) - 1}':>12}")
             for prev_row, current_row in zip(previous_grid, current_grid):
@@ -144,6 +145,7 @@ class Grid():
         else:
             for row in self.grid:
                 print(" ".join([d.get(type(cell), '.') for cell in row]))
+        print()
     
     def get_forager_logs(self, save_as_txt: bool):
         print('-' * 72, '\n')
@@ -289,7 +291,7 @@ class Grid():
         from_x = forager.current_coords[0]
         from_y = forager.current_coords[1]
         hunter = self.grid[to_y][to_x]
-        win, decision = forager.engage_hunter(hunter)
+        decision, win = forager.engage_hunter(hunter)
         if decision == 'fight' and win:
             self.grid[to_y][to_x] = self.grid[from_y][from_x]
             self.grid[from_y][from_x] = None
@@ -300,23 +302,20 @@ class Grid():
             # remove forager
             self.grid[from_y][from_x] = None
             self.foragers.remove(forager)
-            if replace:
-                # replace with new forager
-                new_forager = Forager()
-                self.__place_object(new_forager)
-                self.foragers.append(new_forager)
         elif decision == 'flee' and win:
             # forager is placed in a random location
             self.grid[from_y][from_x] = None
             self.__place_object(forager)
         elif decision == 'flee' and not win:
-            # replace with new forager
+            # remove forager
             self.grid[from_y][from_x] = None
             self.foragers.remove(forager)
-            if replace:
-                new_forager = Forager()
-                self.__place_object(new_forager)
-                self.foragers.append(new_forager)
+        
+        if not win and replace:
+            # add new forager back to the environment
+            new_forager = Forager()
+            print('adding new forager', new_forager.id)
+            self.__place_object(new_forager)
                 
     def __forager_starves(self, forager: Forager, replace: bool) -> None:
         from_x = forager.current_coords[0]
@@ -327,8 +326,6 @@ class Grid():
             # replace with new forager
             new_forager = Forager()
             self.__place_object(new_forager)
-            self.foragers.append(new_forager)
-            
                 
     def __forager_finds_ravine(self, 
                                forager: Forager, 
