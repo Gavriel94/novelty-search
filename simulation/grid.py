@@ -62,6 +62,8 @@ class Grid():
                     self.grid[from_y][from_x] = None
                 
             for forager in self.foragers:
+                if step % 5 == 0:
+                    forager.mated_with.clear()
                 if not forager.alive:
                     continue
                 forager.log_dynamic_attributes(display_attributes)
