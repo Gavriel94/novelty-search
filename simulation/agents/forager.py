@@ -19,13 +19,7 @@ class Forager(Mammal):
         strength = float(randrange(2, 8))
         endurance = float(randrange(2, 9))
         super().__init__(agility, 
-                        perception, strength, endurance)
-        
-        # Default attributes
-        self.compatability_threshold = self.__get_compatibility()
-        self.type = 'Forager'
-        self.alive = True
-        
+                        perception, strength, endurance)        
         if sex == None:
             self.sex = choice(['M', 'F'])
         else:
@@ -34,235 +28,71 @@ class Forager(Mammal):
             raise ValueError('Sex must be \'M\' or \'F\'')
         
         # Config file attributes
-        with open('simulation/agents/forager_config.toml', 'rb') as f:
+        with open('simulation/forager_config.toml', 'rb') as f:
             self.config = tomllib.load(f)
             self.hunger = self.__validate(self.config['hunger'], 10.0)
             self.bravery = self.__validate(self.config['bravery'], 10.0)
             self.compat_diff = self.__validate(self.config['compat_diff'], 1)
             self.hunger_combin = self.__validate(self.config['hunger_combinator'], 1)
         
+        # Default attributes
+        self.compatability_threshold = self.__get_compatibility()
+        self.type = 'Forager'
+        self.alive = True
         # Navigational attributes
         self.current_coords = None
         self.target_coords = None
         self.motivation = None # "nearest food"/"furthest forager" etc"
         self.log = [] # log of actions taken
         self.attribute_log = [] # log of dynamic attribute values
-        
         # Unused attributes
         # self.last_location = None
         # self.explored_coordinates = []
-    
-    def get_next_step(self, environment) -> Tuple[int, int]:
+        
+    def set_motivation(self) -> None:
         """
-        The next step to target coordinates.
+        The novelty search function
         """
-        if self.motivation == None:
-            self.set_target_coords(environment)
-        
-        # finds new target if targeted food is eaten by another forager 
-        if ('food' in self.motivation.split(' ') 
-            or 'sustenance' in self.motivation.split(' ') 
-            and environment.grid[self.target_coords[1]][self.target_coords[0]]):
-            self.motivation = None
-            self.target_coords = None
-            self.set_target_coords(environment)
-        
-        # find coordinate of next step
-        next_step = self.__get_next_coordinates(self.target_coords) 
-        
-        # resets target variables to find a new target next time
-        if next_step == self.target_coords:
-            self.motivation = None
-            self.target_coords = None
-            
-        return next_step
-    
-    def set_target_coords(self, environment):
-        """
-        This is like the brain of the forager. This determines the foragers actions.
-        * The definition for novel search should be in here!
-        gets the coordinates the forager needs to get food/a mate
-        
-        Can find food or foragers ordered by distance, 
-        forager compatibility and food sustenance given
-        
-        Args:
-            environment (Grid): current simulation state.
-        """
-        
-        # * -- Beginning of helper methods -- * 
-        
-        def find_items(object_class: Food | Forager) -> list:
-            """
-            List of (x,y) coordinates for each Food object.
-            """
-            objs = []
-            for y in range(environment.height):
-                for x in range(environment.width):
-                    if isinstance(environment.grid[y][x], object_class):
-                        grid_obj = environment.grid[y][x]
-                        if grid_obj.id == self.id:
-                            continue
-                        if object_class == Food:
-                            obj_dict = {}
-                            obj_dict['id'] = grid_obj.id
-                            obj_dict['type'] = 'Food'
-                            obj_dict['key_attribute'] = grid_obj.sustenance_granted
-                            obj_dict['location'] = (x,y)
-                            objs.append(obj_dict)
-                        elif object_class == Forager:
-                            obj_dict = {}
-                            obj_dict['type'] = 'Forager'
-                            obj_dict['key_attribute'] = grid_obj.compatability_threshold
-                            obj_dict['location'] = (x,y)
-                            objs.append(obj_dict)
-            return objs
-        
-        def manhattan_distance(object_loc):
-            """
-            Manhattan distance between self and object.
-
-            Args:
-                object_loc (tuple(int,int)): x, y coordinate of object.
-            """
-            return (abs(object_loc[0] - self.current_coords[0]) + 
-                    abs(object_loc[1] - self.current_coords[1]))
-        
-        def sort_by_nearest(locations):
-            objs = []
-            closest_obj = None
-            shortest_distance = float('inf')    
-            for obj_loc in locations:
-                distance = manhattan_distance(obj_loc)
-                if distance < shortest_distance:
-                    shortest_distance = distance
-                    closest_obj = obj_loc
-                    objs.append(closest_obj)
-            return objs
-        
-        def sort_by_furthest(locations):
-            objs = sort_by_nearest(locations)
-            objs.reverse()
-            return objs
-        
-        def get_nearest(locations):
-            objs = sort_by_nearest(locations)
-            return objs[0]
-        
-        def get_furthest(locations):
-            objs = sort_by_furthest(locations)
-            return objs[0]
-        
-        def nearest_food():
-            foods = find_items(Food)
-            food_locations = []
-            for food in foods:
-                food_locations.append(food['location'])
-            output = get_nearest(food_locations)
-            if output == None:
-                raise ValueError(f'Output: {output}')
-            return output
-        
-        def furthest_food():
-            foods = find_items(Food)
-            food_locations = []
-            for food in foods:
-                food_locations.append(food['location'])
-            output = get_furthest(food_locations)
-            if output == None:
-                raise ValueError(f'Output: {output}')
-            return output
-        
-        def most_sustenance():
-            foods = find_items(Food)
-            food_locations = []
-            food_sus = float('inf')
-            for food in foods:
-                if food['key_attribute'] < food_sus:
-                    food_sus = food['key_attribute']
-                    food_locations.append(food)
-            output = food_locations[-1]['location']
-            if output == None:
-                raise ValueError(f'Output: {output}')
-            return output
-                    
-        def nearest_forager():
-            foragers = find_items(Forager)
-            if len(foragers) == 0:
-                self.__log_statement(f'{self.id} cannot find any potential mates.\n'
-                                     'Looking for nearest food instead.')
-                output = nearest_food()
-                if output == None:
-                    raise ValueError(f'Output: {output}')
-                return output
-            else:
-                forager_locations = []
-                for forager in foragers:
-                    forager_locations.append(forager['location'])
-                output = get_nearest(forager_locations)
-                if output == None:
-                    raise ValueError(f'Output: {output}')
-                return output
-        
-        def furthest_forager():
-            foragers = find_items(Forager)
-            if len(foragers) == 0:
-                self.__log_statement(f'{self.id} cannot find any potential mates.\n'
-                                     'Looking for furthest food instead.')
-                output = furthest_food()
-                if output == None:
-                    raise ValueError(f'Output: {output}')
-                return furthest_food()
-            else:
-                forager_locations = []
-                for forager in foragers:
-                    forager_locations.append(forager['location'])
-                output = get_furthest(forager_locations)
-                if output == None:
-                    raise ValueError(f'Output: {output}')
-                return get_furthest(forager_locations)
-            
-        def most_compatible():
-            # TODO change food in variable name to forager
-            foods = find_items(Forager)
-            if len(foods) == 0:
-                self.__log_statement(f'{self.id} cannot find any potential mates.\n'
-                        'Looking for most sustenance instead.')
-                return most_sustenance()
-            else:
-                food_locations = []
-                food_sus = float('inf')
-                for food in foods:
-                    if food['key_attribute'] < food_sus:
-                        food_sus = food['key_attribute']
-                        food_locations.append(food)
-                output = food_locations[-1]['location']
-                if output == None:
-                    raise ValueError(f'Output: {output}')
-                return output
-            
-        # * -- End of helper methods -- *
-        
         self.motivation = random.choice(['nearest food', 'furthest food', 
-                                                'nearest forager', 'furthest forager',
-                                                'most sustenance', 'most compatible mate'])
+                                         'nearest forager', 'furthest forager',
+                                         'most sustenance', 'most compatible mate'])
+        print(self.motivation)
         
         self.__log_statement(f'Forager {self.id} is looking for the {self.motivation}.\n')
-        
+
+    def get_next_step(self, environment) -> Tuple[int, int]:
+        """
+        Gets the (x, y) coordinate to the next step on its path.
+
+        Args:
+            environment (Grid): The simulation environment.
+
+        Returns:
+            Tuple[int, int]: x, y coordinate to move the forager to.
+        """
+        actions = ForagerActions(environment, self)
+        self.set_motivation()
         if self.motivation == 'nearest food':
-            self.target_coords = nearest_food()
+            self.target_coords = actions.nearest_food()
+            print('target_coords', self.target_coords)
         elif self.motivation == 'furthest food':
-            self.target_coords = furthest_food()
+            self.target_coords = actions.furthest_food()
+            print('target_coords', self.target_coords)
         elif self.motivation == 'nearest forager':
-            self.target_coords = nearest_forager()
+            self.target_coords = actions.nearest_forager()
+            print('target_coords', self.target_coords)
         elif self.motivation == 'furthest forager':
-            self.target_coords = furthest_forager()
+            self.target_coords = actions.furthest_forager()
+            print('target_coords', self.target_coords)
         elif self.motivation == 'most sustenance':
-            self.target_coords = most_sustenance()
+            self.target_coords = actions.most_sustenance()
+            print('target_coords', self.target_coords)
         elif self.motivation == 'most compatible mate':
-            self.target_coords = most_compatible()
+            self.target_coords = actions.most_compatible()
+            print('target_coords', self.target_coords)
         else:
-            raise TargetError(f'Unrecognised target coordinates {self.target_coords}. Current target: {self.motivation}')
+            raise TargetError(f'Invalid motivation: {self.motivation}')
+        return self.target_coords
             
     def eat(self, food: Food) -> None:
         """
@@ -460,31 +290,6 @@ class Forager(Mammal):
             with open(f'simulation/logs/{self.id}_log.txt', 'r') as f:
                 for line in self.log:
                     f.write(line)
-                    
-    def __get_next_coordinates(self, object_loc):
-            """
-            Get's coordinates of step closer to object.
-            
-            Args:
-                object_loc (tuple(int,int)): x, y coordinate of object.
-            """
-            # TODO document this properly
-            new_x, new_y = 0, 0
-            if (abs(object_loc[0] - self.current_coords[0]) > 
-                abs(object_loc[1] - self.current_coords[1])):
-                if object_loc[0] > self.current_coords[0]:
-                    new_x = 1
-                elif object_loc[0] < self.current_coords[0]:
-                    new_x = -1
-                new_x += self.current_coords[0]
-                return new_x, self.current_coords[1]
-            else:
-                if object_loc[1] > self.current_coords[1]:
-                    new_y = 1
-                elif object_loc[1] < self.current_coords[1]:
-                    new_y = -1
-                new_y += self.current_coords[1]
-                return self.current_coords[0], new_y
     
     def __check_death(self) -> 'InvalidForager':
         """
@@ -574,6 +379,155 @@ class Forager(Mammal):
         
     def __str__(self) -> str:
         return f'Forager {self.id}.\n'
+
+# TODO document this
+class ForagerActions():
+    def __init__(self, environment, forager):
+        self.environment = environment
+        self.current_forager = forager
+        self.foods = self.find(Food)
+        self.foragers = self.find(Forager)
+        
+    def find(self, object_class: Food | Forager) -> list:
+        """
+        List of (x,y) coordinates for each class object.
+        """
+        objs = []
+        for y in range(self.environment.height):
+            for x in range(self.environment.width):
+                if isinstance(self.environment.grid[y][x], object_class):
+                    grid_obj = self.environment.grid[y][x]
+                    obj_dict = {}
+                    if grid_obj.id == self.current_forager.id:
+                        continue
+                    if object_class == Food:
+                        obj_dict['id'] = grid_obj.id
+                        obj_dict['type'] = 'Food'
+                        obj_dict['key_attribute'] = grid_obj.sustenance_granted
+                        obj_dict['location'] = (x,y)
+                    elif object_class == Forager:
+                        obj_dict['type'] = 'Forager'
+                        obj_dict['key_attribute'] = grid_obj.compatability_threshold
+                        obj_dict['location'] = (x,y)
+                    objs.append(obj_dict)
+        return objs
+        
+    def nearest_food(self):
+        food_locations = []
+        for food in self.foods:
+            food_locations.append(food['location'])
+        output = self.get_nearest(food_locations)
+        if output == None:
+            raise ValueError(f'Output: {output}')
+        return output
+    
+    def furthest_food(self):
+        food_locations = []
+        for food in self.foods:
+            food_locations.append(food['location'])
+        output = self.get_furthest(food_locations)
+        if output == None:
+            raise ValueError(f'Output: {output}')
+        return output
+    
+    def most_sustenance(self):
+        food_locations = []
+        food_sus = float('inf')
+        for food in self.foods:
+            if food['key_attribute'] < food_sus:
+                food_sus = food['key_attribute']
+                food_locations.append(food)
+        output = food_locations[-1]['location']
+        if output == None:
+            raise ValueError(f'Output: {output}')
+        return output
+                
+    def nearest_forager(self):
+        if len(self.foragers) == 0:
+            self.current_forager.__log_statement(f'{self.current_forager.id} cannot find any potential mates.\n'
+                                    'Looking for nearest food instead.')
+            output = self.nearest_food()
+            if output == None:
+                raise ValueError(f'Output: {output}')
+            return output
+        else:
+            forager_locations = []
+            for forager in self.foragers:
+                forager_locations.append(forager['location'])
+            output = self.get_nearest(forager_locations)
+            if output == None:
+                raise ValueError(f'Output: {output}')
+            return output
+    
+    def furthest_forager(self):
+        if len(self.foragers) == 0:
+            self.current_forager.__log_statement(f'{self.current_forager.id} cannot find any potential mates.\n'
+                                    'Looking for furthest food instead.')
+            output = self.furthest_food()
+            if output == None:
+                raise ValueError(f'Output: {output}')
+            return self.furthest_food()
+        else:
+            forager_locations = []
+            for forager in self.foragers:
+                forager_locations.append(forager['location'])
+            output = self.get_furthest(forager_locations)
+            if output == None:
+                raise ValueError(f'Output: {output}')
+            return self.get_furthest(forager_locations)
+        
+    def most_compatible(self):
+        # TODO change food in variable name to forager
+        if len(self.foragers) == 0:
+            self.current_forager.__log_statement(f'{self.current_forager.id} cannot find any potential mates.\n'
+                    'Looking for most sustenance instead.')
+            return self.most_sustenance()
+        else:
+            forager_locations = []
+            compatibility = float('inf')
+            for forager in self.foragers:
+                if forager['key_attribute'] < compatibility:
+                    compatibility = forager['key_attribute']
+                    forager_locations.append(forager)
+            output = forager_locations[-1]['location']
+            if output == None:
+                raise ValueError(f'Output: {output}')
+            return output
+        
+    def manhattan_distance(self, object_loc):
+        """
+        Manhattan distance between self and object.
+
+        Args:
+            object_loc (tuple(int,int)): x, y coordinate of object.
+        """
+        return (abs(object_loc[0] - self.current_forager.current_coords[0]) + 
+                abs(object_loc[1] - self.current_forager.current_coords[1]))
+    
+    def sort_by_nearest(self, locations):
+        objs = []
+        closest_obj = None
+        shortest_distance = float('inf')    
+        for obj_loc in locations:
+            distance = self.manhattan_distance(obj_loc)
+            if distance < shortest_distance:
+                shortest_distance = distance
+                closest_obj = obj_loc
+                objs.append(closest_obj)
+        return objs
+    
+    def sort_by_furthest(self, locations):
+        objs = self.sort_by_nearest(locations)
+        objs.reverse()
+        return objs
+    
+    def get_nearest(self, locations):
+        objs = self.sort_by_nearest(locations)
+        return objs[0]
+    
+    def get_furthest(self, locations):
+        objs = self.sort_by_furthest(locations)
+        return objs[0]
     
 class InvalidForager(Exception):
     """
@@ -586,3 +540,5 @@ class InvalidForager(Exception):
 class TargetError(Exception):
     def __init__(self, message):
         super().__init__(message)
+        
+        
