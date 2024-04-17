@@ -40,7 +40,7 @@ class Grid():
         """
         for step in range(steps):
             print('*' + '-' * 52 + '*')
-            print(f"| {'Time':>26} {step:<24}|")
+            print(f"| {'Step'} {step:<30} {len(self.foragers):>5} Foragers |")
             print('*' + '-' * 52 + '*')
             # self.display_grid()
             # print('*' + '-' * 52 + '*')
@@ -60,13 +60,16 @@ class Grid():
                 
                     self.grid[new_y][new_x] = self.grid[from_y][from_x]
                     self.grid[from_y][from_x] = None
-                
+            
             for forager in self.foragers:
-                if step % 5 == 0:
+                if step % 10 == 0:
                     forager.mated_with.clear()
+                    forager.uncompatible_with.clear()
                 if not forager.alive:
                     continue
+                print()
                 forager.log_dynamic_attributes(display_attributes)
+                print()
                 to_x, to_y = forager.get_next_step(self)
                 target_loc = self.grid[to_y][to_x]
                 # Forager eats food
@@ -74,27 +77,36 @@ class Grid():
                     self.__forager_finds_food(forager, to_x, to_y, replace_agent)
                 # Forager engages hunter
                 elif isinstance(target_loc, Hunter):
-                    forager.hunger_increase()
-                    self.__forager_finds_hunter(forager, to_x, to_y, replace_agent)
+                    if forager.hunger_increase():
+                        self.__forager_finds_hunter(forager, to_x, to_y, replace_agent)
+                    else:
+                        self.__forager_starves(forager, replace_agent)
                 # Forager moves through or around ravine
                 elif isinstance(target_loc, Ravine):
-                    forager.hunger_increase()
-                    self.__forager_finds_ravine(forager, to_x, to_y)
+                    if forager.hunger_increase():
+                        self.__forager_finds_ravine(forager, to_x, to_y)
+                    else:
+                        self.__forager_starves(forager, replace_agent)
                 # Forager meets another forager    
                 elif isinstance(target_loc, Forager):
                     # Produce offspring, or wait for the other forager to move
-                    forager.hunger_increase()
-                    self.__forager_finds_forager(forager, to_x, to_y)
+                    if forager.hunger_increase():
+                        self.__forager_finds_forager(forager, to_x, to_y)
+                    else:
+                        self.__forager_starves(forager, replace_agent)
                 # Forager moves from one spot to another   
                 elif target_loc == None:
-                    forager.hunger_increase()
-                    self.__forager_step(forager, to_x, to_y)
+                    if forager.hunger_increase():
+                        self.__forager_step(forager, to_x, to_y)
+                    else:
+                        self.__forager_starves(forager, replace_agent)
                 else:
                     raise MoveError
-                print('*' + '-' * 52 + '*')
+                print('-' * 54)
             self.display_grid()
             print('*' + '-' * 52 + '*')
-            print('\n'*3) 
+            if step != steps - 1:                
+                print('\n'*3) 
             
     def setup_environment(self, objects: list) -> None:
         """
@@ -120,16 +132,15 @@ class Grid():
         }
         grid_copy = [row[:] for row in self.grid]
         self.grid_history.append(grid_copy)
-        
         if len(self.grid_history) > 1:
             previous_grid = self.grid_history[-2]
-            current_grid = self.grid_history[-1]
-            print(f"{f'Step {len(self.grid_history) - 1}':>12}     ------->     {f'Step {len(self.grid_history)}':<8}")
-            print()
+            current_grid = self.grid
+            # print(f"{f'Step {len(self.grid_history) - 1}':>12}     ------->     {f'Step {len(self.grid_history)}':<8}")
+            # print(f"{f'Step {len(self.grid_history) - 1}':>12}")
             for prev_row, current_row in zip(previous_grid, current_grid):
                 previous_row_str = " ".join([d.get(type(cell), '.') for cell in prev_row])
-                current_row_str = " ".join([d.get(type(cell), '.') for cell in current_row])
-                print(f'{previous_row_str}    {current_row_str}')
+                # current_row_str = " ".join([d.get(type(cell), '.') for cell in current_row])
+                print(f'{previous_row_str}')
         else:
             for row in self.grid:
                 print(" ".join([d.get(type(cell), '.') for cell in row]))
@@ -306,6 +317,18 @@ class Grid():
                 new_forager = Forager()
                 self.__place_object(new_forager)
                 self.foragers.append(new_forager)
+                
+    def __forager_starves(self, forager: Forager, replace: bool) -> None:
+        from_x = forager.current_coords[0]
+        from_y = forager.current_coords[1]
+        self.grid[from_y][from_x] = None
+        self.foragers.remove(forager)
+        if replace:
+            # replace with new forager
+            new_forager = Forager()
+            self.__place_object(new_forager)
+            self.foragers.append(new_forager)
+            
                 
     def __forager_finds_ravine(self, 
                                forager: Forager, 
