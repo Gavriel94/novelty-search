@@ -42,7 +42,10 @@ class Forager(Mammal):
         # Navigational attributes
         self.current_coords = None
         self.target_coords = None
+        # Persistent memory
         self.motivation = None # "nearest food"/"furthest forager" etc"
+        self.mated_with = []
+        # store metrics
         self.log = [] # log of actions taken
         self.attribute_log = [] # log of dynamic attribute values
         # Unused attributes
@@ -56,7 +59,6 @@ class Forager(Mammal):
         self.motivation = random.choice(['nearest food', 'furthest food', 
                                          'nearest forager', 'furthest forager',
                                          'most sustenance', 'most compatible mate'])
-        print(self.motivation)
         
         self.__log_statement(f'Forager {self.id} is looking for the {self.motivation}.\n')
 
@@ -71,28 +73,28 @@ class Forager(Mammal):
             Tuple[int, int]: x, y coordinate to move the forager to.
         """
         actions = ForagerActions(environment, self)
-        self.set_motivation()
+        if self.motivation == None:
+            self.set_motivation()
+            
         if self.motivation == 'nearest food':
             self.target_coords = actions.nearest_food()
-            print('target_coords', self.target_coords)
         elif self.motivation == 'furthest food':
             self.target_coords = actions.furthest_food()
-            print('target_coords', self.target_coords)
         elif self.motivation == 'nearest forager':
             self.target_coords = actions.nearest_forager()
-            print('target_coords', self.target_coords)
         elif self.motivation == 'furthest forager':
             self.target_coords = actions.furthest_forager()
-            print('target_coords', self.target_coords)
         elif self.motivation == 'most sustenance':
             self.target_coords = actions.most_sustenance()
-            print('target_coords', self.target_coords)
         elif self.motivation == 'most compatible mate':
             self.target_coords = actions.most_compatible()
-            print('target_coords', self.target_coords)
         else:
             raise TargetError(f'Invalid motivation: {self.motivation}')
-        return self.target_coords
+        
+        next_step = self.__get_next_coordinates(self.target_coords)
+        if next_step == self.target_coords:
+            self.motivation = None
+        return next_step
             
     def eat(self, food: Food) -> None:
         """
@@ -208,11 +210,14 @@ class Forager(Mammal):
         """
         self.__check_death()
         partner.__check_death()
+        if partner in self.mated_with:
+            return False
         # Recalculate thresholds as Foragers may have rebalanced attributes
         self.__get_compatibility()
         partner.__get_compatibility()
         if (self.sex == 'M' and partner.sex == 'F' or 
             self.sex == 'F' and partner.sex == 'M'):
+            
             if isclose(self.compatability_threshold, 
                        partner.compatability_threshold, 
                        rel_tol=self.config['compat_diff']):
@@ -239,6 +244,7 @@ class Forager(Mammal):
         offspring = Forager()
         self.__log_statement(f'{self.id} and {partner.id} '
                           f'produced offspring {offspring.id}.\n')
+        self.mated_with.append(partner)
         return offspring
     
     def log_dynamic_attributes(self, display: bool) -> None:
@@ -379,6 +385,31 @@ class Forager(Mammal):
         
     def __str__(self) -> str:
         return f'Forager {self.id}.\n'
+    
+    def __get_next_coordinates(self, object_loc):
+            """
+            Get's coordinates of step closer to object.
+            
+            Args:
+                object_loc (tuple(int,int)): x, y coordinate of object.
+            """
+            # TODO document this properly
+            new_x, new_y = 0, 0
+            if (abs(object_loc[0] - self.current_coords[0]) > 
+                abs(object_loc[1] - self.current_coords[1])):
+                if object_loc[0] > self.current_coords[0]:
+                    new_x = 1
+                elif object_loc[0] < self.current_coords[0]:
+                    new_x = -1
+                new_x += self.current_coords[0]
+                return new_x, self.current_coords[1]
+            else:
+                if object_loc[1] > self.current_coords[1]:
+                    new_y = 1
+                elif object_loc[1] < self.current_coords[1]:
+                    new_y = -1
+                new_y += self.current_coords[1]
+                return self.current_coords[0], new_y
 
 # TODO document this
 class ForagerActions():
