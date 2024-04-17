@@ -1,9 +1,9 @@
 import random
 from typing import Tuple
-from ..agents.forager import Forager
-from ..agents.hunter import Hunter
-from ..agents.food import Food
-from ..agents.ravine import Ravine
+from .agents.forager import Forager
+from .agents.hunter import Hunter
+from .agents.food import Food
+from .agents.ravine import Ravine
 
 class Grid():
     """
