@@ -176,7 +176,7 @@ class Grid():
             if self.__get_cell(x, y) == None:
                 self.grid[y][x] = object
                 if isinstance(object, Forager):
-                    object.current_coordinates = (x, y)
+                    object.current_coords = (x, y)
                     self.foragers.append(object)
                 elif isinstance(object, Hunter):
                     self.hunters.append(object)
@@ -184,7 +184,7 @@ class Grid():
                 x, y = self.__find_random_empty_cell()
                 self.grid[y][x] = object
                 if isinstance(object, Forager):
-                    object.current_coordinates = (x, y)
+                    object.current_coords = (x, y)
                     self.foragers.append(object)
                 elif isinstance(object, Hunter):
                     self.hunters.append(object)
@@ -246,13 +246,13 @@ class Grid():
         The forager eats and takes the place of the food on the grid. 
         New food appears at a random location.
         """
-        from_x = forager.current_coordinates[0]
-        from_y = forager.current_coordinates[1]
+        from_x = forager.current_coords[0]
+        from_y = forager.current_coords[1]
         food = self.grid[to_y][to_x]
         forager.eat(food)
         self.grid[to_y][to_x] = self.grid[from_y][from_x]
         self.grid[from_y][from_x] = None
-        forager.current_coordinates = (to_x, to_y)
+        forager.current_coords = (to_x, to_y)
         if replace:
             f = Food()
             self.__place_object(f)
@@ -273,14 +273,14 @@ class Grid():
         at random. If the forager loses, it "dies" and a new forager 
         appears at a random location.
         """
-        from_x = forager.current_coordinates[0]
-        from_y = forager.current_coordinates[1]
+        from_x = forager.current_coords[0]
+        from_y = forager.current_coords[1]
         hunter = self.grid[to_y][to_x]
         win, decision = forager.engage_hunter(hunter)
         if decision == 'fight' and win:
             self.grid[to_y][to_x] = self.grid[from_y][from_x]
             self.grid[from_y][from_x] = None
-            forager.current_coordinates = (to_x, to_y)
+            forager.current_coords = (to_x, to_y)
             h = Hunter()
             self.__place_object(h)
         elif decision == 'fight' and not win:
@@ -323,7 +323,7 @@ class Grid():
             new_x = to_x + 1 if to_x + 1 < self.width else to_x - 1
             self.grid[from_y][new_x] = self.grid[from_y][from_x]
             self.grid[from_y][from_x] = None
-            forager.current_coordinates = (new_x, from_y)
+            forager.current_coords = (new_x, from_y)
             
         def vertical_step():
             """
@@ -333,10 +333,10 @@ class Grid():
             new_y = to_y + 1 if to_y + 1 < self.height else to_y - 1
             self.grid[new_y][from_x] = self.grid[from_y][from_x]
             self.grid[from_y][from_x] = None
-            forager.current_coordinates = (from_x, new_y)
+            forager.current_coords = (from_x, new_y)
             
-        from_x = forager.current_coordinates[0]
-        from_y = forager.current_coordinates[1]
+        from_x = forager.current_coords[0]
+        from_y = forager.current_coords[1]
         ravine = self.grid[to_y][to_x]
         traverse = forager.traverse_ravine(ravine)
         
@@ -348,7 +348,7 @@ class Grid():
                 if 0 <= new_x_coord < self.width and not isinstance(self.grid[to_y][new_x_coord], Ravine):
                     self.grid[to_y][new_x_coord] = self.grid[from_y][from_x]
                     self.grid[from_y][from_x] = None
-                    forager.current_coordinates = (new_x_coord, to_y)
+                    forager.current_coords = (new_x_coord, to_y)
                 else:
                     # ravine is on grid edge so can't jump over
                     vertical_step()
@@ -363,7 +363,7 @@ class Grid():
                 if 0 <= new_y_coord < self.height and not isinstance(self.grid[new_y_coord][to_x], Ravine):
                     self.grid[new_y_coord][to_x] = self.grid[from_y][from_x]
                     self.grid[from_y][from_x] = None
-                    forager.current_coordinates = (to_x, new_y_coord)
+                    forager.current_coords = (to_x, new_y_coord)
                 else:
                     # ravine is on grid edge so can't jump over
                     horizontal_step()
@@ -386,7 +386,7 @@ class Grid():
             self.__place_object(offspring)
         else:
             # foragers are incompatible, decide on something else to do.
-            forager.current_target = None
+            forager.motivation = None
     
     def __forager_step(self, 
                        forager: Forager, 
@@ -396,11 +396,11 @@ class Grid():
         There are no obstructions so the forager takes a step in the 
         direction it is heading.
         """
-        from_x = forager.current_coordinates[0]
-        from_y = forager.current_coordinates[1]
+        from_x = forager.current_coords[0]
+        from_y = forager.current_coords[1]
         self.grid[to_y][to_x] = self.grid[from_y][from_x]
         self.grid[from_y][from_x] = None
-        forager.current_coordinates = (to_x, to_y)
+        forager.current_coords = (to_x, to_y)
 
 class GridFull(Exception):
     def __init__(self):
