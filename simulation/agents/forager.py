@@ -2,6 +2,7 @@ from math import isclose
 from random import randrange, choice
 import tomllib
 from typing import Tuple
+import copy
 
 from .mammal import Mammal
 from .food import Food
@@ -40,14 +41,14 @@ class Forager(Mammal):
             self.bravery = self.__validate(self.config['bravery'], 10.0)
             self.compat_diff = self.__validate(self.config['compat_diff'], 1)
             self.hunger_combin = self.__validate(self.config['hunger_combinator'], 1)
-        
+        # region attributes
         # Default attributes
         self.compatability_threshold = self.__get_compatibility()
         self.type = 'Forager'
         self.alive = True
         # Navigational attributes
         self.current_coords = None
-        self.target_coords = None
+        self.destination_coordinates = None
         # Persistent memory
         self.motivation = None # "nearest food"/"furthest forager" etc"
         self.successful_motivations = []
@@ -78,17 +79,17 @@ class Forager(Mammal):
             self.log_statement(f'Forager {self.id} is going to find {self.motivation}.')
         
         # find the next step towards fulfilling motivation
-        self.target_coords = actions.get_next_action()
+        self.destination_coordinates = actions.get_destination_coordinates(self.motivation)
         
         # Get next step to destination 
-        next_step = actions.get_next_coordinates(self.target_coords)
-        self.explored_coords.append(next_step)
+        next_coordinate = actions.get_next_coordinate(self.destination_coordinates)
+        self.explored_coords.append(next_coordinate)
         
-        if next_step == self.target_coords:
+        if next_coordinate == self.destination_coordinates:
             self.log_statement(f'Forager {self.id} found {self.motivation}.')
             self.successful_motivations.append(self.motivation)
             self.motivation = None
-        return next_step
+        return next_coordinate
             
     def eat(self, food: Food) -> None:
         """
@@ -424,6 +425,7 @@ class ForagerActions():
         self.foragers = self.find_all(Forager)
         self.hunters = self.find_all(Hunter)
     # region motivation
+    
     def set_motivation(self) -> None:
         """
         The novelty search function.
@@ -437,10 +439,13 @@ class ForagerActions():
         choices = ['nearest food', 'furthest food', 'most sustaining food', 
                    'nearest forager', 'furthest forager', 'most compatible forager']
 
+        # foragers gain better abilities as they evolve
         if self.forager.agility > 7:
             choices.append('zig zag past hunter')
         elif self.forager.perception > 7:
             choices.append('hide from hunter')
+        elif self.forager.perception == 9 and self.forager.agility == 9:
+            choices.append('camouflage')
             
         # motivation = random.choice(choices)
         
@@ -463,26 +468,92 @@ class ForagerActions():
         # Smarter foragers are more likely to use `get_highest` for food and foragers
         # a list of choices that constantly modify choice_value
         # choice with the highest choice_value at the end (get_motivation) is the choice
+        # TODO document this
+        def step_count():
+            target_coords = self.get_destination_coordinates(choice)
+            num_steps = 0
+            forager_copy = copy.deepcopy(self.forager)
+            while forager_copy.current_coords != target_coords:
+                next_coord = self.get_next_coordinate(target_coords)
+                forager_copy.current_coords = next_coord
+                num_steps += 1
+            
+        def weight_nearest():
+            # with higher perception the forager considers more steps
+            if self.forager.perception > ATT_BOOST_1:
+                if num_steps < 8:
+                    choice_weight *= POS_WEIGHT_MULTIPLIER
+                elif num_steps > 12:
+                    choice_weight *= NEG_WEIGHT_MULTIPLIER
+                    
+                # with higher endurance the forager considers more steps 
+                if self.forager.endurance > ATT_BOOST_2:
+                    if num_steps < 12:
+                        choice_weight *= POS_WEIGHT_MULTIPLIER
+                    elif num_steps > 16:
+                        choice_weight *= NEG_WEIGHT_MULTIPLIER
+        
+        def weight_furthest():
+            # with higher perception the forager considers more steps
+            if self.forager.agility > ATT_BOOST_1:
+                if num_steps < 8:
+                    choice_weight *= POS_WEIGHT_MULTIPLIER
+                elif num_steps > 12:
+                    choice_weight *= NEG_WEIGHT_MULTIPLIER
+            # with higher endurance the forager considers more steps
+            if self.forager.endurance > ATT_BOOST_2:
+                if num_steps < 12:
+                    choice_weight *= POS_WEIGHT_MULTIPLIER
+                elif num_steps < 16:
+                    choice_weight *= NEG_WEIGHT_MULTIPLIER
+        
+        def weight_best_key_attribute():
+            # with higher endurance the forager considers more steps
+            if self.forager.endurance > ATT_BOOST_1:
+                if num_steps < 8:
+                    choice_weight *= POS_WEIGHT_MULTIPLIER
+                elif num_steps < 12:
+                    choice_weight *= NEG_WEIGHT_MULTIPLIER
+            # with higher strength the forager considers more steps
+            if self.forager.strength > ATT_BOOST_2:
+                if num_steps < 12:
+                    choice_weight *= POS_WEIGHT_MULTIPLIER
+                elif num_steps > 16:
+                    choice_weight *= NEG_WEIGHT_MULTIPLIER
+
         choice_weight = 1
+        # weigh novel motivations higher 
         if choice in self.forager.successful_motivations:
             choice_weight = choice_weight * 0.8 
         elif choice not in self.forager.successful_motivations:
             choice_weight = choice_weight * 1.5
-        # !   
-        # if most sustaining is close or far
-        # The distance the forager is from the goal should influence decision likelihood
-        # count steps from current position to target from here.
-        # while self.get_next_coordinates()
-            
-        # if 
+        
+        # what level an attribute is before it unlocks a small bost
+        ATT_BOOST_1 = 6
+        # what level an attribute is before it unlocks a significant boost
+        ATT_BOOST_2 = 8
+        POS_WEIGHT_MULTIPLIER = 1.2
+        NEG_WEIGHT_MULTIPLIER = 0.8
+        # number of steps to destination
+        num_steps = step_count()
+        
+        if choice == 'find nearest food' or choice == 'nearest forager':
+            choice_weight = weight_nearest()
+        elif choice == 'find furthest food' or choice == 'furthest forager':
+            choice_weight = weight_furthest()
+        elif choice == 'most sustaining food' or choice == 'most compatible forager':
+            choice_weight = weight_best_key_attribute()
         
         if self.forager.perception > 5:
             if choice == 'hide from hunter':
-                choice_weight = choice_weight * 1.2
+                choice_weight *= 1.2
                 
         if self.forager.endurance > 5:
             if choice == 'zig zag past hunter':
-                choice_weight = choice_weight * 1.2
+                choice_weight *= 1.2
+                
+        if choice == 'camouflage':
+            choice_weight *= 1.5
             
         if choice_weight < 0:
             raise ValueError
@@ -518,7 +589,7 @@ class ForagerActions():
                     objs.append(obj_dict)
         return objs
         
-    def nearest_food(self):
+    def find_nearest_food(self):
         """
         Finds the (x,y) coordinate of the nearest food.
 
@@ -533,7 +604,7 @@ class ForagerActions():
             raise ValueError(f'Output: {output}')
         return output
     
-    def furthest_food(self):
+    def find_furthest_food(self):
         """
         Finds the (x,y) coordinate of the furthest food.
 
@@ -548,7 +619,7 @@ class ForagerActions():
             raise ValueError(f'Output: {output}')
         return output
     
-    def most_sustenance(self):
+    def find_most_sustenance(self):
         """
         Finds the (x,y) coordinate of the most sustaining food.
 
@@ -566,7 +637,7 @@ class ForagerActions():
             raise ValueError(f'Output: {output}')
         return output
                 
-    def nearest_forager(self):
+    def find_nearest_forager(self):
         """
         Finds the (x,y) coordinate of the nearest forager.
 
@@ -577,7 +648,7 @@ class ForagerActions():
             print(self.forager)
             self.forager.log_statement(f'{self.forager.id} cannot find any potential mates.\n'
                                     'Looking for nearest food instead.')
-            output = self.nearest_food()
+            output = self.find_nearest_food()
             if output == None:
                 raise ValueError(f'Output: {output}')
             return output
@@ -590,7 +661,7 @@ class ForagerActions():
                 raise ValueError(f'Output: {output}')
             return output
     
-    def furthest_forager(self):
+    def find_furthest_forager(self):
         """
         Finds the (x,y) coordinate of the furthest forager.
 
@@ -600,10 +671,10 @@ class ForagerActions():
         if len(self.foragers) == 0:
             self.forager.log_statement(f'{self.forager.id} cannot find any potential mates.\n'
                                     'Looking for furthest food instead.')
-            output = self.furthest_food()
+            output = self.find_furthest_food()
             if output == None:
                 raise ValueError(f'Output: {output}')
-            return self.furthest_food()
+            return self.find_furthest_food()
         else:
             forager_locations = []
             for forager in self.foragers:
@@ -613,7 +684,7 @@ class ForagerActions():
                 raise ValueError(f'Output: {output}')
             return self.get_furthest(forager_locations)
         
-    def most_compatible(self):
+    def find_most_compatible_forager(self):
         """
         Finds the (x,y) coordinate of the forager with the most similar
         compatibility threshold.
@@ -626,7 +697,7 @@ class ForagerActions():
             # go and look for food
             self.forager.log_statement(f'{self.forager.id} cannot find any potential mates.\n'
                     'Looking for the most sustaining food instead.')
-            return self.most_sustenance()
+            return self.find_most_sustenance()
         else:
             forager_locations = []
             compatibility = float('inf')
@@ -710,7 +781,7 @@ class ForagerActions():
         objs = self.sort_by_furthest(locations)
         return objs[0]
 
-    def get_next_coordinates(self, object_loc):
+    def get_next_coordinate(self, object_loc):
         """
         Get's coordinates of step closer to object.
         
@@ -735,22 +806,32 @@ class ForagerActions():
             new_y += self.forager.current_coords[1]
             return self.forager.current_coords[0], new_y
         
-    def get_next_action(self):
+    def get_destination_coordinates(self, choice):
         # needs to set target_coords in the forager
         # * must return (x,y) coordinate
+        """
+        Checks the foragers motivation and finds the (x,y) coordinate in the grid
+        
+
+        Raises:
+            TargetError: _description_
+
+        Returns:
+            _type_: _description_
+        """
         target_coords = None
-        if self.forager.motivation == 'nearest food':
-            target_coords = self.nearest_food()
-        elif self.forager.motivation == 'furthest food':
-            target_coords = self.furthest_food()
-        elif self.forager.motivation == 'most sustaining food':
-            target_coords = self.most_sustenance()
-        elif self.forager.motivation == 'nearest forager':
-            target_coords = self.nearest_forager()
-        elif self.forager.motivation == 'furthest forager':
-            target_coords = self.furthest_forager()
-        elif self.forager.motivation == 'most compatible forager':
-            target_coords = self.most_compatible()
+        if choice == 'nearest food':
+            target_coords = self.find_nearest_food()
+        elif choice == 'furthest food':
+            target_coords = self.find_furthest_food()
+        elif choice == 'most sustaining food':
+            target_coords = self.find_most_sustenance()
+        elif choice == 'nearest forager':
+            target_coords = self.find_nearest_forager()
+        elif choice == 'furthest forager':
+            target_coords = self.find_furthest_forager()
+        elif choice == 'most compatible forager':
+            target_coords = self.find_most_compatible_forager()
         else:
             raise TargetError(f'Invalid motivation: {self.forager.motivation}')
         return target_coords
