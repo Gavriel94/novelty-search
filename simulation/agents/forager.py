@@ -58,7 +58,7 @@ class Forager(Mammal):
         self.attribute_log = [] # log of dynamic attribute values
         # Unused attributes
         # self.last_location = None
-        self.explored_coordinates = []
+        self.explored_coords = []
 
     def get_next_step(self, environment) -> Tuple[int, int]:
         """
@@ -153,7 +153,7 @@ class Forager(Mammal):
             # self.log_statement(f'{self.id}\'s hunger increased. ({self.old_hunger:.2f} -> {self.hunger:.2f}).\n')
         return self.alive
     
-    def engage_hunter(self, hunter: Hunter) -> bool:
+    def engage_hunter(self, hunter: Hunter) -> Tuple[str, bool]:
         """
         Determines foragers action when coming across a hunter.
 
@@ -192,11 +192,11 @@ class Forager(Mammal):
         crossing_probability = weighted_sum / 10
         if crossing_probability > ravine.skill_required:
             self.log_statement(f'{self.id} successfully '
-                              f'crossed ravine {ravine.id}')
+                              f'crossed ravine.')
             return True
         else:
             self.log_statement(f'{self.id} fails to '
-                              f'cross ravine {ravine.id}.')
+                              f'cross ravine.')
             return False
         
     def is_compatible_with(self, partner: 'Forager') -> bool:
@@ -263,12 +263,13 @@ class Forager(Mammal):
         
         # Choose attributes stochastically
         # offspring = Forager()
+        
         self.log_statement(f'{self.id} and {partner.id} '
                           f'produced offspring {offspring.id}.')
         self.mated_with.append(partner)
         return offspring
     
-    def log_dynamic_attributes(self, display: bool) -> None:
+    def log_dynamic_attributes(self, display: bool, forager_num: int) -> None:
         """
         Saves dynamic attributes to analyse changes over time.
         """
@@ -285,15 +286,20 @@ class Forager(Mammal):
         }
         self.attribute_log.append([attributes_at_timestep])
         if display:
+            print()
+            print('*' + '-' * 21 + '*')
+            print(f'| Forager {forager_num + 1:<3}| {self.id:<7}|')
+            print('*' + '-' * 21 + '*')
             # stdout attributes
             a = dict(self.attribute_log[-1][0])
             for key, value in a.items():
                 if isinstance(value, str):
-                    print(f'Forager {value}')
+                    continue
                 elif key == 'timestep':
                     continue
                 elif key == 'current_coords':
-                    print(f'(x,y): {value}')
+                    label = '(x,y)'
+                    print(f'| {label:<11}| {value} |')
                 else:
                     icon = ' '
                     if len(self.attribute_log) > 1:
@@ -301,8 +307,8 @@ class Forager(Mammal):
                             icon = '-'
                         else:
                             icon = '+'
-                    print(f'{key.title()}: {value:.2f} {icon}')
-            
+                    print(f'| {key.title():<11}| {value:>4.2f} {icon} |')
+            print('*' + '-' * 21 + '*')
     def log_statement(self, statement: str) -> None:
         """
         Saves and outputs forager actions to stdout.
@@ -367,9 +373,9 @@ class Forager(Mammal):
         else:
             self.alive = False
             self.log_statement(f'{self.id} lost to hunter {hunter.id}.')
-        return (self.alive, 'fight')
+        return ('fight', self.alive)
     
-    def __flee_hunter(self, hunter: Hunter) -> Tuple[bool, str]:
+    def __flee_hunter(self, hunter: Hunter) -> Tuple[str, bool]:
         """
         A weighted sum of the foragers agility, endurance and perception
         are compared to the hunters. The loser is made inactive.
@@ -391,7 +397,7 @@ class Forager(Mammal):
         else:
             self.alive = False
             self.log_statement(f'{self.id} was caught by hunter {hunter.id}.')
-        return (self.alive, 'flee')
+        return ('flee', self.alive)
     
     def __validate(self, att: float, max: float) -> float | ValueError:
         """
