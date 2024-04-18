@@ -458,7 +458,7 @@ class ForagerActions():
             if weight > max_weight:
                 max_weight = weight
                 best_choice = choice
-        print(weighted_choices, best_choice)
+        print('weighted_choice, best_choice', weighted_choices, best_choice)
         return best_choice
     
     # region fixing
