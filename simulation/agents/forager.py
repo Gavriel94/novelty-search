@@ -26,7 +26,7 @@ class Forager(Mammal):
             strength = float(randrange(1, 3))
             endurance = float(randrange(1, 3))
         super().__init__(agility, perception, strength, endurance)   
-             
+        
         if sex == None:
             self.sex = choice(['M', 'F'])
         else:
@@ -41,26 +41,40 @@ class Forager(Mammal):
             self.bravery = self.__validate(self.config['bravery'], 10.0)
             self.compat_diff = self.__validate(self.config['compat_diff'], 1)
             self.hunger_combin = self.__validate(self.config['hunger_combinator'], 1)
-        # region attributes
+        
         # Default attributes
         self.compatability_threshold = self.__get_compatibility()
         self.type = 'Forager'
         self.alive = True
+        
         # Navigational attributes
         self.current_coords = None
         self.destination_coordinates = None
+        
         # Persistent memory
         self.motivation = None # "nearest food"/"furthest forager" etc"
         self.successful_motivations = []
+        self.previous_choices = []
         self.mated_with = []
         self.incompatible_with = []
+        
         # store metrics
         self.log = [] # log of actions taken
         self.attribute_log = [] # log of dynamic attribute values
         # Unused attributes
-        # self.last_location = None
         self.explored_coords = []
-    # region next step
+        # offspring can evolve to have better abilities
+        self.bonus_attributes = []
+        # Previous choices can influence the current one
+        self.bias_to_choices = {
+            'nearest food': 1,
+            'furthest food': 1,
+            'most sustaining food': 1,
+            'nearest forager': 1,
+            'furthest forager': 1,
+            'most compatible forager': 1
+        }
+        
     def get_next_step(self, environment) -> Tuple[int, int]:
         """
         Gets the (x, y) coordinate to the next step on its path.
@@ -72,9 +86,8 @@ class Forager(Mammal):
             Tuple[int, int]: x, y coordinate to move the forager to.
         """
         actions = ForagerActions(environment, self)
-        
+        # region motivation
         if self.motivation == None:
-            #TODO this
             self.motivation = actions.set_motivation()
             self.log_statement(f'Forager {self.id} is going to find {self.motivation}.')
         
@@ -82,7 +95,7 @@ class Forager(Mammal):
         self.destination_coordinates = actions.get_destination_coordinates(self.motivation)
         
         # Get next step to destination 
-        next_coordinate = actions.get_next_coordinate(self.destination_coordinates)
+        next_coordinate = actions.get_next_coordinate(self.current_coords, self.destination_coordinates)
         self.explored_coords.append(next_coordinate)
         
         if next_coordinate == self.destination_coordinates:
@@ -160,6 +173,7 @@ class Forager(Mammal):
             return self.__fight_hunter(hunter)
         else:
             return self.__flee_hunter(hunter)
+        
     
     def traverse_ravine(self, ravine: Ravine) -> bool:
         """
@@ -441,16 +455,16 @@ class ForagerActions():
 
         # foragers gain better abilities as they evolve
         if self.forager.agility > 7:
-            choices.append('zig zag past hunter')
+            self.forager.bonus_attributes.append('zig zag past hunter')
         elif self.forager.perception > 7:
-            choices.append('hide from hunter')
+            self.forager.bonus_attributes('hide from hunter')
         elif self.forager.perception == 9 and self.forager.agility == 9:
-            choices.append('camouflage')
+            self.forager.bonus_attributes.append('camouflage')
             
         # motivation = random.choice(choices)
         
         # get choices and their weights
-        weighted_choices = [(choice, self.weight_choice(choice)) for choice in choices]
+        weighted_choices = [(choice, self.novelty_value(choice)) for choice in choices]
         # find the choice with the highest weight
         best_choice = None
         max_weight = 0
@@ -458,109 +472,150 @@ class ForagerActions():
             if weight > max_weight:
                 max_weight = weight
                 best_choice = choice
-        print('weighted_choice, best_choice', weighted_choices, best_choice)
+
+        for choice in weighted_choices:
+            print(choice)
+        print()
+        # now at this stage, the forager shouldn't always do the best choice
+        # there should be noise here
+        # stochasticity
+        
         return best_choice
     
     # region fixing
-    def weight_choice(self, choice):
-        # if choice is in previous moves
-        # if previous motivation was forager based, be more likely to choose food
-        # Increase weight if move produce a mate
-        # Smarter foragers are more likely to use `get_highest` for food and foragers
-        # a list of choices that constantly modify choice_value
-        # choice with the highest choice_value at the end (get_motivation) is the choice
-        # TODO document this
-        def step_count():
-            target_coords = self.get_destination_coordinates(choice)
-            num_steps = 0
-            forager_copy = copy.deepcopy(self.forager)
-            while forager_copy.current_coords != target_coords:
-                next_coord = self.get_next_coordinate(target_coords)
-                forager_copy.current_coords = next_coord
-                num_steps += 1
-            
-        def weight_nearest():
-            # with higher perception the forager considers more steps
-            if self.forager.perception > ATT_BOOST_1:
-                if num_steps < 8:
-                    choice_weight *= POS_WEIGHT_MULTIPLIER
-                elif num_steps > 12:
-                    choice_weight *= NEG_WEIGHT_MULTIPLIER
-                    
-                # with higher endurance the forager considers more steps 
-                if self.forager.endurance > ATT_BOOST_2:
-                    if num_steps < 12:
-                        choice_weight *= POS_WEIGHT_MULTIPLIER
-                    elif num_steps > 16:
-                        choice_weight *= NEG_WEIGHT_MULTIPLIER
-        
-        def weight_furthest():
-            # with higher perception the forager considers more steps
-            if self.forager.agility > ATT_BOOST_1:
-                if num_steps < 8:
-                    choice_weight *= POS_WEIGHT_MULTIPLIER
-                elif num_steps > 12:
-                    choice_weight *= NEG_WEIGHT_MULTIPLIER
-            # with higher endurance the forager considers more steps
-            if self.forager.endurance > ATT_BOOST_2:
-                if num_steps < 12:
-                    choice_weight *= POS_WEIGHT_MULTIPLIER
-                elif num_steps < 16:
-                    choice_weight *= NEG_WEIGHT_MULTIPLIER
-        
-        def weight_best_key_attribute():
-            # with higher endurance the forager considers more steps
-            if self.forager.endurance > ATT_BOOST_1:
-                if num_steps < 8:
-                    choice_weight *= POS_WEIGHT_MULTIPLIER
-                elif num_steps < 12:
-                    choice_weight *= NEG_WEIGHT_MULTIPLIER
-            # with higher strength the forager considers more steps
-            if self.forager.strength > ATT_BOOST_2:
-                if num_steps < 12:
-                    choice_weight *= POS_WEIGHT_MULTIPLIER
-                elif num_steps > 16:
-                    choice_weight *= NEG_WEIGHT_MULTIPLIER
+    def novelty_value(self, choice):
+        """
+        Each choice is transformed into a novelty value.
 
-        choice_weight = 1
-        # weigh novel motivations higher 
-        if choice in self.forager.successful_motivations:
-            choice_weight = choice_weight * 0.8 
-        elif choice not in self.forager.successful_motivations:
-            choice_weight = choice_weight * 1.5
+        Args:
+            choice (str): The motivation of the forager.
+
+        Returns:
+            _type_: _description_
+        """
+        # * --- Helper methods begin-- *
+        
+        def step_count():
+            steps = 0
+            current_coords = self.forager.current_coords
+            destination_coords = self.get_destination_coordinates(choice)
+            while current_coords != destination_coords:
+                next_coord = self.get_next_coordinate(current_coords, destination_coords)
+                current_coords = next_coord
+                steps += 1
+            return steps
+            
+        def weight_nearest(choice_weight):
+            """
+            If the foragers perception is higher than the boost threshold,
+            it now considers a destination is close if it is less than 
+            8 steps. It's then nudged toward choosing 
+            """
+            if self.forager.perception > BOOST1_THRESHOLD:
+                if num_steps < 8:
+                    choice_weight *= POS_MULTIPLIER
+                elif num_steps > 12:
+                    choice_weight *= NEG_MULTIPLIER
+                    
+            # with higher endurance the forager considers more steps 
+            if self.forager.endurance > BOOST2_THRESHOLD:
+                if num_steps < 12:
+                    choice_weight *= POS_MULTIPLIER
+                elif num_steps > 16:
+                    choice_weight *= NEG_MULTIPLIER
+            return choice_weight
+        
+        def weight_furthest(choice_weight):
+            # with higher perception the forager considers more steps
+            if self.forager.agility > BOOST1_THRESHOLD:
+                if num_steps < 8:
+                    choice_weight *= POS_MULTIPLIER
+                elif num_steps > 12:
+                    choice_weight *= NEG_MULTIPLIER
+            # with higher endurance the forager considers more steps
+            if self.forager.endurance > BOOST2_THRESHOLD:
+                if num_steps < 12:
+                    choice_weight *= POS_MULTIPLIER
+                elif num_steps < 16:
+                    choice_weight *= NEG_MULTIPLIER
+            return choice_weight
+        
+        def weight_best_key_attribute(choice_weight):
+            # with higher endurance the forager considers more steps
+            if self.forager.endurance > BOOST1_THRESHOLD:
+                if num_steps < 8:
+                    choice_weight *= POS_MULTIPLIER
+                elif num_steps < 12:
+                    choice_weight *= NEG_MULTIPLIER
+            # with higher strength the forager considers more steps
+            if self.forager.strength > BOOST2_THRESHOLD:
+                if num_steps < 12:
+                    choice_weight *= POS_MULTIPLIER
+                elif num_steps > 16:
+                    choice_weight *= NEG_MULTIPLIER
+            return choice_weight
+        
+        # * -- Helper methods end --
         
         # what level an attribute is before it unlocks a small bost
-        ATT_BOOST_1 = 6
+        BOOST1_THRESHOLD = 2
         # what level an attribute is before it unlocks a significant boost
-        ATT_BOOST_2 = 8
+        BOOST2_THRESHOLD = 2 
         # Influence on choice_weight
-        POS_WEIGHT_MULTIPLIER = 1.2
-        NEG_WEIGHT_MULTIPLIER = 0.8
+        POS_MULTIPLIER = 1.2
+        NEG_MULTIPLIER = 0.8
+    
         # number of steps to destination
         num_steps = step_count()
+        choice_weight = self.forager.bias_to_choices[choice]
+        
+        # weigh novel motivations higher 
+        if choice in self.forager.successful_motivations:
+            choice_weight = choice_weight * NEG_MULTIPLIER
+        elif choice not in self.forager.successful_motivations:
+            choice_weight = choice_weight * POS_MULTIPLIER
+        
+        print()
+        print('Possible choices')
+        print(choice, choice_weight)
+        print('Forager', self.forager.id)
+        print('initial choice_weight', choice_weight)
+        print('successful motivations', self.forager.successful_motivations)
+        print('third choice_weight', choice_weight)
         
         if choice == 'find nearest food' or choice == 'nearest forager':
-            choice_weight = weight_nearest()
+            choice_weight = weight_nearest(choice_weight)
         elif choice == 'find furthest food' or choice == 'furthest forager':
-            choice_weight = weight_furthest()
+            choice_weight = weight_furthest(choice_weight)
         elif choice == 'most sustaining food' or choice == 'most compatible forager':
-            choice_weight = weight_best_key_attribute()
+            choice_weight = weight_best_key_attribute(choice_weight)
+        print('fourth choice_weight', choice_weight)
+
+        # stronger foragers are likely to explore more
+        if (len(self.forager.bonus_attributes) > 0 
+            and choice == 'find furthest food' 
+            or choice == 'find furthest forager'): 
+            choice_weight *= 1.1
         
-        # nudge to use newer attributes
-        if choice == 'hide from hunter':
-            choice_weight *= 1.2
-        elif choice == 'zig zag past hunter':
-            choice_weight *= 1.2
-        elif choice == 'camouflage':
-            choice_weight *= 1.5
-        
-        # nudge to mate
+        # forager is hungry so nudge towards eating
+        if self.forager.hunger > 5:
+            if choice == 'find nearest food':
+                choice_weight *= 1.3
+            elif choice == 'find furthest food':
+                choice_weight *= 1.1
+            elif choice_weight == 'most sustaining food':
+                choice_weight *= 1.3
+         
+        # nudge towards mate
         if choice == 'most compatible forager':
-            choice_weight *= 1.2
-            
+            choice_weight *= 1.1
+        
+        print('fifth choice_weight', choice_weight)
+        print()
         if choice_weight < 0:
             raise ValueError
         else:
+            self.forager.bias_to_choices[choice] = choice_weight
             return choice_weight
         
     def find_all(self, object_class: Food | Forager | Hunter) -> list:
@@ -784,30 +839,30 @@ class ForagerActions():
         objs = self.sort_by_furthest(locations)
         return objs[0]
 
-    def get_next_coordinate(self, object_loc):
+    def get_next_coordinate(self, current_coords, object_loc):
         """
-        Get's coordinates of step closer to object.
+        Get's the coordinates of the next step towards to object.
         
         Args:
             object_loc (tuple(int,int)): x, y coordinate of object.
         """
         # TODO document this properly
         new_x, new_y = 0, 0
-        if (abs(object_loc[0] - self.forager.current_coords[0]) > 
-            abs(object_loc[1] - self.forager.current_coords[1])):
-            if object_loc[0] > self.forager.current_coords[0]:
+        if (abs(object_loc[0] - current_coords[0]) > 
+            abs(object_loc[1] - current_coords[1])):
+            if object_loc[0] > current_coords[0]:
                 new_x = 1
-            elif object_loc[0] < self.forager.current_coords[0]:
+            elif object_loc[0] < current_coords[0]:
                 new_x = -1
-            new_x += self.forager.current_coords[0]
-            return new_x, self.forager.current_coords[1]
+            new_x += current_coords[0]
+            return new_x, current_coords[1]
         else:
-            if object_loc[1] > self.forager.current_coords[1]:
+            if object_loc[1] > current_coords[1]:
                 new_y = 1
-            elif object_loc[1] < self.forager.current_coords[1]:
+            elif object_loc[1] < current_coords[1]:
                 new_y = -1
-            new_y += self.forager.current_coords[1]
-            return self.forager.current_coords[0], new_y
+            new_y += current_coords[1]
+            return current_coords[0], new_y
         
     def get_destination_coordinates(self, choice):
         # needs to set target_coords in the forager
