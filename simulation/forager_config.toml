@@ -9,4 +9,4 @@ compat_diff = 0.1 # 0 <= x <= 1
 
 # The effect hunger has on the other attributes. 
 # A higher hunger combinator makes more drastic changes
-hunger_combinator = 0.3 # 0 <= x <= 1
+hunger_combinator = 0.1 # 0 <= x <= 1
