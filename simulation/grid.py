@@ -64,7 +64,7 @@ class Grid():
             for forager in self.foragers:
                 if step % 10 == 0:
                     forager.mated_with.clear()
-                    forager.uncompatible_with.clear()
+                    forager.incompatible_with.clear()
                 if not forager.alive:
                     continue
                 print()
