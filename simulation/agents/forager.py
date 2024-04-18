@@ -9,7 +9,7 @@ from .hunter import Hunter
 from .ravine import Ravine
 
 # ForagerActions: class appended to bottom of file
-
+# region Forager
 class Forager(Mammal):
     def __init__(self, sex: str = None, attribute_dict: dict = None):
         # Super attributes
@@ -20,10 +20,10 @@ class Forager(Mammal):
             strength = attribute_dict['strength']
             endurance = attribute_dict['endurance']
         else:
-            agility = float(randrange(1, 5))
-            perception = float(randrange(1, 5))
-            strength = float(randrange(1, 5))
-            endurance = float(randrange(1, 5))
+            agility = float(randrange(1, 3))
+            perception = float(randrange(1, 3))
+            strength = float(randrange(1, 3))
+            endurance = float(randrange(1, 3))
         super().__init__(agility, perception, strength, endurance)   
              
         if sex == None:
@@ -59,7 +59,7 @@ class Forager(Mammal):
         # Unused attributes
         # self.last_location = None
         self.explored_coords = []
-
+    # region next step
     def get_next_step(self, environment) -> Tuple[int, int]:
         """
         Gets the (x, y) coordinate to the next step on its path.
@@ -73,27 +73,17 @@ class Forager(Mammal):
         actions = ForagerActions(environment, self)
         
         if self.motivation == None:
+            #TODO this
             self.motivation = actions.set_motivation()
             self.log_statement(f'Forager {self.id} is going to find {self.motivation}.')
         
-        # Get destination coordinates
-        if self.motivation == 'nearest food':
-            self.target_coords = actions.nearest_food()
-        elif self.motivation == 'furthest food':
-            self.target_coords = actions.furthest_food()
-        elif self.motivation == 'most sustaining food':
-            self.target_coords = actions.most_sustenance()
-        elif self.motivation == 'nearest forager':
-            self.target_coords = actions.nearest_forager()
-        elif self.motivation == 'furthest forager':
-            self.target_coords = actions.furthest_forager()
-        elif self.motivation == 'most compatible forager':
-            self.target_coords = actions.most_compatible()
-        else:
-            raise TargetError(f'Invalid motivation: {self.motivation}')
+        # find the next step towards fulfilling motivation
+        self.target_coords = actions.get_next_action()
+        
         # Get next step to destination 
-        next_step = self.__get_next_coordinates(self.target_coords)
-        self.explored_coordinates.append(next_step)
+        next_step = actions.get_next_coordinates(self.target_coords)
+        self.explored_coords.append(next_step)
+        
         if next_step == self.target_coords:
             self.log_statement(f'Forager {self.id} found {self.motivation}.')
             self.successful_motivations.append(self.motivation)
@@ -309,6 +299,7 @@ class Forager(Mammal):
                             icon = '+'
                     print(f'| {key.title():<11}| {value:>4.2f} {icon} |')
             print('*' + '-' * 21 + '*')
+            
     def log_statement(self, statement: str) -> None:
         """
         Saves and outputs forager actions to stdout.
@@ -333,7 +324,7 @@ class Forager(Mammal):
             with open(f'simulation/logs/{self.id}_log.txt', 'r') as f:
                 for line in self.log:
                     f.write(line)
-    
+    # region private
     def __check_death(self) -> 'InvalidForager':
         """
         Check to ensure dead foragers do not perform actions.
@@ -415,32 +406,8 @@ class Forager(Mammal):
         
     def __str__(self) -> str:
         return f'Forager {self.id}.\n'
-    
-    def __get_next_coordinates(self, object_loc):
-            """
-            Get's coordinates of step closer to object.
-            
-            Args:
-                object_loc (tuple(int,int)): x, y coordinate of object.
-            """
-            # TODO document this properly
-            new_x, new_y = 0, 0
-            if (abs(object_loc[0] - self.current_coords[0]) > 
-                abs(object_loc[1] - self.current_coords[1])):
-                if object_loc[0] > self.current_coords[0]:
-                    new_x = 1
-                elif object_loc[0] < self.current_coords[0]:
-                    new_x = -1
-                new_x += self.current_coords[0]
-                return new_x, self.current_coords[1]
-            else:
-                if object_loc[1] > self.current_coords[1]:
-                    new_y = 1
-                elif object_loc[1] < self.current_coords[1]:
-                    new_y = -1
-                new_y += self.current_coords[1]
-                return self.current_coords[0], new_y
 
+# region Actions
 # Kept in same .py file to avoid circular import error
 class ForagerActions():
     """
@@ -456,7 +423,7 @@ class ForagerActions():
         self.foods = self.find_all(Food)
         self.foragers = self.find_all(Forager)
         self.hunters = self.find_all(Hunter)
-        
+    # region motivation
     def set_motivation(self) -> None:
         """
         The novelty search function.
@@ -488,6 +455,7 @@ class ForagerActions():
                 best_choice = choice
         return best_choice
     
+    # region fixing
     def weight_choice(self, choice):
         # if choice is in previous moves
         # if previous motivation was forager based, be more likely to choose food
@@ -500,6 +468,11 @@ class ForagerActions():
             choice_weight = choice_weight * 0.8 
         elif choice not in self.forager.successful_motivations:
             choice_weight = choice_weight * 1.5
+        # !   
+        # if most sustaining is close or far
+        # The distance the forager is from the goal should influence decision likelihood
+        # count steps from current position to target from here.
+        # while self.get_next_coordinates()
             
         # if 
         
@@ -736,6 +709,51 @@ class ForagerActions():
         """
         objs = self.sort_by_furthest(locations)
         return objs[0]
+
+    def get_next_coordinates(self, object_loc):
+        """
+        Get's coordinates of step closer to object.
+        
+        Args:
+            object_loc (tuple(int,int)): x, y coordinate of object.
+        """
+        # TODO document this properly
+        new_x, new_y = 0, 0
+        if (abs(object_loc[0] - self.forager.current_coords[0]) > 
+            abs(object_loc[1] - self.forager.current_coords[1])):
+            if object_loc[0] > self.forager.current_coords[0]:
+                new_x = 1
+            elif object_loc[0] < self.forager.current_coords[0]:
+                new_x = -1
+            new_x += self.forager.current_coords[0]
+            return new_x, self.forager.current_coords[1]
+        else:
+            if object_loc[1] > self.forager.current_coords[1]:
+                new_y = 1
+            elif object_loc[1] < self.forager.current_coords[1]:
+                new_y = -1
+            new_y += self.forager.current_coords[1]
+            return self.forager.current_coords[0], new_y
+        
+    def get_next_action(self):
+        # needs to set target_coords in the forager
+        # * must return (x,y) coordinate
+        target_coords = None
+        if self.forager.motivation == 'nearest food':
+            target_coords = self.nearest_food()
+        elif self.forager.motivation == 'furthest food':
+            target_coords = self.furthest_food()
+        elif self.forager.motivation == 'most sustaining food':
+            target_coords = self.most_sustenance()
+        elif self.forager.motivation == 'nearest forager':
+            target_coords = self.nearest_forager()
+        elif self.forager.motivation == 'furthest forager':
+            target_coords = self.furthest_forager()
+        elif self.forager.motivation == 'most compatible forager':
+            target_coords = self.most_compatible()
+        else:
+            raise TargetError(f'Invalid motivation: {self.forager.motivation}')
+        return target_coords
     
 class InvalidForager(Exception):
     """

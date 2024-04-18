@@ -135,7 +135,7 @@ class Grid():
             previous_grid = self.grid_history[-2]
             current_grid = self.grid
             print()
-            print(f'Step {step} Map\n')
+            # print(f'Step {step} Map\n')
             # print(f"{f'Step {len(self.grid_history) - 1}':>12}     ------->     {f'Step {len(self.grid_history)}':<8}")
             # print(f"{f'Step {len(self.grid_history) - 1}':>12}")
             for prev_row, current_row in zip(previous_grid, current_grid):
