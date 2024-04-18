@@ -64,7 +64,7 @@ class Grid():
             for i, forager in enumerate(self.foragers):
                 if step % 10 == 0:
                     forager.mated_with.clear()
-                    forager.uncompatible_with.clear()
+                    forager.incompatible_with.clear()
                 if not forager.alive:
                     continue
                 forager.log_dynamic_attributes(display_attributes, i)
