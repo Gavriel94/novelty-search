@@ -458,6 +458,7 @@ class ForagerActions():
             if weight > max_weight:
                 max_weight = weight
                 best_choice = choice
+        print(weighted_choices, best_choice)
         return best_choice
     
     # region fixing
@@ -532,6 +533,7 @@ class ForagerActions():
         ATT_BOOST_1 = 6
         # what level an attribute is before it unlocks a significant boost
         ATT_BOOST_2 = 8
+        # Influence on choice_weight
         POS_WEIGHT_MULTIPLIER = 1.2
         NEG_WEIGHT_MULTIPLIER = 0.8
         # number of steps to destination
@@ -544,16 +546,17 @@ class ForagerActions():
         elif choice == 'most sustaining food' or choice == 'most compatible forager':
             choice_weight = weight_best_key_attribute()
         
-        if self.forager.perception > 5:
-            if choice == 'hide from hunter':
-                choice_weight *= 1.2
-                
-        if self.forager.endurance > 5:
-            if choice == 'zig zag past hunter':
-                choice_weight *= 1.2
-                
-        if choice == 'camouflage':
+        # nudge to use newer attributes
+        if choice == 'hide from hunter':
+            choice_weight *= 1.2
+        elif choice == 'zig zag past hunter':
+            choice_weight *= 1.2
+        elif choice == 'camouflage':
             choice_weight *= 1.5
+        
+        # nudge to mate
+        if choice == 'most compatible forager':
+            choice_weight *= 1.2
             
         if choice_weight < 0:
             raise ValueError
