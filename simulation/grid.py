@@ -1,6 +1,6 @@
 import random
 from typing import Tuple
-from .agents.forager import Forager
+from .agents.forager import Forager, ForagerActions
 from .agents.hunter import Hunter
 from .agents.food import Food
 from .agents.ravine import Ravine
@@ -291,31 +291,57 @@ class Grid():
         from_x = forager.current_coords[0]
         from_y = forager.current_coords[1]
         hunter = self.grid[to_y][to_x]
-        decision, win = forager.engage_hunter(hunter)
-        if decision == 'fight' and win:
-            self.grid[to_y][to_x] = self.grid[from_y][from_x]
-            self.grid[from_y][from_x] = None
-            forager.current_coords = (to_x, to_y)
-            h = Hunter()
-            self.__place_object(h)
-        elif decision == 'fight' and not win:
-            # remove forager
-            self.grid[from_y][from_x] = None
-            self.foragers.remove(forager)
-        elif decision == 'flee' and win:
-            # forager is placed in a random location
+        if 'hide from hunter' in forager.bonus_attributes:
+            # Forager moves to a random location without danger
             self.grid[from_y][from_x] = None
             self.__place_object(forager)
-        elif decision == 'flee' and not win:
-            # remove forager
-            self.grid[from_y][from_x] = None
-            self.foragers.remove(forager)
-        
-        if not win and replace:
-            # add new forager back to the environment
-            new_forager = Forager()
-            print('adding new forager', new_forager.id)
-            self.__place_object(new_forager)
+        elif 'zig zag past hunter' in forager.bonus_attributes:
+            fa = ForagerActions(environment=self, forager=forager)
+            steps = fa.steps_to_choice(forager.motivation)
+            if self.grid[2] != None:
+                # Move three steps ahead
+                if self.grid[steps[2][1]][steps[2][0]] == None:
+                    self.grid[steps[2][1]][steps[2][0]] = self.grid[from_y][from_x]
+                    self.grid[from_y][from_x] = None
+                    forager.current_coords = (steps[2][0], steps[2][1])
+            elif self.grid[1] != None:
+                # move two steps ahead
+                if self.grid[steps[1][1]][steps[1][0]] == None:
+                    self.grid[steps[2][1]][steps[2][0]] = self.grid[from_y][from_x]
+                    self.grid[from_y][from_x] = None
+                    forager.current_coords = (steps[2][0], steps[2][1])
+        else:
+            if 'camouflage' in forager.bonus_attributes:
+                # self.grid[to_y][to_x] = self.grid[from_y][from_x]
+                self.grid[from_y][from_x] = None
+                forager.current_coords = (to_x, to_y)  
+            decision, win = forager.engage_hunter(hunter)
+            if decision == 'fight' and win:
+                self.grid[to_y][to_x] = self.grid[from_y][from_x]
+                self.grid[from_y][from_x] = None
+                forager.current_coords = (to_x, to_y)
+                if replace:
+                    # replace hunter 
+                    h = Hunter()
+                    self.__place_object(h)
+            elif decision == 'fight' and not win:
+                # remove forager
+                self.grid[from_y][from_x] = None
+                self.foragers.remove(forager)
+            elif decision == 'flee' and win:
+                # forager is placed in a random location
+                self.grid[from_y][from_x] = None
+                self.__place_object(forager)
+            elif decision == 'flee' and not win:
+                # remove forager
+                self.grid[from_y][from_x] = None
+                self.foragers.remove(forager)
+            
+            if not win and replace:
+                # add new forager back to the environment
+                new_forager = Forager()
+                print('adding new forager', new_forager.id)
+                self.__place_object(new_forager)
                 
     def __forager_starves(self, forager: Forager, replace: bool) -> None:
         from_x = forager.current_coords[0]
@@ -360,14 +386,18 @@ class Grid():
         from_x = forager.current_coords[0]
         from_y = forager.current_coords[1]
         ravine = self.grid[to_y][to_x]
+        # true if ravine is within foragers ability to cross
         traverse = forager.traverse_ravine(ravine)
         
-        # forager is moving horizontally
+        # forager is moving horizontally    
         if abs(to_x - from_x) > abs(to_y - from_y):
             if traverse:
                 # determine if moving left-to-right or right-to-left
                 new_x_coord = to_x + ravine.width + 1 if to_x > from_x else to_x - ravine.width - 1
-                if 0 <= new_x_coord < self.width and not isinstance(self.grid[to_y][new_x_coord], Ravine):
+                if 'fails' in forager.log[-1]:
+                    # forager already tried and failed to cross ravine
+                    vertical_step()
+                elif 0 <= new_x_coord < self.width and not isinstance(self.grid[to_y][new_x_coord], Ravine):
                     self.grid[to_y][new_x_coord] = self.grid[from_y][from_x]
                     self.grid[from_y][from_x] = None
                     forager.current_coords = (new_x_coord, to_y)
@@ -382,7 +412,10 @@ class Grid():
             if traverse:
                 # determine if moving up or down
                 new_y_coord = to_y + ravine.height + 1 if to_y > from_y else to_y - ravine.height - 1
-                if 0 <= new_y_coord < self.height and not isinstance(self.grid[new_y_coord][to_x], Ravine):
+                if 'fails' in forager.log[-1]:
+                    # forager already tried and failed to cross ravine
+                    horizontal_step()
+                elif 0 <= new_y_coord < self.height and not isinstance(self.grid[new_y_coord][to_x], Ravine):
                     self.grid[new_y_coord][to_x] = self.grid[from_y][from_x]
                     self.grid[from_y][from_x] = None
                     forager.current_coords = (to_x, new_y_coord)
