@@ -45,7 +45,6 @@ class Forager(Mammal):
             self.boost1_threshold = self.__validate(self.config['boost1_threshold'], 10)
             self.boost2_threshold = self.__validate(self.config['boost2_threshold'], 10)
             self.positive_multiplier = self.__validate(self.config['positive_multiplier'], 1)
-            self.negative_multiplier = self.__validate(self.config['negative_multiplier'], 1)
         
         # Default attributes
         self.compatability_threshold = self.__get_compatibility()
@@ -79,7 +78,7 @@ class Forager(Mammal):
             'furthest forager': random.uniform(0.1, 0.3),
             'most compatible forager': random.uniform(0.1, 0.3)
         }
-        
+    # region GNS   
     def get_next_step(self, environment) -> Tuple[int, int]:
         """
         Gets the (x, y) coordinate to the next step on its path.
@@ -91,7 +90,6 @@ class Forager(Mammal):
             Tuple[int, int]: x, y coordinate to move the forager to.
         """
         actions = ForagerActions(environment, self)
-        # region motivation
         if self.motivation == None:
             self.motivation = actions.set_motivation()
             self.log_statement(f'Forager {self.id} is going to find {self.motivation}.')
@@ -339,7 +337,7 @@ class Forager(Mammal):
             with open(f'simulation/logs/{self.id}_log.txt', 'r') as f:
                 for line in self.log:
                     f.write(line)
-    # region private
+                    
     def __check_death(self) -> 'InvalidForager':
         """
         Check to ensure dead foragers do not perform actions.
@@ -468,7 +466,7 @@ class ForagerActions():
         
         return best_choice[0]
     
-    # region fixing
+    # region NV
     def novelty_value(self, choice):
         """
         Each choice is transformed into a novelty value.
@@ -488,26 +486,20 @@ class ForagerActions():
             if (self.forager.perception > self.forager.boost1_threshold 
                 or self.forager.agility > self.forager.boost1_threshold):
                 choice_weight += math.log(self.forager.positive_multiplier + 1, 10)
-            if (self.forager.strength > self.forager.boost2_threshold
-                or self.forager.endurance > self.forager.boost2_threshold):
-                choice_weight += math.log(self.forager.positive_multiplier + 1, 10)
         elif choice == 'furthest food' or choice == 'furthest forager':
             if (self.forager.strength > self.forager.boost1_threshold
                 or self.forager.endurance > self.forager.boost1_threshold):
-                choice_weight += math.log(self.forager.positive_multiplier + 1, 10)
-            if (self.forager.agility > self.forager.boost2_threshold
-                or self.forager.perception > self.forager.boost2_threshold):
                 choice_weight += math.log(self.forager.positive_multiplier + 1, 10)
         
         if choice == 'most sustaining food':
             if (self.forager.strength > self.forager.boost2_threshold
                 or self.forager.perception > self.forager.boost2_threshold):
-                choice_weight += math.log(self.forager.positive_multiplier + 1, 10)
+                choice_weight += math.log(self.forager.positive_multiplier + 1.2, 10)
                 
         if choice == 'most compatible forager':
             if (self.forager.endurance > self.forager.boost2_threshold
                 or self.forager.agility > self.forager.boost2_threshold):
-                choice_weight += math.log(self.forager.positive_multiplier + 1, 10)
+                choice_weight += math.log(self.forager.positive_multiplier + 1.2, 10)
         
         # skilled foragers are more likely to explore     
         if (len(self.forager.bonus_attributes) > 0
