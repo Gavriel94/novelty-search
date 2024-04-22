@@ -3,43 +3,27 @@ hunger = 3 # 0 <= x <= 10
 # Initial bravery  
 bravery = 3 # 0 <= x <= 10
 
-# The allowed difference between foragers compatibility_threshold 
-# Higher compat_diff makes the foragers less "fussy", promoting more diversity
+# The maximum difference between foragers compatibility thresholds 
+# Higher compat_diff makes the foragers less "fussy" when finding potential mates 
 compat_diff = 0.3 # 0 <= x <= 1
 
 # The effect hunger has on the other attributes. 
 # A higher hunger combinator makes more drastic changes
 hunger_combinator = 0.1 # 0 <= x <= 1
 
-# How decisive the forager is on positive and negative influences of their choice
-# A higher pos multiplier means the the decision is boosted more based on attributes
-# If the forager is considering finding the nearest food, if it now has an idea that food is close by being able to count steps using its high perception. 
-# For example, with a high enough perception foragers can work out the distance of food. This influences how likely they are to pick a food related motivaton.
-# Foragers with a higher endurance will be more likely to look for the furthest food or forager.
-# Foragers with high agility are most likely to look for the furthest food
-# This gives this choice a `pos_multiplier` boost. 
+# How much influence is given to positive choices
+positive_multiplier = 0.25 # 0 <= x <= 1
 
-# foragers with attributes above these values have more decisive thinking.
+# Boosts
+# -------------------------------------------------------------------- #
+# Boosts enhance foragers decisions by making them more informed
+
+# Forager with high agility and perception are more likely to go for 
+# nearer food and foragers, whereas foragers with high strength or
+# endurance are more likely to go further for food and foragers. 
+# boost1_threshold sets a value that defines when a attriubte is "high".
+# boost2_threshold unlocks more powerful decision making, allowing the
+# forager to consider the most sustaining food or compatible forager.
+
 boost1_threshold = 4 # 0 <= x <= 10
 boost2_threshold = 6 # 0 <= x <= 10
-
-positive_multiplier = 0.25 # 0 <= x <= 1
-negative_multiplier = 0.25 # 0 <= x <= 1
-# 
-# boost1 provides a boost to food or forager motivations
-# boost2 provides an additional boost to either near or far motivations
-# 
-# boost1 = [perception, agility]
-# boost2 = [strength, endurance]
-
-# forager has a perception of 5 and agility of 7. That means its very likely to go for the nearest food
-# forager has a strength of 5 and 
-
-# perception is nearest
-# agility is nearest
-# strength is furthest
-# endurance is furthest
-# strength and perception is food
-# agility and endurance is forager
-# 
-
