@@ -388,14 +388,24 @@ class Grid():
         ravine = self.grid[to_y][to_x]
         # true if ravine is within foragers ability to cross
         traverse = forager.traverse_ravine(ravine)
+        log_match1 = f'{forager.id} successfully crossed ravine.'
+        log_match2 = f'{forager.id} fails to cross ravine.'
+        
+        print('1.', log_match1, str(forager.log[-1]))
+        print('2.', log_match2, str(forager.log[-1]))
+        if log_match1 == str(forager.log[-1]) or log_match2 == str(forager.log[-1]):
+            'this passes'
         
         # forager is moving horizontally    
         if abs(to_x - from_x) > abs(to_y - from_y):
             if traverse:
                 # determine if moving left-to-right or right-to-left
                 new_x_coord = to_x + ravine.width + 1 if to_x > from_x else to_x - ravine.width - 1
-                if 'fails' in forager.log[-1]:
-                    # forager already tried and failed to cross ravine
+                log_match1 = f'{forager.id} successfully crossed ravine.'
+                log_match2 = f'{forager.id} fails to cross ravine.'
+                # walk vertically instead of bouncing back 
+                # TODO this never becomes true for some reason
+                if log_match1 == str(forager.log[-1]) or log_match2 == str(forager.log[-1]):
                     vertical_step()
                 elif 0 <= new_x_coord < self.width and not isinstance(self.grid[to_y][new_x_coord], Ravine):
                     self.grid[to_y][new_x_coord] = self.grid[from_y][from_x]
@@ -412,7 +422,8 @@ class Grid():
             if traverse:
                 # determine if moving up or down
                 new_y_coord = to_y + ravine.height + 1 if to_y > from_y else to_y - ravine.height - 1
-                if 'fails' in forager.log[-1]:
+                if log_match1 == str(forager.log[-1]) or log_match2 == str(forager.log[-1]):
+                    horizontal_step()
                     # forager already tried and failed to cross ravine
                     horizontal_step()
                 elif 0 <= new_y_coord < self.height and not isinstance(self.grid[new_y_coord][to_x], Ravine):
