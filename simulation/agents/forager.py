@@ -1,9 +1,9 @@
-from math import isclose
+import math
 import random
 from random import randrange, choice
 import tomllib
+import numpy as np
 from typing import Tuple
-import math
 
 from .mammal import Mammal
 from .food import Food
@@ -41,6 +41,7 @@ class Forager(Mammal):
             self.hunger = self.__validate(self.config['hunger'], 10.0)
             self.bravery = self.__validate(self.config['bravery'], 10.0)
             self.compat_diff = self.__validate(self.config['compat_diff'], 1)
+            self.decay_factor = self.__validate(self.config['decay_factor'], 1)
             self.hunger_combin = self.__validate(self.config['hunger_combinator'], 1)
             self.boost1_threshold = self.__validate(self.config['boost1_threshold'], 10)
             self.boost2_threshold = self.__validate(self.config['boost2_threshold'], 10)
@@ -67,16 +68,16 @@ class Forager(Mammal):
         self.attribute_log = [] # log of dynamic attribute values
         # Unused attributes
         self.explored_coords = []
-        # offspring can evolve to have better abilities
+        # offspring evolve to have better abilities
         self.bonus_attributes = []
-        # Previous choices can influence the current one
-        self.bias_to_choices = {
-            'nearest food': random.uniform(0.1, 0.3),
-            'furthest food': random.uniform(0.1, 0.3),
-            'most sustaining food': random.uniform(0.1, 0.3),
-            'nearest forager': random.uniform(0.1, 0.3),
-            'furthest forager': random.uniform(0.1, 0.3),
-            'most compatible forager': random.uniform(0.1, 0.3)
+        # the weights of the foragers decisions and 'personality'
+        self.motivation_weights = {
+            'nearest food': random.uniform(0.01, 0.3),
+            'furthest food': random.uniform(0.01, 0.3),
+            'most sustaining food': random.uniform(0.01, 0.3),
+            'nearest forager': random.uniform(0.01, 0.3),
+            'furthest forager': random.uniform(0.01, 0.3),
+            'most compatible forager': random.uniform(0.01, 0.3)
         }
     # region GNS   
     def get_next_step(self, environment) -> Tuple[int, int]:
@@ -227,7 +228,7 @@ class Forager(Mammal):
         if (self.sex == 'M' and partner.sex == 'F' or 
             self.sex == 'F' and partner.sex == 'M'):
             
-            if isclose(self.compatability_threshold, 
+            if math.isclose(self.compatability_threshold, 
                        partner.compatability_threshold, 
                        rel_tol=self.config['compat_diff']):
                 self.log_statement(f'{self.id} ({self.sex}: {self.compatability_threshold:.2f}) '
@@ -441,6 +442,11 @@ class ForagerActions():
         """
         The forager decides on a motivation such as finding food or a mate.
         """
+        def softmax(x):
+            exp_values = [math.exp(value) for value in x]
+            sum_values = sum(exp_values)
+            return [exp_value / sum_values for exp_value in exp_values]
+            
         choices = ['nearest food', 'furthest food', 'most sustaining food', 
                    'nearest forager', 'furthest forager', 'most compatible forager']
 
@@ -454,17 +460,18 @@ class ForagerActions():
             
         # motivation = random.choice(choices)
         
-        # get choices and their weights
-        weighted_choices = [(choice, self.novelty_value(choice)) for choice in choices]
-        # sort the list in descending order
-        weighted_choices.sort(key=lambda x: x[1], reverse=True)
-        # the choice with the highest weight
-        best_choice = weighted_choices[0]
+        # weight of choices
+        novelty_values = [(self.novelty_value(choice)) for choice in choices]
+        probabilities = softmax(novelty_values)
+        choice_prob = list(zip(choices, probabilities))
+        motivation = random.choices(choice_prob, weights=[prob for _, prob in choice_prob])[0][0]
+        print(motivation)
+        # # sort the list in descending order
+        # weighted_choices.sort(key=lambda x: x[1], reverse=True)
+        # # the choice with the highest weight
+        # best_choice = weighted_choices[0]
         
-        for choice in weighted_choices:
-            print(choice)
-        
-        return best_choice[0]
+        return motivation
     
     # region NV
     def novelty_value(self, choice):
@@ -475,12 +482,13 @@ class ForagerActions():
             choice (str): The motivation of the forager.
         """
         # number of steps to destination
-        num_steps = len(self.steps_to_choice(choice))
-        choice_weight = self.forager.bias_to_choices[choice]
+        choice_weight = self.forager.motivation_weights[choice]
         
         # Lean towards novel motivations
         if choice not in self.forager.successful_motivations:
-            choice_weight = math.log(self.forager.positive_multiplier + 1.5, 10)
+            choice_weight += math.log(self.forager.positive_multiplier + 1.2, 10)
+        else:
+            choice_weight *= self.forager.decay_factor
             
         if choice == 'nearest food' or choice == 'nearest forager':
             if (self.forager.perception > self.forager.boost1_threshold 
@@ -494,32 +502,30 @@ class ForagerActions():
         if choice == 'most sustaining food':
             if (self.forager.strength > self.forager.boost2_threshold
                 or self.forager.perception > self.forager.boost2_threshold):
-                choice_weight += math.log(self.forager.positive_multiplier + 1.2, 10)
+                choice_weight += math.log(self.forager.positive_multiplier + 1.1, 10)
                 
         if choice == 'most compatible forager':
             if (self.forager.endurance > self.forager.boost2_threshold
                 or self.forager.agility > self.forager.boost2_threshold):
-                choice_weight += math.log(self.forager.positive_multiplier + 1.2, 10)
+                choice_weight += math.log(self.forager.positive_multiplier + 1.1, 10)
         
         # skilled foragers are more likely to explore     
-        if (len(self.forager.bonus_attributes) > 0
-            and choice == 'furthest food'
-            or choice == 'furthest forager'):
-            choice_weight = (choice_weight * self.forager.positive_multiplier) * 10
+        # if (len(self.forager.bonus_attributes) > 0
+        #     and choice == 'furthest food'
+        #     or choice == 'furthest forager'):
+        #     choice_weight += math.log(self.forager.positive_multiplier + 1.2, 10)
         
         # add benefits from boosts in here
         if self.forager.hunger > 5:
             # forager is hungry so lean towards eating
             if choice == 'nearest food':
-                choice_weight = (choice_weight * (self.forager.positive_multiplier * 1.2)) * 10
+                choice_weight += math.log(self.forager.positive_multiplier + 1.1, 10)
             elif choice == 'most sustaining food' and 'sniff food' in self.forager.bonus_attributes:
-                # forager can tell if the nearest food is the most sustaining so leans towards it
+                # forager knows the nearest food *is* is the most sustaining
                 if self.steps_to_choice('nearest food') == self.steps_to_choice('most sustaining food'):
-                    choice_weight = (choice_weight * (self.forager.positive_multiplier * 1.4)) * 10
-                else:
-                    choice_weight = (choice_weight * (self.forager.positive_multiplier * 1.1)) * 10
+                    choice_weight += math.log(self.forager.positive_multiplier + 1.2, 10)
             elif choice == 'furthest food':
-                choice_weight = (choice_weight * (self.forager.positive_multiplier * 1.05)) * 10
+                choice_weight += math.log(self.forager.positive_multiplier + 1.1, 10)
          
         # # nudge slightly towards mating
         # if choice == 'most compatible forager':
@@ -528,7 +534,7 @@ class ForagerActions():
         if choice_weight < 0:
             raise ValueError
         else:
-            self.forager.bias_to_choices[choice] = choice_weight
+            self.forager.motivation_weights[choice] = choice_weight
             return choice_weight
         
     def steps_to_choice(self, choice: str):

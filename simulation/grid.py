@@ -1,10 +1,13 @@
 import random
+import matplotlib.pyplot as plt
+import seaborn as sns
+sns.set_theme()
 from typing import Tuple
 from .agents.forager import Forager, ForagerActions
 from .agents.hunter import Hunter
 from .agents.food import Food
 from .agents.ravine import Ravine
-
+# region Grid
 class Grid():
     """
     The environment in which foragers search for food.
@@ -25,8 +28,10 @@ class Grid():
                        display_attributes: bool) -> None:
         """
         Runs the simulation.
-        Hunters move before foragers do. 
-        Hunters do not engage with any objects.
+        
+        - Hunters move before foragers
+        - Hunters do not eat food
+        - Hunters must walk around ravines
 
         Args:
             steps (int): Number of simulation steps.
@@ -67,6 +72,7 @@ class Grid():
                     forager.incompatible_with.clear()
                 if not forager.alive:
                     continue
+                # TODO log dynamic attributes
                 forager.log_dynamic_attributes(display_attributes, i)
                 print()
                 to_x, to_y = forager.get_next_step(self)
@@ -251,7 +257,7 @@ class Grid():
         else:
             return random.choice(empty_cells)
         
-    # region handle forager actions
+    # region begin actions
     def __forager_finds_food(self, 
                              forager: Forager, 
                              to_x: int, 
@@ -305,7 +311,7 @@ class Grid():
                     self.grid[from_y][from_x] = None
                     forager.current_coords = (steps[2][0], steps[2][1])
             elif self.grid[1] != None:
-                # move two steps ahead
+                # move two steps ahead if 3 isn't valid
                 if self.grid[steps[1][1]][steps[1][0]] == None:
                     self.grid[steps[2][1]][steps[2][0]] = self.grid[from_y][from_x]
                     self.grid[from_y][from_x] = None
@@ -315,6 +321,7 @@ class Grid():
                 # self.grid[to_y][to_x] = self.grid[from_y][from_x]
                 self.grid[from_y][from_x] = None
                 forager.current_coords = (to_x, to_y)  
+                return
             decision, win = forager.engage_hunter(hunter)
             if decision == 'fight' and win:
                 self.grid[to_y][to_x] = self.grid[from_y][from_x]
@@ -477,3 +484,12 @@ class MoveError(Exception):
     def __init__(self):
         self.message = 'Invalid forager move.\n'
         super().__init__(self.message)
+
+# region Grid Analytics
+class GridAnalytics:
+    def __init__(self, grid: Grid):
+        self.grid = grid
+    
+    def plot_choices(self):
+        pass
+        
