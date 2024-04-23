@@ -36,7 +36,7 @@ class Forager(Mammal):
             raise ValueError('Sex must be \'M\' or \'F\'')
         
         # Config file attributes
-        with open('simulation/forager_config.toml', 'rb') as f:
+        with open('assets/agents/forager_config.toml', 'rb') as f:
             self.config = tomllib.load(f)
             self.hunger = self.__validate(self.config['hunger'], 10.0)
             self.bravery = self.__validate(self.config['bravery'], 10.0)
@@ -70,7 +70,7 @@ class Forager(Mammal):
         self.explored_coords = []
         # offspring evolve to have better abilities
         self.bonus_attributes = []
-        # the weights of the foragers decisions and 'personality'
+        # the weights of the foragers decisions aka foragers 'personality'
         self.motivation_weights = {
             'nearest food': random.uniform(0.01, 0.3),
             'furthest food': random.uniform(0.01, 0.3),
@@ -79,6 +79,72 @@ class Forager(Mammal):
             'furthest forager': random.uniform(0.01, 0.3),
             'most compatible forager': random.uniform(0.01, 0.3)
         }
+        # key metrics
+        self.steps_alive = 0
+        self.motivation_metrics = {
+            'food encounters': {
+                'num encounters': 0,
+                'total sustenance gained': 0,
+                'foods tasted': []
+            },
+            'offspring produced': 0,
+            'nearest food': {
+                'times chosen': 0,
+                'successful outcomes': 0,
+                'total time': 0,
+                'average time': 0,
+            },
+            'furthest food': {
+                'times chosen': 0,
+                'successful outcomes': 0,
+                'total time': 0,
+                'average time': 0,
+            },
+            'most sustaining food': {
+                'times chosen': 0,
+                'successful outcomes': 0,
+                'total time': 0,
+                'average time': 0,
+            },
+            'nearest forager': {
+                'times chosen': 0,
+                'successful outcomes': 0,
+                'total time': 0,
+                'average time': 0,
+            },
+            'furthest forager': {
+                'times chosen': 0,
+                'successful outcomes': 0,
+                'total time': 0,
+                'average time': 0,
+            },
+            'most compatible forager': {
+                'times chosen': 0,
+                'successful outcomes': 0,
+                'total time': 0,
+                'average time': 0,
+            },  
+            'hunter encounters': {
+                'num encounters': 0,
+                'times fought': 0,
+                'times fled': 0,
+                'times hidden': 0,
+                'times zig zagged': 0,
+                'times camouflaged': 0,
+                'times won': 0,
+                'times lost': 0
+            },
+            'ravine encounters': {
+                'times jumped': 0,
+                'times attempted': 0,
+            }
+        }
+        self.decision_metrics = {
+            'num novel decisions': 0,
+            'num random decisions': 0,
+        }
+        self.motivation_time = 0
+    
     # region GNS   
     def get_next_step(self, environment) -> Tuple[int, int]:
         """
@@ -90,11 +156,15 @@ class Forager(Mammal):
         Returns:
             Tuple[int, int]: x, y coordinate to move the forager to.
         """
-        actions = ForagerActions(environment, self)
-        if self.motivation == None:
+        def set_motivation():
             self.motivation = actions.set_motivation()
             self.log_statement(f'Forager {self.id} is going to find {self.motivation}.')
+            self.motivation_metrics[self.motivation]['times chosen'] += 1
         
+        actions = ForagerActions(environment, self)
+        if self.motivation == None:
+            set_motivation()
+            
         # find the next step towards fulfilling motivation
         self.destination_coordinates = actions.get_destination_coordinates(self.motivation)
         
@@ -102,10 +172,16 @@ class Forager(Mammal):
         next_coordinate = actions.get_next_coordinate(self.current_coords, self.destination_coordinates)
         self.explored_coords.append(next_coordinate)
         
-        if next_coordinate == self.destination_coordinates:
+        if self.current_coords == self.destination_coordinates:
             self.log_statement(f'Forager {self.id} found {self.motivation}.')
-            self.successful_motivations.append(self.motivation)
-            self.motivation = None
+            self.motivation_metrics[self.motivation]['successful outcomes'] += 1
+            self.motivation_metrics[self.motivation]['total time'] += 1
+            # used to influence next choice
+            self.successful_motivations.append(self.motivation) 
+            set_motivation()
+        else:
+            self.motivation_metrics[self.motivation]['total time'] += 1
+            self.motivation_metrics[self.motivation]['average time'] = str(f"{(self.motivation_metrics[self.motivation]['total time'] / environment.num_steps)*100}%")
         return next_coordinate
             
     def eat(self, food: Food) -> None:
@@ -132,6 +208,9 @@ class Forager(Mammal):
         self.endurance = min((self.endurance + (food.sustenance_granted * (self.positive_multiplier * 10))  / 4), 10.0)
         self.log_statement(f'{self.id} ate the {food.name}.\n'
                               f'{self.id}\'s hunger decreased. ({self.old_hunger:.2f} -> {self.hunger:.2f}).')
+        self.motivation_metrics['food encounters']['num encounters'] += 1
+        self.motivation_metrics['food encounters']['total sustenance gained'] += food.sustenance_granted
+        self.motivation_metrics['food encounters']['foods tasted'].append(food.name)
     
     def hunger_increase(self) -> bool:
         """
@@ -166,10 +245,23 @@ class Forager(Mammal):
         self.__check_death()
         # ? This could probably be nicer
         if self.bravery > 5:
-            return self.__fight_hunter(hunter)
+            decision, win = self.__fight_hunter(hunter)
+            self.motivation_metrics['hunter encounters']['num encounters'] += 1
+            self.motivation_metrics['hunter encounters']['times fought'] += 1
+            if win:
+                self.motivation_metrics['hunter encounters']['times won'] += 1
+            else:
+                self.motivation_metrics['hunter encounters']['times lost'] += 1
+            return (decision, win)    
         else:
-            return self.__flee_hunter(hunter)
-        
+            decision, win = self.__flee_hunter(hunter)
+            self.motivation_metrics['hunter encounters']['num encounters'] += 1
+            self.motivation_metrics['hunter encounters']['times fought'] += 1
+            if win:
+                self.motivation_metrics['hunter encounters']['times won'] += 1
+            else:
+                self.motivation_metrics['hunter encounters']['times lost'] += 1
+            return (decision, win)    
     
     def traverse_ravine(self, ravine: Ravine) -> bool:
         """
@@ -192,19 +284,20 @@ class Forager(Mammal):
                         self.perception * weights['perception'])
         crossing_probability = weighted_sum / 10
         if crossing_probability > ravine.skill_required:
-            self.log_statement(f'{self.id} successfully '
-                              f'crossed ravine.')
+            self.log_statement(f'{self.id} successfully crossed ravine.')
+            self.motivation_metrics['ravine encounters']['times jumped'] += 1
+            self.motivation_metrics['ravine encounters']['times attempted'] += 1
             return True
         else:
-            self.log_statement(f'{self.id} fails to '
-                              f'cross ravine.')
+            self.log_statement(f'{self.id} fails to cross ravine.')
+            self.motivation_metrics['ravine encounters']['times attempted'] += 1
             return False
         
     def is_compatible_with(self, partner: 'Forager') -> bool:
         """
         Calculates comatilibity between two foragers using a combination
-        of bravery, strength and perception and `compat_diff` defined in
-        the config file. The higher the compat_diff, the less "fussy"
+        of bravery, strength and perception and `compat_diff`. 
+        The higher the compat_diff, the less "fussy"
         the forager is.
 
         Args:
@@ -212,7 +305,7 @@ class Forager(Mammal):
             max_diff (float): Acceptable difference between thresholds. 
             
         Returns:
-            bool: True, if compatible.
+            bool: True, if compatible otherwise false.
         """
         self.__check_death()
         try:
@@ -222,7 +315,7 @@ class Forager(Mammal):
         
         if partner in self.mated_with:
             return False
-        # Recalculate thresholds as Foragers may have rebalanced attributes
+        # Recalculate thresholds as Foragers attributes adjust
         self.__get_compatibility()
         partner.__get_compatibility()
         if (self.sex == 'M' and partner.sex == 'F' or 
@@ -239,11 +332,13 @@ class Forager(Mammal):
                                      f'and {partner.id} ({partner.compatability_threshold:.2f}) '
                                      'are not compatible.')
                 self.incompatible_with.append(partner)
+                self.motivation_metrics[self.motivation]['times chosen'] += 1
                 return False
         else:
             self.log_statement(f'{self.id} ({self.sex}) and {partner.id} '
                                  f'({partner.sex}) are not compatible.')
             self.incompatible_with.append(partner)
+            self.motivation_metrics[self.motivation]['times chosen'] += 1
             return False
     
     def produce_offspring(self, partner: 'Forager') -> 'Forager':
@@ -252,9 +347,6 @@ class Forager(Mammal):
         """
         self.__check_death()
         partner.__check_death()
-        
-        # Choose attributes stochastically
-        # offspring = Forager()
         
         # Get a combination of self and partners attributes
         offspring_dict = {
@@ -268,6 +360,7 @@ class Forager(Mammal):
         self.log_statement(f'{self.id} and {partner.id} '
                           f'produced offspring {offspring.id}.')
         self.mated_with.append(partner)
+        self.motivation_metrics['offspring produced'] += 1
         return offspring
     
     def log_dynamic_attributes(self, display: bool, forager_num: int) -> None:
@@ -355,10 +448,16 @@ class Forager(Mammal):
                                         (self.perception * 1.5))
         return self.compatability_threshold
     
-    def __fight_hunter(self, hunter: Hunter) -> Tuple[bool, str]:
+    def __fight_hunter(self, hunter: Hunter) -> Tuple[str, bool]:
         """
         A weighted sum of the foragers strength, endurance and agility 
         are compared to the hunters. The loser is made inactive.
+
+        Args:
+            hunter (Hunter): The hunter the forager is fighting
+
+        Returns:
+            Tuple[bool, str]: 
         """
         weights = {
             'agility': 0.3,
@@ -422,7 +521,7 @@ class Forager(Mammal):
         return f'Forager {self.id}.\n'
 
 # region Actions
-# Kept in same .py file to avoid circular import error
+# appended here to avoid circular import error
 class ForagerActions():
     """
     The "brain" of the Forager. 
@@ -438,10 +537,11 @@ class ForagerActions():
         self.foragers = self.find_all(Forager)
         self.hunters = self.find_all(Hunter)
     
-    def set_motivation(self) -> None:
+    def set_motivation(self) -> str:
         """
         The forager decides on a motivation such as finding food or a mate.
         """
+        # TODO document this
         def softmax(x):
             exp_values = [math.exp(value) for value in x]
             sum_values = sum(exp_values)
@@ -457,19 +557,12 @@ class ForagerActions():
             self.forager.bonus_attributes.append('sniff food')
         elif self.forager.perception == 9 and self.forager.agility == 9:
             self.forager.bonus_attributes.append('camouflage')
-            
-        # motivation = random.choice(choices)
         
-        # weight of choices
+        # Rate the choices, make a choice, set motivation
         novelty_values = [(self.novelty_value(choice)) for choice in choices]
         probabilities = softmax(novelty_values)
         choice_prob = list(zip(choices, probabilities))
         motivation = random.choices(choice_prob, weights=[prob for _, prob in choice_prob])[0][0]
-        print(motivation)
-        # # sort the list in descending order
-        # weighted_choices.sort(key=lambda x: x[1], reverse=True)
-        # # the choice with the highest weight
-        # best_choice = weighted_choices[0]
         
         return motivation
     
@@ -563,24 +656,24 @@ class ForagerActions():
         objs = []
         for y in range(self.environment.height):
             for x in range(self.environment.width):
-                if isinstance(self.environment.grid[y][x], object_class):
-                    grid_obj = self.environment.grid[y][x]
+                if isinstance(self.environment.simulation[y][x], object_class):
+                    simulation_obj = self.environment.simulation[y][x]
                     obj_dict = {}
-                    if grid_obj.id == self.forager.id:
+                    if simulation_obj.id == self.forager.id:
                         continue
                     if object_class == Food:
-                        obj_dict['id'] = grid_obj.id
+                        obj_dict['id'] = simulation_obj.id
                         obj_dict['type'] = 'Food'
-                        obj_dict['key_attribute'] = grid_obj.sustenance_granted
+                        obj_dict['key_attribute'] = simulation_obj.sustenance_granted
                         obj_dict['location'] = (x,y)
                     elif object_class == Forager:
                         obj_dict['type'] = 'Forager'
-                        obj_dict['key_attribute'] = grid_obj.compatability_threshold
+                        obj_dict['key_attribute'] = simulation_obj.compatability_threshold
                         obj_dict['location'] = (x,y)
                     elif object_class == Hunter:
-                        obj_dict['id'] = grid_obj.id
+                        obj_dict['id'] = simulation_obj.id
                         obj_dict['type'] = 'Hunter'
-                        obj_dict['key_attribute'] = grid_obj.strength
+                        obj_dict['key_attribute'] = simulation_obj.strength
                         obj_dict['location'] = (x,y)
                     objs.append(obj_dict)
         return objs
@@ -799,7 +892,7 @@ class ForagerActions():
         # needs to set target_coords in the forager
         # * must return (x,y) coordinate
         """
-        Checks the foragers motivation and finds the (x,y) coordinate in the grid
+        Checks the foragers motivation and finds the (x,y) coordinate in the simulation
         
 
         Raises:
