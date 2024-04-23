@@ -58,7 +58,11 @@ simulation.run(steps=simulation_steps, replace_agent=True, display_attributes=Tr
 # simulation.get_forager_logs(save_as_txt=False)
 
 analytics = SimulationAnalytics(simulation=simulation)
-analytics.get_best_survivors(10)
+# analytics.detailed_analysis()
+# analytics.simulation_metrics()
+analytics.display_motivations_trends()
+# analytics.get_best_survivors(10)
+# print(analytics.get_lifetimes())
 
 
 
