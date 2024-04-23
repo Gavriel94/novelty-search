@@ -7,7 +7,7 @@ from ..agents.forager import Forager, ForagerActions
 from ..agents.hunter import Hunter
 from ..agents.food import Food
 from ..agents.ravine import Ravine
-# region Grid
+
 class Simulation():
     """
     The environment in which foragers search for food.
@@ -22,11 +22,32 @@ class Simulation():
         self.hunters: list[Hunter] = []
         self.simulation_history = []
         self.num_steps = 0
+        
+        # metrics for analysis
+        self.attribute_trends = {
+            'average agility / 10 steps': [],
+            'average perception / 10 steps': [],
+            'average strength / 10 steps': [],
+            'average endurance / 10 steps': []
+        }
+        self.total_mating_attempts = 0
+        self.total_offspring_produced = 0
+        self.total_sustenance_gained = 0
+        self.total_foragers_lost = 0
+        self.total_hunters_lost = 0
+        self.total_motivations = {
+            'nearest food': 0,
+            'furthest food': 0,
+            'most sustaining food': 0,
+            'nearest forager': 0,
+            'furthest forager': 0,
+            'most compatible forager': 0
+        }
                     
     def run(self, 
-                       steps: int, 
-                       replace_agent: bool, 
-                       display_attributes: bool) -> None:
+            steps: int, 
+            replace_agent: bool, 
+            display_attributes: bool) -> None:
         """
         Runs the simulation.
         
@@ -43,7 +64,9 @@ class Simulation():
 
         Raises:
             MoveError: Simulation ends if an invalid move has been made.
+            GridFull: Simulation ends if the grid runs out of empty space.
         """
+
         self.num_steps = steps
         for i, step in enumerate(range(steps)):
             print('*' + '*' * 52 + '*')
@@ -52,6 +75,7 @@ class Simulation():
             self.display_simulation(step)
             # print('*' + '-' * 52 + '*')
             
+            # hunters move
             for hunter in self.hunters:
                 if not hunter.alive:
                     continue
@@ -68,10 +92,26 @@ class Simulation():
                     self.simulation[new_y][new_x] = self.simulation[from_y][from_x]
                     self.simulation[from_y][from_x] = None
             
+            # foragers move
             for i, forager in enumerate(self.foragers):
                 if step % 10 == 0:
                     forager.mated_with.clear()
                     forager.incompatible_with.clear()
+                    # Get average attributes
+                    agility = 0
+                    perception = 0
+                    strength = 0
+                    endurance = 0
+                    for fo in self.foragers:
+                        agility += fo.agility
+                        perception += fo.perception
+                        strength += fo.strength
+                        endurance += fo.endurance
+                    self.attribute_trends['average agility / 10 steps'].append(round(agility / len(self.foragers), ndigits=2))
+                    self.attribute_trends['average perception / 10 steps'].append(round(perception / len(self.foragers), ndigits=2))
+                    self.attribute_trends['average strength / 10 steps'].append(round(strength / len(self.foragers), ndigits=2))
+                    self.attribute_trends['average endurance / 10 steps'].append(round(endurance / len(self.foragers), ndigits=2))
+                    
                 if not forager.alive:
                     continue
                 forager.log_dynamic_attributes(display_attributes, i)
@@ -261,7 +301,6 @@ class Simulation():
         else:
             return random.choice(empty_cells)
         
-    # region begin actions
     def __forager_finds_food(self, 
                              forager: Forager, 
                              to_x: int, 
@@ -278,6 +317,7 @@ class Simulation():
         self.simulation[to_y][to_x] = self.simulation[from_y][from_x]
         self.simulation[from_y][from_x] = None
         forager.current_coords = (to_x, to_y)
+        self.total_sustenance_gained += food.sustenance_granted
         if replace:
             f = Food()
             self.__place_object(f)
@@ -305,7 +345,7 @@ class Simulation():
             # Forager moves to a random location without danger
             self.simulation[from_y][from_x] = None
             self.__place_object(forager)
-            forager.motivation_metrics[self.motivation]['hunter encounters']['times hidden'] += 1
+            forager.motivation_metrics['hunter encounters']['times hidden'] += 1
         elif 'zig zag past hunter' in forager.bonus_attributes:
             fa = ForagerActions(environment=self, forager=forager)
             steps = fa.steps_to_choice(forager.motivation)
@@ -315,7 +355,7 @@ class Simulation():
                     self.simulation[steps[2][1]][steps[2][0]] = self.simulation[from_y][from_x]
                     self.simulation[from_y][from_x] = None
                     forager.current_coords = (steps[2][0], steps[2][1])
-                    forager.motivation_metrics[self.motivation]['hunter encounters']['times zig zagged'] += 1
+                    forager.motivation_metrics['hunter encounters']['times zig zagged'] += 1
             elif self.simulation[1] != None:
                 # move two steps ahead if 3 isn't valid
                 if self.simulation[steps[1][1]][steps[1][0]] == None:
@@ -327,13 +367,14 @@ class Simulation():
                 # self.simulation[to_y][to_x] = self.simulation[from_y][from_x]
                 self.simulation[from_y][from_x] = None
                 forager.current_coords = (to_x, to_y)  
-                forager.motivation_metrics[self.motivation]['hunter encounters']['times camouflaged'] += 1
+                forager.motivation_metrics['hunter encounters']['times camouflaged'] += 1
                 return
             decision, win = forager.engage_hunter(hunter)
             if decision == 'fight' and win:
                 self.simulation[to_y][to_x] = self.simulation[from_y][from_x]
                 self.simulation[from_y][from_x] = None
                 forager.current_coords = (to_x, to_y)
+                self.total_hunters_lost += 1
                 if replace:
                     # replace hunter 
                     h = Hunter()
@@ -342,6 +383,7 @@ class Simulation():
                 # remove forager
                 self.simulation[from_y][from_x] = None
                 self.foragers.remove(forager)
+                self.total_foragers_lost += 1
             elif decision == 'flee' and win:
                 # forager is placed in a random location
                 self.simulation[from_y][from_x] = None
@@ -350,6 +392,7 @@ class Simulation():
                 # remove forager
                 self.simulation[from_y][from_x] = None
                 self.foragers.remove(forager)
+                self.total_foragers_lost += 1
             
             if not win and replace:
                 # add new forager back to the environment
@@ -362,6 +405,7 @@ class Simulation():
         from_y = forager.current_coords[1]
         self.simulation[from_y][from_x] = None
         self.foragers.remove(forager)
+        self.total_foragers_lost += 1
         if replace:
             # replace with new forager
             new_forager = Forager()
@@ -405,11 +449,6 @@ class Simulation():
         log_match1 = f'{forager.id} successfully crossed ravine.'
         log_match2 = f'{forager.id} fails to cross ravine.'
         
-        print('1.', log_match1, str(forager.log[-1]))
-        print('2.', log_match2, str(forager.log[-1]))
-        if log_match1 == str(forager.log[-1]) or log_match2 == str(forager.log[-1]):
-            'this passes'
-        
         # forager is moving horizontally    
         if abs(to_x - from_x) > abs(to_y - from_y):
             if traverse:
@@ -418,7 +457,6 @@ class Simulation():
                 log_match1 = f'{forager.id} successfully crossed ravine.'
                 log_match2 = f'{forager.id} fails to cross ravine.'
                 # walk vertically instead of bouncing back 
-                # TODO this never becomes true for some reason
                 if log_match1 == str(forager.log[-1]) or log_match2 == str(forager.log[-1]):
                     vertical_step()
                 elif 0 <= new_x_coord < self.width and not isinstance(self.simulation[to_y][new_x_coord], Ravine):
@@ -464,10 +502,12 @@ class Simulation():
         if forager.is_compatible_with(potential_mate):
             offspring = forager.produce_offspring(potential_mate)
             self.__place_object(offspring)
-            
+            self.total_mating_attempts += 1
+            self.total_offspring_produced += 1
         else:
             # foragers are incompatible, decide on something else to do.
             forager.motivation = None
+            self.total_mating_attempts += 1
     
     def __forager_step(self, 
                        forager: Forager, 
@@ -493,26 +533,96 @@ class MoveError(Exception):
         self.message = 'Invalid forager move.\n'
         super().__init__(self.message)
 
-# region Grid Analytics
 class SimulationAnalytics:
     def __init__(self, simulation: Simulation):
         self.simulation = simulation
+        self.foragers = [forager for forager in self.simulation.foragers]
+        
+    def simulation_metrics(self):
+        print(f'Total mating attempts: {self.simulation.total_mating_attempts}')
+        print(f'Total offspring produced: {self.simulation.total_offspring_produced}')
+        print(f'Total sustenance granted: {self.simulation.total_sustenance_gained}')
+        print(f'Total foragers lost: {self.simulation.total_foragers_lost}')
+        print(f'Total hunters lost: {self.simulation.total_hunters_lost}')
+        
+    def display_attribute_trends(self):
+        legend_labels = []
+        for k, v in self.simulation.attribute_trends.items():
+            # attribute name from key in form 'average 'attribute' / 10 steps'
+            attribute = k.split()[1].title()
+            legend_labels.append(attribute)
+            plt.plot(v)
+            plt.xlabel('Generation')
+            plt.ylabel('Attribute Level')
+        plt.legend(legend_labels)
+        plt.show()
+    
+    def display_motivations_trends(self):
+        keys = list(self.simulation.total_motivations.keys())
+        values  = list(self.simulation.total_motivations.values())
+        plt.bar(keys, values)
+        plt.show()
+            
+        
+    def detailed_analysis(self, forager):
+        print('Attribute Trends\n')
+        self.forager_attribute_differences(forager)
+        
+        print('Motivation Metrics\n')
+        self.print_motivation_metrics(forager)
+    
+    def forager_attribute_differences(self, forager):
+        print(f"Difference in agility: {forager.agility - forager.atrributes_at_init['agility']}")
+        print(f"Difference in agility: {forager.perception - forager.atrributes_at_init['perception']}")
+        print(f"Difference in agility: {forager.strength - forager.atrributes_at_init['strength']}")
+        print(f"Difference in agility: {forager.endurance - forager.atrributes_at_init['endurance']}")
+    
+    def print_motivation_metrics(self, forager) -> None:
+        """
+        Displays full motivation metrics dictionary.
+        """
+        print(f'Forager {forager.id}\n')
+        for motivation, details in forager.motivation_metrics.items():
+            print(f'{motivation.title()}')
+            if not isinstance(details, dict):
+                print(f'{motivation}: {details}')
+                print()
+            else:
+                for k, v in details.items():
+                    print(f'{k}: {v}')
+                print()
+        print()
     
     def get_best_survivors(self, steps_alive: int) -> None:
-        best_foragers = [forager for forager in self.simulation.foragers if forager.steps_alive > steps_alive]
+        """
+        Returns a list of key metrics from foragers who survived more 
+        than `steps_alive` steps.
+
+        Args:
+            steps_alive (int): Threshold of "best" survivor.
+        """
+        best_foragers = [forager for forager in self.foragers if forager.steps_alive > steps_alive]
         for forager in best_foragers:
-            print(f'Forager {forager.id}\n')
-            for motivation, details in forager.motivation_metrics.items():
-                print(f'{motivation.title()}')
-                if not isinstance(details, dict):
-                    print(f'{motivation}: {details}')
-                    print()
-                else:
-                    for k, v in details.items():
-                        print(f'{k}: {v}')
-                    print()
-            print()
-    
+            self.print_motivation_metrics(forager)
+            
+    def get_lifetimes(self, display=True) -> list:
+        """
+        Pairs a foragers ID with the amount of steps it has survived
+        and sorts them in ascending order.
+
+        Args:
+            display (bool, optional): Details to stdout.
+
+        Returns:
+            list: (forager ID, steps alive)
+        """
+        lifetimes = [(forager.id, forager.steps_alive) for forager in self.foragers]
+        lifetimes_asc = sorted(lifetimes, key= lambda x: [1], reverse=True)
+        if display:
+            for f in lifetimes_asc:
+                print(f'Forager {f[0]} survived {f[1]} steps')
+        return lifetimes_asc
+        
     def plot_choices(self):
         pass
         

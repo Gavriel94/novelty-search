@@ -79,7 +79,7 @@ class Forager(Mammal):
             'furthest forager': random.uniform(0.01, 0.3),
             'most compatible forager': random.uniform(0.01, 0.3)
         }
-        # key metrics
+        # attributes used for analysis
         self.steps_alive = 0
         self.motivation_metrics = {
             'food encounters': {
@@ -139,11 +139,12 @@ class Forager(Mammal):
                 'times attempted': 0,
             }
         }
-        self.decision_metrics = {
-            'num novel decisions': 0,
-            'num random decisions': 0,
+        self.atrributes_at_init = {
+            'agility': agility,
+            'perception': perception,
+            'strength': strength,
+            'endurance': endurance
         }
-        self.motivation_time = 0
     
     # region GNS   
     def get_next_step(self, environment) -> Tuple[int, int]:
@@ -160,6 +161,7 @@ class Forager(Mammal):
             self.motivation = actions.set_motivation()
             self.log_statement(f'Forager {self.id} is going to find {self.motivation}.')
             self.motivation_metrics[self.motivation]['times chosen'] += 1
+            environment.total_motivations[self.motivation] += 1
         
         actions = ForagerActions(environment, self)
         if self.motivation == None:
