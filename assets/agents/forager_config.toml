@@ -1,0 +1,34 @@
+# Initial hunger (0-10)
+hunger = 3 
+# Initial bravery (0-10)
+bravery = 3 
+
+# The maximum difference between foragers compatibility thresholds (0-1)
+# Higher compat_diff makes the foragers less "fussy" when finding potential mates 
+compat_diff = 0.3 # 0 <= x <= 1
+
+# How much to reduce the weight of succesful choice (0-1)
+# this encourages foragers to explore new choices
+decay_factor = 0.98
+
+# The effect hunger has on the other attributes. (0-1)
+# A higher hunger combinator makes more drastic changes
+hunger_combinator = 0.1 # 0 <= x <= 1
+
+# How much influence is given to positive choices (0-1)
+positive_multiplier = 0.25 # 0 <= x <= 1
+
+# Boosts
+# -------------------------------------------------------------------- #
+# Boosts enhance foragers decisions by making them more informed
+
+# Foragers with high agility and perception are more likely to go for 
+# nearer food and foragers, whereas foragers with high strength or
+# endurance are more likely to go further for food and foragers. 
+# boost1_threshold sets a value that defines when a attriubte is "high".
+# boost2_threshold unlocks more powerful decision making, allowing the
+# forager to consider the most sustaining food or compatible forager.
+
+# Values must be in range (0-10)
+boost1_threshold = 4 
+boost2_threshold = 6 
