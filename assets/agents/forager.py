@@ -1,8 +1,6 @@
 import math
 import random
-from random import randrange, choice
 import tomllib
-import numpy as np
 
 from .mammal import Mammal
 from .food import Food
@@ -26,16 +24,16 @@ class Forager(Mammal):
             endurance = parents_genes['endurance']
         else:
             # Forager has no parents so genes init at random
-            agility = float(randrange(1, 3))
-            perception = float(randrange(1, 3))
-            strength = float(randrange(1, 3))
-            endurance = float(randrange(1, 3))
+            agility = float(random.randrange(1, 3))
+            perception = float(random.randrange(1, 3))
+            strength = float(random.randrange(1, 3))
+            endurance = float(random.randrange(1, 3))
         super().__init__(agility, perception, strength, endurance)   
         self.type = 'Forager'
         self.alive = True
         
         if sex == None:
-            self.sex = choice(['M', 'F'])
+            self.sex = random.choice(['M', 'F'])
         else:
             self.sex = sex            
         if self.sex != 'M' and self.sex != 'F':
@@ -43,14 +41,13 @@ class Forager(Mammal):
         
         with open('assets/agents/forager_config.toml', 'rb') as f:
             self.config = tomllib.load(f)
-            self.hunger = self.__validate(self.config['hunger'], 'hunger', 10.0)
-            self.bravery = self.__validate(self.config['bravery'], 'bravery', 10.0)
+            self.hunger = self.__validate(self.config['hunger'], 'hunger')
+            self.bravery = self.__validate(self.config['bravery'], 'bravery')
             self.compat_diff = self.__validate(self.config['compat_diff'], 'compat_diff', 1)
             self.decay_factor = self.__validate(self.config['decay_factor'], 'decay_factor', 1)
             self.hunger_combin = self.__validate(self.config['hunger_combinator'], 'hunger_combinator', 1)
-            self.boost1_threshold = self.__validate(self.config['boost1_threshold'], 'boost1_threshold', 10)
-            self.boost2_threshold = self.__validate(self.config['boost2_threshold'], 'boost2_threshold', 10)
             self.positive_multiplier = self.__validate(self.config['positive_multiplier'], 'positive_multiplier', 1)
+            self.use_novelty_search = self.__validate(self.config['novelty_search'], 'novelty_search')
         
         self.compatability_threshold = self.__get_compatibility()
         
@@ -72,12 +69,16 @@ class Forager(Mammal):
         
         # * Attributes emulating persistent memory
         self.current_motivation = None 
+        self.num_motivation_steps = 0 
         self.successful_motivations = []
         self.mated_with = [] # Foragers mated with
         self.incompatible_with = [] # Foragers unable to mate with
         self.explored_coords = [] # Explored coordinates
         self.log = [] # Log of actions
         self.gene_log = [] # Log of gene updates
+        self.chosen_motivations = set()
+        self.num_decisions = 0
+        self.num_novel_decisions = 0
 
         # * Attributes for analysis
         self.steps_alive = 0 # Number of simulation steps survived
@@ -140,11 +141,14 @@ class Forager(Mammal):
             }
         }
     
-    def set_motivation(self, environment, actions) -> str:
+    def set_motivation(self, environment, actions: 'ForagerActions') -> str:
         """
         Set a motivation and store metrics.
         """
-        self.current_motivation = actions.set_motivation()
+        if self.use_novelty_search:
+            self.current_motivation = actions.set_motivation()
+        else:
+            self.current_motivation = actions.set_rdm_motivation()
         self.__log_statement(f'Forager {self.id} is going to find {self.current_motivation}.')
         self.motivation_metrics[self.current_motivation]['times chosen'] += 1
         environment.total_motivations[self.current_motivation] += 1
@@ -162,6 +166,18 @@ class Forager(Mammal):
         """
         self.__alive()
         actions = ForagerActions(environment, self)
+        
+        # forager has spent too much time trying to achieve motivation
+        # reset and find a new one
+        if self.endurance < 5 and self.num_motivation_steps > 5:
+            self.num_motivation_steps = 0
+            self.current_motivation = None            
+        elif self.endurance >= 5 and self.num_motivation_steps == 12:
+            self.num_motivation_steps = 0
+            self.current_motivation = None
+        else:
+            self.num_motivation_steps += 1
+        
         if self.current_motivation == None:
             self.set_motivation(environment, actions)
 
@@ -488,20 +504,24 @@ class Forager(Mammal):
         return ('flee', self.alive)
     
     def __validate(self, 
-                   att: float, 
+                   att: float | str, 
                    att_name: str, 
-                   max: float) -> float | ValueError:
+                   max: float = 10) -> float | str:
         """
         Validates configuration file attributes.
         """
-        if max == 1:
-            if att > 1 or att < 0:
-                raise ValueError(f'config: Value {att} out of range 0-1 '
-                                 f'for {att_name}.\n')
-        if max == 10.0:
-            if att > 10.0 or att < 0.0:
-                raise ValueError(f'config: Value {att} out of range 0.0-10.0 '
-                                 f'for {att_name}.\n')
+        if isinstance(att, float):
+            if max == 1:
+                if att > 1 or att < 0:
+                    raise ValueError(f'config: Value {att} out of range 0-1 '
+                                    f'for {att_name}.\n')
+            if max == 10.0:
+                if att > 10.0 or att < 0.0:
+                    raise ValueError(f'config: Value {att} out of range 0.0-10.0 '
+                                    f'for {att_name}.\n')
+        if att_name == 'novelty_search':
+            if att != True and att != False:
+                raise ValueError(f'config: {att_name} must be \'True\' or \'False\'. Current value: {att}')
         return att
     
     def __log_statement(self, statement: str) -> None:
@@ -542,6 +562,17 @@ class ForagerActions():
         self.foods = self.__find_all(Food)
         self.foragers = self.__find_all(Forager)
         self.hunters = self.__find_all(Hunter)
+        
+    def set_rdm_motivation(self) -> str:
+        """
+        Picks a random motivation.
+
+        Returns:
+            str: The motivation.
+        """
+        motivations = ['nearest food', 'furthest food', 'most sustaining food', 
+                       'nearest forager', 'furthest forager', 'most compatible forager']
+        return random.choice(motivations)
     
     def set_motivation(self) -> str:
         """
@@ -584,6 +615,12 @@ class ForagerActions():
         motiv_prob = list(zip(motivations, probabilities))
         # Choose a motivation based on probability and extract str
         chosen_motivation = random.choices(motiv_prob, weights=[prob for _, prob in motiv_prob])[0][0]
+        if chosen_motivation not in self.forager.chosen_motivations:
+            self.forager.chosen_motivations.add(chosen_motivation)
+            self.forager.num_novel_decisions += 1
+            self.forager.num_decisions += 1
+        else:
+            self.forager.num_decisions += 1
         return chosen_motivation
     
     def novelty_value(self, motivation) -> float:
@@ -597,47 +634,50 @@ class ForagerActions():
         """
         # Get initial novelty value
         novelty_value = self.forager.motivation_weights[motivation]
-        
+        if len(self.forager.chosen_motivations) == 6:
+            self.forager.chosen_motivations.clear()
         # Add bias towards novel motivations
-        if motivation not in self.forager.successful_motivations:
-            novelty_value += math.log(self.forager.positive_multiplier + 1.2, 10)
+        if motivation not in self.forager.chosen_motivations:
+            novelty_value += math.log(self.forager.positive_multiplier + 2, 10)
         else:
             novelty_value *= self.forager.decay_factor
-        # Check if level 1 boosts can be applied
+
+        # Foragers attributes can add bias to decisions
         if motivation == 'nearest food' or motivation == 'nearest forager':
-            if (self.forager.perception > self.forager.boost1_threshold 
-                or self.forager.agility > self.forager.boost1_threshold):
+            if math.isclose(self.forager.perception, self.forager.agility, rel_tol=0.2):
                 novelty_value += math.log(self.forager.positive_multiplier + 1, 10)
         elif motivation == 'furthest food' or motivation == 'furthest forager':
-            if (self.forager.strength > self.forager.boost1_threshold
-                or self.forager.endurance > self.forager.boost1_threshold):
+            if math.isclose(self.forager.strength, self.forager.endurance, rel_tol=0.2):
                 novelty_value += math.log(self.forager.positive_multiplier + 1, 10)
-        # Check if level 2 boosts can be applied
+
         if motivation == 'most sustaining food':
-            if (self.forager.strength > self.forager.boost2_threshold
-                or self.forager.perception > self.forager.boost2_threshold):
+            if math.isclose(self.forager.strength, self.forager.perception, rel_tol=0.2):
                 novelty_value += math.log(self.forager.positive_multiplier + 1.1, 10)        
         if motivation == 'most compatible forager':
-            if (self.forager.endurance > self.forager.boost2_threshold
-                or self.forager.agility > self.forager.boost2_threshold):
+            if math.isclose(self.forager.endurance, self.forager.agility, rel_tol=0.2):
                 novelty_value += math.log(self.forager.positive_multiplier + 1.1, 10)
         
         # Skilled foragers are more likely to explore     
         if (len(self.forager.evolved_abilities) > 0
-            and choice == 'furthest food'
-            or choice == 'furthest forager'):
-            choice_weight += math.log(self.forager.positive_multiplier + 1.2, 10)
-        
-        # add benefits from boosts in here
-        if self.forager.hunger > 4:
-            # forager is hungry so lean towards eating
+            and motivation == 'furthest food'
+            or motivation == 'furthest forager'):
+            novelty_value += math.log(self.forager.positive_multiplier + 1.2, 10)
+            
+        if 'sniff food' in self.forager.evolved_abilities:
+            # forager works out if the nearest food is the most sustaining
+            x_nearest, y_nearest = self.steps_to_motivation('nearest food')[-1]
+            x_most_sus, y_most_sus = self.steps_to_motivation('most sustaining food')[-1]
+            
+            if math.isclose(x_nearest, x_most_sus, rel_tol=3) or math.isclose(y_nearest, y_most_sus, rel_tol=3):
+                novelty_value += math.log(self.forager.positive_multiplier + 1.2, 10)
+
+        if self.forager.hunger > 5:
+            # forager is hungry so small bias towards eating
             if motivation == 'nearest food':
                 novelty_value += math.log(self.forager.positive_multiplier + 1.1, 10)
-            elif motivation == 'most sustaining food' and 'sniff food' in self.forager.evolved_abilities:
-                # forager knows the nearest food *is* is the most sustaining
-                if self.steps_to_motivation('nearest food') == self.steps_to_motivation('most sustaining food'):
-                    novelty_value += math.log(self.forager.positive_multiplier + 1.2, 10)
             elif motivation == 'furthest food':
+                novelty_value += math.log(self.forager.positive_multiplier + 1.1, 10)
+            elif motivation == 'most sustaining food':
                 novelty_value += math.log(self.forager.positive_multiplier + 1.1, 10)
         
         if novelty_value < 0:
