@@ -6,7 +6,7 @@ class Hunter(Mammal):
     """
     Predators that fight foragers, or cause them to flee.
     """
-    def __init__(self):
+    def __init__(self) -> None:
         attributes = self.create_hunter()
         super().__init__(
             agility=attributes['agility'],

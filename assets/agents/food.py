@@ -5,7 +5,7 @@ class Food():
     """
     Food for the foragers to find and eat.
     """
-    def __init__(self):
+    def __init__(self) -> None:
         self.id = self.__generate_id()
         self.name, self.sustenance_granted = self.create_food()
     

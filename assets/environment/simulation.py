@@ -2,6 +2,9 @@ import random
 import matplotlib.pyplot as plt
 import seaborn as sns
 sns.set_theme()
+import os 
+import shutil
+
 from ..agents.forager import Forager, ForagerActions
 from ..agents.hunter import Hunter
 from ..agents.food import Food
@@ -15,7 +18,7 @@ class Simulation():
     """
     The environment in which foragers search for food.
     """
-    def __init__(self, width: int, height: int):
+    def __init__(self, width: int, height: int) -> None:
         self.width = width
         self.height = height
         self.grid = [[None for _ in range(width)] for _ in range(height)]
@@ -124,6 +127,7 @@ class Simulation():
                 
                 if not forager.alive:
                     continue
+                forager.simulation_step = step
                 forager.log_genes(display, i)
                 print()
                 # Coordinates of next step
@@ -182,28 +186,21 @@ class Simulation():
             for object in objects:
                 self.__place_object(object)
     
-    def get_forager_logs(self, save_as_txt: bool) -> list | None:
+    def save_forager_logs(self, run_name: str) -> None:
         """
-        Displays the log of each foragers action in stdout or saves them
-        as txt files.
+        Saves the log of each forager in a txt file.
 
         Args:
-            save_as_txt (bool): Save logs as txt files.
-
-        Returns:
-            list | None: List of strings or None if txt files are saved.
+            run_name (str): Directory name.
         """
-        print('-' * 72, '\n')
-        if not save_as_txt:
-            for forager in self.foragers:
-                log = forager.get_log(save_as_txt)
-                print(f'Forager {forager.id}')
-                for line in log:
-                    print(line)
-                print('\n')
-        else:
-            for forager in self.foragers:
-                forager.get_log(save_as_txt)
+        try:
+            os.mkdir(f'logs/{run_name}')
+        except:
+            shutil.rmtree(f'logs/{run_name}')
+            os.mkdir(f'logs/{run_name}')
+            
+        for forager in self.foragers:
+            forager.get_log(run_name)
                 
     def __display_simulation(self) -> None:
         """
@@ -628,11 +625,15 @@ class SimulationAnalytics:
     """
     Processes and plots data gathered while running the simulation.
     """
-    def __init__(self, simulation: Simulation):
+    def __init__(self, simulation: Simulation) -> None:
         self.__grid = simulation
         self.__foragers = [forager for forager in self.__grid.foragers]
         
-    def chart_compare_decisions(self):
+    def chart_compare_decisions(self) -> None:
+        """
+        Bar chart displaying the number of novel decisions compared to
+        repeated decisions.
+        """
         num_novel = 0
         num_decisions = 0
         for forager in self.__foragers:
@@ -642,8 +643,18 @@ class SimulationAnalytics:
         plt.bar(['Novel Decisions', 'Repeated Decisions'], [num_novel, num_decisions])
         plt.show()
     
-    def chart_simulation_metrics(self):
+    def chart_simulation_metrics(self) -> None:
+        """
+        Displays overall metrics from the simulation:
+        - total mating attempts
+        - total offspring produced
+        - total sustenace gained
+        - total foragers lost
+        - total hunters lost
+        - total foragers lost after reaching their age limit
+        """
         keys = list(self.__grid.simulation_metrics.keys())
+        key_labels = [label.split('_').title() for label in keys]
         values = list(self.__grid.simulation_metrics.values())
         final_values = []
         for value in values:
@@ -651,12 +662,13 @@ class SimulationAnalytics:
                 final_values.append(value[-1][1])
             else:
                 final_values.append(0)
-        plt.bar(keys, final_values)
+        plt.bar(key_labels, final_values)
         plt.show()
         
-    def chart_gene_changes(self):
+    def chart_gene_changes(self) -> None:
         """
-        Plots a chart showing the average change in dynamic attributes.
+        Plots a chart showing the average growth in dynamic attributes.
+        Measurements are taken every 10 steps.
         """
         legend_labels = []
         for k, v in self.__grid.gene_trends.items():
@@ -670,7 +682,10 @@ class SimulationAnalytics:
         plt.legend(legend_labels)
         plt.show()
     
-    def chart_motivations(self):
+    def chart_motivations(self) -> None:
+        """
+        A bar chart displaying how many times each motivation was chosen.
+        """
         keys = list(self.__grid.total_motivations.keys())
         values  = list(self.__grid.total_motivations.values())
         plt.bar(keys, values)
@@ -678,14 +693,7 @@ class SimulationAnalytics:
     
     def chart_lifetime_lengths(self) -> None:
         """
-        Pairs a foragers ID with the amount of steps it has survived
-        and sorts them in ascending order.
-
-        Args:
-            display (bool, optional): Details to stdout.
-
-        Returns:
-            list: (forager ID, steps alive)
+        A bar chart displaying the lifetime length of each forager.
         """
         lifetimes = [(forager.id, forager.steps_alive) for forager in self.__foragers]
         lifetimes_asc = sorted(lifetimes, key=lambda x: [1], reverse=True)
@@ -698,18 +706,18 @@ class SimulationAnalytics:
     
     def stdout_eol_foragers(self) -> None:
         """
-        Returns a list of key metrics from foragers who survived until
+        Displays a list of key metrics from foragers who survived until
         their age limit.
-
-        Args:
-            steps_alive (int): Threshold of "best" survivor.
         """
         best_foragers = [forager for forager in self.__foragers if forager.steps_alive >= self.__grid.forager_age_limit]
         print(f'{len(best_foragers)} foragers survived to old age.\n')
         for forager in best_foragers:
             self.__print_motivation_metrics(forager)
         
-    def stdout_steps_and_actions(self):
+    def stdout_steps_and_actions(self) -> None:
+        """
+        Displays each change in metrics alongside the step that it happened.
+        """
         for k, v in self.__grid.simulation_metrics.items():
             print(f"{k}:")
             for step, value in v:

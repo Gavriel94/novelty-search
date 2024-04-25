@@ -4,8 +4,11 @@ class Mammal():
     """
     Superclass for hunters and foragers.
     """
-    def __init__(self, agility: float, 
-                 perception: float , strength: float , endurance: float):
+    def __init__(self, 
+                 agility: float, 
+                 perception: float, 
+                 strength: float, 
+                 endurance: float) -> None:
         self.id = self.generate_id()
         self.agility = self.__validate(agility, 'agility')
         self.perception = self.__validate(perception, 'perception')

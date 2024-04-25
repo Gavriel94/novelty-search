@@ -21,14 +21,14 @@ def load_default_inhabitants():
         Food()
     ]
 
-DEFAULT_GRID_WIDTH = 10
-DEFAULT_GRID_HEIGHT = 10
+DEFAULT_GRID_WIDTH = 20
+DEFAULT_GRID_HEIGHT = 20
 
 if len(sys.argv) < 7:
     # load default simulation config
     simulation = Simulation(DEFAULT_GRID_WIDTH, DEFAULT_GRID_HEIGHT)
     environment = load_default_inhabitants()
-    simulation_steps = 50
+    simulation_steps = 200
 else:
     # read command line arguments
     num_foragers = int(sys.argv[1])
@@ -55,13 +55,8 @@ else:
 
 simulation.setup_environment(environment)
 simulation.run(steps=simulation_steps, replace=True, display=True)
-# simulation.get_forager_logs(save_as_txt=False)
+
+simulation.save_forager_logs(run_name='Novelty_Run_1')
 
 analytics = SimulationAnalytics(simulation=simulation)
-analytics.chart_lifetime_lengths()
-# analytics.display_overall_gene_trends()
-# analytics.pair_step_and_change()
-# analytics.plot_motivations_trend()
-
-# analytics.get_best_survivors()
-
+analytics.

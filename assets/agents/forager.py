@@ -15,7 +15,7 @@ class Forager(Mammal):
     """
     Agents who navigate the environment to eat, mate, adapt and evolve.
     """
-    def __init__(self, sex: str = None, parents_genes: dict = None):
+    def __init__(self, sex: str = None, parents_genes: dict = None) -> None:
         if parents_genes is not None:
             # Derives genes from parents
             agility = parents_genes['agility']
@@ -79,6 +79,7 @@ class Forager(Mammal):
         self.chosen_motivations = set()
         self.num_decisions = 0
         self.num_novel_decisions = 0
+        self.simulation_step = 0
 
         # * Attributes for analysis
         self.steps_alive = 0 # Number of simulation steps survived
@@ -149,7 +150,7 @@ class Forager(Mammal):
             self.current_motivation = actions.set_motivation()
         else:
             self.current_motivation = actions.set_rdm_motivation()
-        self.__log_statement(f'Forager {self.id} is going to find {self.current_motivation}.')
+        self.__log_statement(f'Step {self.simulation_step}: Forager {self.id} is going to find {self.current_motivation}.')
         self.motivation_metrics[self.current_motivation]['times chosen'] += 1
         environment.total_motivations[self.current_motivation] += 1
     
@@ -188,7 +189,7 @@ class Forager(Mammal):
         
         if self.current_coords == self.destination_coordinates:
             # Motivation has been fulfilled
-            self.__log_statement(f'Forager {self.id} found {self.current_motivation}.')
+            self.__log_statement(f'Step {self.simulation_step}: Forager {self.id} found {self.current_motivation}.')
             self.motivation_metrics[self.current_motivation]['successful outcomes'] += 1
             self.motivation_metrics[self.current_motivation]['total time'] += 1
             self.successful_motivations.append(self.current_motivation) 
@@ -213,7 +214,7 @@ class Forager(Mammal):
         self.hunger = max((self.hunger - food.sustenance_granted), 0.0)
         self.bravery = max((self.hunger - food.sustenance_granted / 2), 0.0)
         # Log data
-        self.__log_statement(f'{self.id} ate the {food.name}.\n')
+        self.__log_statement(f'Step {self.simulation_step}: {self.id} ate the {food.name}.\n')
         self.motivation_metrics['food encounters']['num encounters'] += 1
         self.motivation_metrics['food encounters']['total sustenance gained'] += food.sustenance_granted
         self.motivation_metrics['food encounters']['foods tasted'].append(food.name)
@@ -231,7 +232,7 @@ class Forager(Mammal):
         self.bravery = min((self.bravery + self.hunger_combin / 2), 10)
         
         if self.hunger == 10:
-            self.__log_statement(f'{self.id} starved.')
+            self.__log_statement(f'Step {self.simulation_step}: {self.id} starved.')
             self.alive = False
 
         return self.alive
@@ -289,12 +290,12 @@ class Forager(Mammal):
                         self.perception * weights['perception'])
         
         if weighted_sum > ravine.skill_required:
-            self.__log_statement(f'{self.id} successfully crossed ravine.')
+            self.__log_statement(f'Step {self.simulation_step}: {self.id} successfully crossed ravine.')
             self.motivation_metrics['ravine encounters']['times jumped'] += 1
             self.motivation_metrics['ravine encounters']['times attempted'] += 1
             return True
         else:
-            self.__log_statement(f'{self.id} fails to cross ravine.')
+            self.__log_statement(f'Step {self.simulation_step}: {self.id} fails to cross ravine.')
             self.motivation_metrics['ravine encounters']['times attempted'] += 1
             return False
         
@@ -325,12 +326,12 @@ class Forager(Mammal):
                        partner.compatability_threshold, 
                        rel_tol=self.config['compat_diff']):
                 # Foragers compatibility thresholds are within compat_diff
-                self.__log_statement(f'{self.id} ({self.sex}: {self.compatability_threshold:.2f}) '
+                self.__log_statement(f'Step {self.simulation_step}: {self.id} ({self.sex}: {self.compatability_threshold:.2f}) '
                                      f'and {partner.id} ({partner.sex}: {partner.compatability_threshold:.2f}) are compatible.')
                 return True
             else:
                 # Foragers are not compatible
-                self.__log_statement(f'{self.id} ({self.compatability_threshold:.2f}) '
+                self.__log_statement(f'Step {self.simulation_step}: {self.id} ({self.compatability_threshold:.2f}) '
                                      f'and {partner.id} ({partner.compatability_threshold:.2f}) '
                                      'are not compatible.')
                 self.incompatible_with.append(partner)
@@ -338,7 +339,7 @@ class Forager(Mammal):
                 return False
         else:
             # Foragers are not compatible
-            self.__log_statement(f'{self.id} ({self.sex}) and {partner.id} '
+            self.__log_statement(f'Step {self.simulation_step}: {self.id} ({self.sex}) and {partner.id} '
                                  f'({partner.sex}) are not compatible.')
             self.incompatible_with.append(partner)
             self.motivation_metrics[self.current_motivation]['times chosen'] += 1
@@ -358,7 +359,7 @@ class Forager(Mammal):
         # Create offspring
         offspring = Forager(parents_genes=offspring_dict)
         
-        self.__log_statement(f'{self.id} and {partner.id} '
+        self.__log_statement(f'Step {self.simulation_step}: {self.id} and {partner.id} '
                           f'produced offspring {offspring.id}.')
         self.mated_with.append(partner)
         self.motivation_metrics['offspring produced'] += 1
@@ -417,23 +418,21 @@ class Forager(Mammal):
                     print(f'| {key.title():<12}| {value:>6.2f} {icon:<1} |')
             print('*' + '-' * 24 + '*')
     
-    def get_log(self, save_as_txt: bool) -> list | None:
+    def get_log(self, run_name: str = None) -> list | None:
         """
-        Returns the actions of the forager as a list of strings or
-        saves them in a txt file.
+        Saves the actions of each forager in a txt file.
 
         Args:
-            save_as_txt (bool): If true, save actions as a txt file
+            save_as_txt (bool): If true, save actions as a txt file.
+            run_name (str): Seperate files with new directory names.
 
         Returns:
             list | None: List of strings or None if txt files are saved.
-        """
-        if not save_as_txt:
-            return self.log
-        else: 
-            with open(f'simulation/logs/{self.id}_log.txt', 'r') as f:
-                for line in self.log:
-                    f.write(line)
+        """ 
+        with open(f'logs/{run_name}/{self.id}_log.txt', 'w') as f:
+            for line in self.log:
+                f.write(line)
+                f.write('\n')
     
     def __get_compatibility(self) -> float:
         """
@@ -471,10 +470,10 @@ class Forager(Mammal):
         
         if self_weighted_sum > hunter_weighted_sum:
             hunter.alive = False
-            self.__log_statement(f'{self.id} beat hunter {hunter.id}.')
+            self.__log_statement(f'Step {self.simulation_step}: {self.id} beat hunter {hunter.id}.')
         else:
             self.alive = False
-            self.__log_statement(f'{self.id} lost to hunter {hunter.id}.')
+            self.__log_statement(f'Step {self.simulation_step}: {self.id} lost to hunter {hunter.id}.')
         return ('fight', self.alive)
     
     def __flee_hunter(self, hunter: Hunter) -> tuple[str, bool]:
@@ -497,10 +496,10 @@ class Forager(Mammal):
                                hunter.perception * weights['perception'])
         
         if self_weighted_sum > hunter_weighted_sum:
-            self.__log_statement(f'{self.id} fled hunter {hunter.id}.')
+            self.__log_statement(f'Step {self.simulation_step}: {self.id} fled hunter {hunter.id}.')
         else:
             self.alive = False
-            self.__log_statement(f'{self.id} was caught by hunter {hunter.id}.')
+            self.__log_statement(f'Step {self.simulation_step}: {self.id} was caught by hunter {hunter.id}.')
         return ('flee', self.alive)
     
     def __validate(self, 

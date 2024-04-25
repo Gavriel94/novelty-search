@@ -7,11 +7,11 @@ class Ravine():
     Foragers with the right attributes can jump over them.
     Hunters, and foragers that cannot jump, have to walk around.
     """
-    def __init__(self, grid_width: int):
+    def __init__(self, grid_width: int) -> None:
         self.id = self.generate_id()
         self.skill_required = round(uniform(0.1, 0.7), 2) * 10
-        self.width = randrange(1, grid_width//2)
-        self.height = randrange(1, grid_width//2)
+        self.width = randrange(1, grid_width)
+        self.height = randrange(1, grid_width)
         
     def generate_id(self) -> str:
         """
