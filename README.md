@@ -11,4 +11,4 @@ Optional arguments can be passed as 6 integers:
 - grid height 
 - grid width.
 
-The default config reproduced as a CLI arg is `$ python novelty_search.py 2 3 2 3 10 10`
+The default simulation configuration reproduced in the CLI is `python novelty_search.py 2 3 2 3 10 10`
