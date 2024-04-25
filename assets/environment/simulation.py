@@ -25,6 +25,7 @@ class Simulation():
         self.hunters: list[Hunter] = []
         self.grid_history = []
         self.num_steps = 0
+        self.forager_age_limit = 25
         
         # attributes used for analysis
         self.gene_trends = {
@@ -39,6 +40,7 @@ class Simulation():
         self.total_sustenance_gained = 0
         self.total_foragers_lost = 0
         self.total_hunters_lost = 0
+        self.total_foragers_eol = 0
         
         self.simulation_metrics = {
             'total_mating_attempts' : [],
@@ -46,6 +48,7 @@ class Simulation():
             'total_sustenance_gained' : [],
             'total_foragers_lost' : [],
             'total_hunters_lost' : [],
+            'total_foragers_eol': []
         }
         self.total_motivations = {
             'nearest food': 0,
@@ -106,14 +109,19 @@ class Simulation():
                     forager.mated_with.clear()
                     forager.incompatible_with.clear()
                     # Analyse attribute trends
-                if step % 50 == 0:
-                    if forager.steps_alive >= 25:
-                        # Forager dies of old age to make room for offspring
-                        forager.alive = False
-                    self.total_foragers_lost += 1
-                    self.simulation_metrics['total_foragers_lost'].append(
-                        (step, self.total_foragers_lost)
-                    )
+
+                if forager.steps_alive >= self.forager_age_limit:
+                    # Forager dies of old age to make room for offspring
+                    forager.alive = False
+                self.total_foragers_lost += 1
+                self.total_foragers_eol += 1
+                self.simulation_metrics['total_foragers_lost'].append(
+                    (step, self.total_foragers_lost)
+                )
+                self.simulation_metrics['total_foragers_eol'].append(
+                    (step, self.total_foragers_eol)
+                )
+                
                 if not forager.alive:
                     continue
                 forager.log_genes(display, i)
@@ -613,7 +621,8 @@ class MoveError(Exception):
     def __init__(self):
         self.message = 'Invalid forager move.\n'
         super().__init__(self.message)
-import numpy as np
+
+# TODO document this
 # region Analytics
 class SimulationAnalytics:
     """
@@ -622,15 +631,30 @@ class SimulationAnalytics:
     def __init__(self, simulation: Simulation):
         self.__grid = simulation
         self.__foragers = [forager for forager in self.__grid.foragers]
-    
-    def when_stuff_changed(self):
-        for attribute, data in self.__grid.simulation_metrics.items():
-            print(f"{attribute}:")
-            for step, value in data:
-                print(f"Step {step}: {value}")
-            print()
         
-    def display_overall_gene_trends(self):
+    def chart_compare_decisions(self):
+        num_novel = 0
+        num_decisions = 0
+        for forager in self.__foragers:
+            num_novel += forager.num_novel_decisions
+            num_decisions += forager.num_decisions
+        num_decisions = num_decisions - num_novel
+        plt.bar(['Novel Decisions', 'Repeated Decisions'], [num_novel, num_decisions])
+        plt.show()
+    
+    def chart_simulation_metrics(self):
+        keys = list(self.__grid.simulation_metrics.keys())
+        values = list(self.__grid.simulation_metrics.values())
+        final_values = []
+        for value in values:
+            if len(value) > 1:
+                final_values.append(value[-1][1])
+            else:
+                final_values.append(0)
+        plt.bar(keys, final_values)
+        plt.show()
+        
+    def chart_gene_changes(self):
         """
         Plots a chart showing the average change in dynamic attributes.
         """
@@ -646,42 +670,13 @@ class SimulationAnalytics:
         plt.legend(legend_labels)
         plt.show()
     
-    def plot_motivations_trend(self):
+    def chart_motivations(self):
         keys = list(self.__grid.total_motivations.keys())
         values  = list(self.__grid.total_motivations.values())
         plt.bar(keys, values)
         plt.show()
-
     
-    def print_motivation_metrics(self, forager) -> None:
-        """
-        Displays full motivation metrics dictionary.
-        """
-        print(f'Forager {forager.id}\n')
-        for motivation, details in forager.motivation_metrics.items():
-            print(f'{motivation.title()}')
-            if not isinstance(details, dict):
-                print(f'{motivation}: {details}')
-                print()
-            else:
-                for k, v in details.items():
-                    print(f'{k}: {v}')
-                print()
-        print()
-    
-    def get_best_survivors(self, steps_alive: int) -> None:
-        """
-        Returns a list of key metrics from foragers who survived more 
-        than `steps_alive` steps.
-
-        Args:
-            steps_alive (int): Threshold of "best" survivor.
-        """
-        best_foragers = [forager for forager in self.__foragers if forager.steps_alive > steps_alive]
-        for forager in best_foragers:
-            self.print_motivation_metrics(forager)
-            
-    def get_lifetimes(self, display=True) -> list:
+    def chart_lifetime_lengths(self) -> None:
         """
         Pairs a foragers ID with the amount of steps it has survived
         and sorts them in ascending order.
@@ -693,9 +688,47 @@ class SimulationAnalytics:
             list: (forager ID, steps alive)
         """
         lifetimes = [(forager.id, forager.steps_alive) for forager in self.__foragers]
-        lifetimes_asc = sorted(lifetimes, key= lambda x: [1], reverse=True)
-        if display:
-            for f in lifetimes_asc:
-                print(f'Forager {f[0]} survived {f[1]} steps')
-        return lifetimes_asc
+        lifetimes_asc = sorted(lifetimes, key=lambda x: [1], reverse=True)
+        print(lifetimes_asc)
+        life_lengths = []
+        for f in lifetimes_asc:
+            life_lengths.append(f[1])
+        plt.bar(range(len(self.__foragers)), life_lengths)
+        plt.show()
+    
+    def stdout_eol_foragers(self) -> None:
+        """
+        Returns a list of key metrics from foragers who survived until
+        their age limit.
+
+        Args:
+            steps_alive (int): Threshold of "best" survivor.
+        """
+        best_foragers = [forager for forager in self.__foragers if forager.steps_alive >= self.__grid.forager_age_limit]
+        print(f'{len(best_foragers)} foragers survived to old age.\n')
+        for forager in best_foragers:
+            self.__print_motivation_metrics(forager)
+        
+    def stdout_steps_and_actions(self):
+        for k, v in self.__grid.simulation_metrics.items():
+            print(f"{k}:")
+            for step, value in v:
+                print(f"Step {step}: {value}")
+            print()    
+    
+    def __print_motivation_metrics(self, forager) -> None:
+        """
+        Displays full motivation metrics dictionary.
+        """
+        print(f'Forager {forager.id}\n')
+        for motivation, details in forager.motivation_metrics.items():
+            print(f'{motivation.title()}')
+            if not isinstance(details, dict):
+                print(f'{motivation.title()}: {details}')
+                print()
+            else:
+                for k, v in details.items():
+                    print(f'{k.title()}: {v}')
+                print()
+        print()
         
