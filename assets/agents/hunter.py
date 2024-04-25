@@ -3,6 +3,9 @@ import random
 from random import randrange
 
 class Hunter(Mammal):
+    """
+    Predators that fight foragers, or cause them to flee.
+    """
     def __init__(self):
         attributes = self.create_hunter()
         super().__init__(
@@ -16,7 +19,8 @@ class Hunter(Mammal):
         
     def create_hunter(self) -> dict:
         """
-        Hunter attributes are initialised at random.
+        Hunter attributes, initialised at random.
+        The range of values is high, forcing foragers to evolve.
 
         Returns:
             dict: Dictionary containing name and value of attributes.
@@ -28,14 +32,18 @@ class Hunter(Mammal):
         d['endurance'] = float(randrange(4, 8))
         return d
     
-    def get_next_move(self, grid: list, grid_height: int, grid_width: int):
+    def get_next_move(self, 
+                      grid: list, 
+                      grid_height: int, 
+                      grid_width: int) -> tuple[tuple, tuple]:
             """
-            The hunter picks a direction to move in, and moves there if 
-            the space is empty. If there are no empty spaces the hunter 
-            stays still.
+            Finds an empty space directly around itself, and moves to it. 
+            If there are no empty spaces, the hunter remains still.
             
             Args:
-                potential_moves (list): possible moves the hunter can make
+                grid (list): The simulation and its contents
+                grid_height (int): Height of grid
+                grid_width (int): Width of grid
             """
             current_position = None
             potential_moves = []
@@ -64,8 +72,8 @@ class Hunter(Mammal):
             return current_position, new_position
         
     def __str__(self) -> str:
+        """
+        Overload str method for more informative output when printing.
+        """
         return f'Hunter {self.id}.\n'
     
-class MoveError(Exception):
-    def __init__(self, message):
-        super().__init__(message)
