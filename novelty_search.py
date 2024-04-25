@@ -9,8 +9,8 @@ from assets.environment.simulation import SimulationAnalytics
 
 def load_default_inhabitants():
     return [
-        Ravine(grid_width=DEFAULT_GRID_WIDTH, grid_height=DEFAULT_GRID_HEIGHT),
-        Ravine(grid_width=DEFAULT_GRID_WIDTH, grid_height=DEFAULT_GRID_HEIGHT),
+        Ravine(grid_width=DEFAULT_GRID_WIDTH),
+        Ravine(grid_width=DEFAULT_GRID_WIDTH),
         Forager(sex='M'),
         Forager(sex='F'),
         Hunter(),
@@ -28,7 +28,7 @@ if len(sys.argv) < 7:
     # load default simulation config
     simulation = Simulation(DEFAULT_GRID_WIDTH, DEFAULT_GRID_HEIGHT)
     environment = load_default_inhabitants()
-    simulation_steps = 15
+    simulation_steps = 50
 else:
     # read command line arguments
     num_foragers = int(sys.argv[1])
@@ -42,7 +42,7 @@ else:
 
     environment = []
     for i in range(num_ravines):
-        environment.append(Ravine(grid_width=grid_width, grid_height=grid_height))
+        environment.append(Ravine(grid_width=DEFAULT_GRID_WIDTH))
     for i in range(num_foragers):
         if i % 2 == 0:
             environment.append(Forager(sex='M'))
@@ -54,15 +54,11 @@ else:
         environment.append(Food())
 
 simulation.setup_environment(environment)
-simulation.run(steps=simulation_steps, replace_agent=True, display_attributes=True)
+simulation.run(steps=simulation_steps, replace=True, display=True)
 # simulation.get_forager_logs(save_as_txt=False)
 
 analytics = SimulationAnalytics(simulation=simulation)
-# analytics.detailed_analysis()
-# analytics.simulation_metrics()
-analytics.display_motivations_trends()
-# analytics.get_best_survivors(10)
-# print(analytics.get_lifetimes())
-
-
+analytics.display_overall_gene_trends()
+analytics.when_stuff_changed()
+analytics.plot_motivations_trend()
 
