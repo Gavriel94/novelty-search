@@ -58,7 +58,10 @@ simulation.run(steps=simulation_steps, replace=True, display=True)
 # simulation.get_forager_logs(save_as_txt=False)
 
 analytics = SimulationAnalytics(simulation=simulation)
-analytics.display_overall_gene_trends()
-analytics.when_stuff_changed()
-analytics.plot_motivations_trend()
+analytics.chart_lifetime_lengths()
+# analytics.display_overall_gene_trends()
+# analytics.pair_step_and_change()
+# analytics.plot_motivations_trend()
+
+# analytics.get_best_survivors()
 
