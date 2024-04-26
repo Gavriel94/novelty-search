@@ -11,11 +11,18 @@ def load_default_inhabitants():
     return [
         Ravine(grid_width=DEFAULT_GRID_WIDTH),
         Ravine(grid_width=DEFAULT_GRID_WIDTH),
+        Ravine(grid_width=DEFAULT_GRID_WIDTH),
+        Ravine(grid_width=DEFAULT_GRID_WIDTH),
         Forager(sex='M'),
+        Forager(sex='M'),
+        Forager(sex='F'),
         Forager(sex='F'),
         Hunter(),
         Hunter(),
         Hunter(),
+        Food(),
+        Food(),
+        Food(),
         Food(),
         Food(),
         Food()
@@ -23,12 +30,13 @@ def load_default_inhabitants():
 
 DEFAULT_GRID_WIDTH = 20
 DEFAULT_GRID_HEIGHT = 20
+DEFAULT_SIMULATION_STEPS = 200
 
 if len(sys.argv) < 7:
     # load default simulation config
     simulation = Simulation(DEFAULT_GRID_WIDTH, DEFAULT_GRID_HEIGHT)
     environment = load_default_inhabitants()
-    simulation_steps = 200
+    simulation_steps = DEFAULT_SIMULATION_STEPS
 else:
     # read command line arguments
     num_foragers = int(sys.argv[1])

@@ -12,4 +12,4 @@ Optional arguments can be passed as 6 integers:
 - grid width
 - number of steps
 
-The default simulation configuration reproduced in the CLI is `python novelty_search.py 2 3 2 3 10 10`
+The default simulation configuration reproduced in the CLI is `python novelty_search.py 4 3 4 6 20 20 200`
