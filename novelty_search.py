@@ -12,7 +12,6 @@ def load_default_inhabitants():
         Ravine(grid_width=DEFAULT_GRID_WIDTH),
         Ravine(grid_width=DEFAULT_GRID_WIDTH),
         Ravine(grid_width=DEFAULT_GRID_WIDTH),
-        Ravine(grid_width=DEFAULT_GRID_WIDTH),
         Forager(sex='M'),
         Forager(sex='M'),
         Forager(sex='F'),
@@ -28,9 +27,9 @@ def load_default_inhabitants():
         Food()
     ]
 
-DEFAULT_GRID_WIDTH = 20
-DEFAULT_GRID_HEIGHT = 20
-DEFAULT_SIMULATION_STEPS = 200
+DEFAULT_GRID_WIDTH = 15
+DEFAULT_GRID_HEIGHT = 15
+DEFAULT_SIMULATION_STEPS = 45
 
 if len(sys.argv) < 8:
     # load default simulation config

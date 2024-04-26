@@ -170,14 +170,16 @@ class Forager(Mammal):
         
         # forager has spent too much time trying to achieve motivation
         # reset and find a new one
-        if self.endurance < 5 and self.num_motivation_steps > 5:
-            self.num_motivation_steps = 0
-            self.current_motivation = None            
-        elif self.endurance >= 5 and self.num_motivation_steps == 12:
-            self.num_motivation_steps = 0
-            self.current_motivation = None
-        else:
-            self.num_motivation_steps += 1
+        # if self.endurance < 5 and self.num_motivation_steps > 5:
+        #     self.num_motivation_steps = 0
+        #     self.current_motivation = None  
+        #     self.__log_statement(f'Step {self.simulation_step}: {self.id} reset motivation.')          
+        # elif self.endurance >= 5 and self.num_motivation_steps == 12:
+        #     self.__log_statement(f'Step {self.simulation_step}: {self.id} reset motivation.')          
+        #     self.num_motivation_steps = 0
+        #     self.current_motivation = None
+        # else:
+        #     self.num_motivation_steps += 1
         
         if self.current_motivation == None:
             self.set_motivation(environment, actions)
@@ -214,7 +216,7 @@ class Forager(Mammal):
         self.hunger = max((self.hunger - food.sustenance_granted), 0.0)
         self.bravery = max((self.hunger - food.sustenance_granted / 2), 0.0)
         # Log data
-        self.__log_statement(f'Step {self.simulation_step}: {self.id} ate the {food.name}.\n')
+        self.__log_statement(f'Step {self.simulation_step}: {self.id} ate the {food.name}.')
         self.motivation_metrics['food encounters']['num encounters'] += 1
         self.motivation_metrics['food encounters']['total sustenance gained'] += food.sustenance_granted
         self.motivation_metrics['food encounters']['foods tasted'].append(food.name)
@@ -351,10 +353,10 @@ class Forager(Mammal):
         """
         # Get a combination of self and partners genes
         offspring_dict = {
-            'agility': min(10.0, ((self.agility + partner.agility) / 2 + random.uniform(1.5, 3))),
-            'perception': min(10.0, ((self.perception + partner.perception) / 2 + random.uniform(1.5, 3))),
-            'strength': min(10.0, ((self.strength + partner.strength) / 2 + random.uniform(1.5, 3))),
-            'endurance': min(10.0, ((self.endurance + partner.endurance) / 2 + random.uniform(1.5, 3))),
+            'agility': min(10.0, ((self.agility + partner.agility) / 2 + random.uniform(3, 4))),
+            'perception': min(10.0, ((self.perception + partner.perception) / 2 + random.uniform(3, 4))),
+            'strength': min(10.0, ((self.strength + partner.strength) / 2 + random.uniform(3, 4))),
+            'endurance': min(10.0, ((self.endurance + partner.endurance) / 2 + random.uniform(3, 4))),
         }
         # Create offspring
         offspring = Forager(parents_genes=offspring_dict)
@@ -418,21 +420,37 @@ class Forager(Mammal):
                     print(f'| {key.title():<12}| {value:>6.2f} {icon:<1} |')
             print('*' + '-' * 24 + '*')
     
-    def get_log(self, run_name: str = None) -> list | None:
+    def get_log(self, run_name: str = None) -> None:
         """
         Saves the actions of each forager in a txt file.
 
         Args:
-            save_as_txt (bool): If true, save actions as a txt file.
-            run_name (str): Seperate files with new directory names.
-
-        Returns:
-            list | None: List of strings or None if txt files are saved.
+            run_name (str): Directory name to save file.
         """ 
-        with open(f'logs/{run_name}/{self.id}_log.txt', 'w') as f:
+        with open(f'logs/{run_name}/forager_logs/{self.id}_log.txt', 'w') as f:
             for line in self.log:
                 f.write(line)
                 f.write('\n')
+            
+            # attribute table here
+            f.write('\nAttributes\n')
+            f.write(f'Agility: {self.agility:.2f}\n')
+            f.write(f'Perception: {self.perception:.2f}\n')
+            f.write(f'Strength: {self.strength:.2f}\n')
+            f.write(f'Endurance: {self.endurance:.2f}\n')
+            
+            
+            f.write('\nTotal Motivation Metrics')
+            f.write('\n\n')
+            for k, v in self.motivation_metrics.items():
+                f.write(f'{k.title()}')
+                f.write('\n')
+                f.write(str(v))
+                f.write('\n')
+                
+                    
+                
+                    
     
     def __get_compatibility(self) -> float:
         """

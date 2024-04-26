@@ -10,8 +10,8 @@ class Ravine():
     def __init__(self, grid_width: int) -> None:
         self.id = self.generate_id()
         self.skill_required = round(uniform(0.1, 0.7), 2) * 10
-        self.width = randrange(1, grid_width)
-        self.height = randrange(1, grid_width)
+        self.width = randrange(1, grid_width//2)
+        self.height = randrange(1, grid_width//2)
         
     def generate_id(self) -> str:
         """

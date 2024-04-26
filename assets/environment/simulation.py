@@ -4,6 +4,7 @@ import seaborn as sns
 sns.set_theme()
 import os 
 import shutil
+import sys
 
 from ..agents.forager import Forager, ForagerActions
 from ..agents.hunter import Hunter
@@ -77,7 +78,7 @@ class Simulation():
         Args:
             steps (int): Number of simulation steps.
             replace (bool): Replace objects that are removed. 
-            display (bool): Output information to stdout at each time step.
+            display (bool): Output information to file at each time step.
             run_name (str): Name of directory to store informaton.
 
         Raises:
@@ -86,94 +87,106 @@ class Simulation():
         """
 
         self.num_steps = steps
-        for i, step in enumerate(range(steps)):
-            print('*' + '*' * 52 + '*')
-            print(f"{'Step'} {step+1:<45}\n")
-            self.__display_simulation()
-            self.__gather_gene_trend_data()
-            # hunters move
-            for hunter in self.hunters:
-                if not hunter.alive:
-                    continue
-                from_xy, to_xy = hunter.get_next_move(self.grid, self.height, self.width)
-                if to_xy == from_xy:
-                    continue
-                else:
-                    # print(f'Hunter {hunter.id} moved from {(from_xy)} to {(to_xy)}')
-                    from_x = from_xy[0]
-                    from_y = from_xy[1]
-                    new_x = to_xy[0] 
-                    new_y = to_xy[1]
-                
-                    self.grid[new_y][new_x] = self.grid[from_y][from_x]
-                    self.grid[from_y][from_x] = None
+        
+        # write all information to file instead of stdout
+        if os.path.exists(f'logs/{run_name}/simulation'):
+            shutil.rmtree(f'logs/{run_name}/simulation')
+        
+        os.makedirs(f'logs/{run_name}/simulation/')
+        
+        with open(f'logs/{run_name}/simulation/log.txt', 'w') as file:
+            stdout = sys.stdout
+            sys.stdout = file
             
-            # foragers move
-            for i, forager in enumerate(self.foragers):
-                if step % 10 == 0:
-                    forager.mated_with.clear()
-                    forager.incompatible_with.clear()
-                    # Analyse attribute trends
-
-                if forager.steps_alive >= self.forager_age_limit:
-                    # Forager dies of old age to make room for offspring
-                    forager.alive = False
-                self.total_foragers_lost += 1
-                self.total_foragers_eol += 1
-                self.simulation_metrics['total_foragers_lost'].append(
-                    (step, self.total_foragers_lost)
-                )
-                self.simulation_metrics['total_foragers_eol'].append(
-                    (step, self.total_foragers_eol)
-                )
+            for i, step in enumerate(range(steps)):
+                print('*' + '*' * 52 + '*')
+                print(f"{'Step'} {step:<45}\n")
+                self.__display_simulation()
+                self.__gather_gene_trend_data()
+                # hunters move
+                for hunter in self.hunters:
+                    if not hunter.alive:
+                        continue
+                    from_xy, to_xy = hunter.get_next_move(self.grid, self.height, self.width)
+                    if to_xy == from_xy:
+                        continue
+                    else:
+                        # print(f'Hunter {hunter.id} moved from {(from_xy)} to {(to_xy)}')
+                        from_x = from_xy[0]
+                        from_y = from_xy[1]
+                        new_x = to_xy[0] 
+                        new_y = to_xy[1]
+                    
+                        self.grid[new_y][new_x] = self.grid[from_y][from_x]
+                        self.grid[from_y][from_x] = None
                 
-                if not forager.alive:
-                    continue
-                forager.simulation_step = step
-                forager.log_genes(display, i)
-                print()
-                # Coordinates of next step
-                to_x, to_y = forager.get_next_step(self)
-                # Object at next step
-                next_step_obj = self.grid[to_y][to_x]
-                if isinstance(next_step_obj, Food):
-                    # Forager eats food
-                    self.__forager_finds_food(forager, to_x, to_y, replace, step)
-                    forager.steps_alive += 1
-                elif isinstance(next_step_obj, Hunter):
-                    # Forager engages hunter
-                    if forager.hunger_increase():
-                        self.__forager_finds_hunter(forager, to_x, to_y, replace, step)
+                # foragers move
+                for i, forager in enumerate(self.foragers):
+                    if step % 10 == 0:
+                        forager.mated_with.clear()
+                        forager.incompatible_with.clear()
+                        # Analyse attribute trends
+
+                    if forager.steps_alive >= self.forager_age_limit:
+                        # Forager dies of old age to make room for offspring
+                        forager.alive = False
+                    self.total_foragers_lost += 1
+                    self.total_foragers_eol += 1
+                    self.simulation_metrics['total_foragers_lost'].append(
+                        (step, self.total_foragers_lost)
+                    )
+                    self.simulation_metrics['total_foragers_eol'].append(
+                        (step, self.total_foragers_eol)
+                    )
+                    
+                    if not forager.alive:
+                        continue
+                    forager.simulation_step = step
+                    forager.log_genes(display, i)
+                    print()
+                    # Coordinates of next step
+                    to_x, to_y = forager.get_next_step(self)
+                    # Object at next step
+                    next_step_obj = self.grid[to_y][to_x]
+                    if isinstance(next_step_obj, Food):
+                        # Forager eats food
+                        self.__forager_finds_food(forager, to_x, to_y, replace, step)
                         forager.steps_alive += 1
+                    elif isinstance(next_step_obj, Hunter):
+                        # Forager engages hunter
+                        if forager.hunger_increase():
+                            self.__forager_finds_hunter(forager, to_x, to_y, replace, step)
+                            forager.steps_alive += 1
+                        else:
+                            self.__forager_starves(forager, replace, step)
+                    elif isinstance(next_step_obj, Ravine):
+                        # Forager moves through or around ravine
+                        if forager.hunger_increase():
+                            self.__forager_finds_ravine(forager, to_x, to_y)
+                            forager.steps_alive += 1
+                        else:
+                            self.__forager_starves(forager, replace, step)
+                    elif isinstance(next_step_obj, Forager):
+                        # Forager meets another forager    
+                        if forager.hunger_increase():
+                            # Produce offspring, or wait for the other forager to move
+                            self.__forager_finds_forager(forager, to_x, to_y, step)
+                            forager.steps_alive += 1
+                        else:
+                            self.__forager_starves(forager, replace, step)
+                    elif next_step_obj == None:
+                        # Forager moves from one spot to another   
+                        if forager.hunger_increase():
+                            self.__forager_step(forager, to_x, to_y)
+                            forager.steps_alive += 1
+                        else:
+                            self.__forager_starves(forager, replace, step)
                     else:
-                        self.__forager_starves(forager, replace, step)
-                elif isinstance(next_step_obj, Ravine):
-                    # Forager moves through or around ravine
-                    if forager.hunger_increase():
-                        self.__forager_finds_ravine(forager, to_x, to_y)
-                        forager.steps_alive += 1
-                    else:
-                        self.__forager_starves(forager, replace, step)
-                elif isinstance(next_step_obj, Forager):
-                    # Forager meets another forager    
-                    if forager.hunger_increase():
-                        # Produce offspring, or wait for the other forager to move
-                        self.__forager_finds_forager(forager, to_x, to_y, step)
-                        forager.steps_alive += 1
-                    else:
-                        self.__forager_starves(forager, replace, step)
-                elif next_step_obj == None:
-                    # Forager moves from one spot to another   
-                    if forager.hunger_increase():
-                        self.__forager_step(forager, to_x, to_y)
-                        forager.steps_alive += 1
-                    else:
-                        self.__forager_starves(forager, replace, step)
-                else:
-                    raise MoveError
-            print('*' + '-' * 52 + '*')
-            if step != steps - 1:                
-                print() 
+                        raise MoveError
+                print('*' + '-' * 52 + '*')
+                if step != steps - 1:                
+                    print() 
+            sys.stdout = stdout
             
     def setup_environment(self, objects: list) -> None:
         """
@@ -197,17 +210,17 @@ class Simulation():
             run_name (str): Directory name.
         """
         try:
-            os.mkdir(f'logs/{run_name}/forager_logs/')
+            os.makedirs(f'logs/{run_name}/forager_logs/')
         except:
-            shutil.rmtree(f'logs/{run_name}/forager_')
-            os.mkdir(f'logs/{run_name}')
+            shutil.rmtree(f'logs/{run_name}/forager_logs/')
+            os.makedirs(f'logs/{run_name}/forager_logs/')
             
         for forager in self.foragers:
             forager.get_log(run_name)
                 
     def __display_simulation(self) -> None:
         """
-        Outputs simulation to stdout.
+        Outputs simulation.
         """
         d = {
             Forager: 'F',
@@ -347,10 +360,9 @@ class Simulation():
         self.simulation_metrics['total_sustenance_gained'].append(
             (step, self.total_sustenance_gained)
         )
-        if replace:
-            # Replace eaten food with another at a random location
-            f = Food()
-            self.__place_object(f)
+        # Replace eaten food with another at a random location
+        f = Food()
+        self.__place_object(f)
             
     def __forager_finds_hunter(self, 
                                forager: Forager, 
