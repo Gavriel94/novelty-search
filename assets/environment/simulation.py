@@ -65,7 +65,8 @@ class Simulation():
     def run(self, 
             steps: int, 
             replace: bool, 
-            display: bool) -> None:
+            display: bool,
+            run_name: str) -> None:
         """
         Runs the simulation.
         
@@ -77,6 +78,7 @@ class Simulation():
             steps (int): Number of simulation steps.
             replace (bool): Replace objects that are removed. 
             display (bool): Output information to stdout at each time step.
+            run_name (str): Name of directory to store informaton.
 
         Raises:
             MoveError: Simulation ends if an invalid move has been made.
@@ -188,15 +190,16 @@ class Simulation():
     
     def save_forager_logs(self, run_name: str) -> None:
         """
-        Saves the log of each forager in a txt file.
+        Isolates each foragers log from the simulation and stores it in
+        a txt file.
 
         Args:
             run_name (str): Directory name.
         """
         try:
-            os.mkdir(f'logs/{run_name}')
+            os.mkdir(f'logs/{run_name}/forager_logs/')
         except:
-            shutil.rmtree(f'logs/{run_name}')
+            shutil.rmtree(f'logs/{run_name}/forager_')
             os.mkdir(f'logs/{run_name}')
             
         for forager in self.foragers:

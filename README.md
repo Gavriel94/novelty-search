@@ -3,7 +3,7 @@ A simulated environment in which foragers search for food and mates while naviga
 Can be run from the command line
 `$ python novelty_search.py`
 
-Optional arguments can be passed as 6 integers: 
+Optional arguments can be passed to change the simulation setup: 
 - number of foragers 
 - number of hunters 
 - number of ravines 
@@ -11,8 +11,10 @@ Optional arguments can be passed as 6 integers:
 - grid height 
 - grid width
 - number of steps
+- run name
 
-The default simulation configuration reproduced in the CLI is `python novelty_search.py 4 3 4 6 20 20 200`
+The default simulation configuration reproduced in the CLI is `python novelty_search.py 4 3 4 6 20 20 200 my_run`
+The run name determines the name of the directy within `logs/` where all the data about the simulation is stored. This includes the environment, foragers decisions and forager logs. Each foragers log is also isolated and stored seperately in `logs/forager/run_name`
 
 To change between novelty search or random search, or to have more granular configuration options, refer to `forager_config.toml`. This allows editing of initial hunger and bravery, compatibility threshold and more.
 

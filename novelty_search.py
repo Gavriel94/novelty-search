@@ -32,11 +32,12 @@ DEFAULT_GRID_WIDTH = 20
 DEFAULT_GRID_HEIGHT = 20
 DEFAULT_SIMULATION_STEPS = 200
 
-if len(sys.argv) < 7:
+if len(sys.argv) < 8:
     # load default simulation config
     simulation = Simulation(DEFAULT_GRID_WIDTH, DEFAULT_GRID_HEIGHT)
     environment = load_default_inhabitants()
     simulation_steps = DEFAULT_SIMULATION_STEPS
+    run_name = 'run'
 else:
     # read command line arguments
     num_foragers = int(sys.argv[1])
@@ -46,6 +47,7 @@ else:
     grid_height = int(sys.argv[5])
     grid_width = int(sys.argv[6])
     simulation_steps = int(sys.argv[7])
+    run_name = str(sys.argv[8])
     simulation = Simulation(grid_width, grid_height)
 
     environment = []
@@ -62,8 +64,8 @@ else:
         environment.append(Food())
 
 simulation.setup_environment(environment)
-simulation.run(steps=simulation_steps, replace=True, display=True)
+simulation.run(steps=simulation_steps, replace=False, display=True, run_name=run_name)
 
-simulation.save_forager_logs(run_name='Novelty_Run_1')
+simulation.save_forager_logs(run_name=run_name)
 
 analytics = SimulationAnalytics(simulation=simulation)
