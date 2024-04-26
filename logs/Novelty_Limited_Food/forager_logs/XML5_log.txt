@@ -1,0 +1,34 @@
+Step 69: Forager XML5 is going to find nearest forager.
+Step 70: XML5 successfully crossed ravine.
+Step 71: XML5 (F: 28.00) and 6PAz (M: 25.41) are compatible.
+Step 71: XML5 and 6PAz produced offspring 3CdY.
+Step 74: Forager XML5 is going to find furthest forager.
+
+Attributes
+Agility: 10.00
+Perception: 10.00
+Strength: 10.00
+Endurance: 10.00
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 0, 'total sustenance gained': 0, 'foods tasted': []}
+Offspring Produced
+1
+Nearest Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Furthest Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Most Sustaining Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Nearest Forager
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 5, 'average time': '6.666666666666667%'}
+Furthest Forager
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 1, 'average time': '1.3333333333333335%'}
+Most Compatible Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 1, 'times attempted': 1}

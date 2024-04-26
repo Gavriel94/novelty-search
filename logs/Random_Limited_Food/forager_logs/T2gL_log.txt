@@ -1,0 +1,52 @@
+Step 35: Forager T2gL is going to find nearest food.
+Step 42: T2gL (23.83) and 5Zp6 (15.04) are not compatible.
+Step 43: Forager T2gL is going to find furthest forager.
+Step 43: T2gL (23.83) and ZzPy (15.38) are not compatible.
+Step 44: Forager T2gL is going to find nearest forager.
+Step 44: T2gL (M: 23.83) and cL2X (F: 24.69) are compatible.
+Step 44: T2gL and cL2X produced offspring uCsn.
+Step 48: T2gL (M) and xL4F (M) are not compatible.
+Step 49: Forager T2gL is going to find nearest food.
+Step 51: T2gL successfully crossed ravine.
+Step 52: T2gL (M) and xL4F (M) are not compatible.
+Step 53: Forager T2gL is going to find most compatible forager.
+Step 53: T2gL (23.83) and ZzPy (15.38) are not compatible.
+Step 54: Forager T2gL is going to find nearest forager.
+Step 55: T2gL successfully crossed ravine.
+Step 56: T2gL successfully crossed ravine.
+Step 57: T2gL successfully crossed ravine.
+Step 58: T2gL successfully crossed ravine.
+Step 59: T2gL successfully crossed ravine.
+Step 60: T2gL successfully crossed ravine.
+Step 61: T2gL successfully crossed ravine.
+Step 68: T2gL (M) and uCsn (M) are not compatible.
+Step 69: Forager T2gL is going to find furthest food.
+
+Attributes
+Agility: 8.76
+Perception: 8.45
+Strength: 8.16
+Endurance: 8.72
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 0, 'total sustenance gained': 0, 'foods tasted': []}
+Offspring Produced
+1
+Nearest Food
+{'times chosen': 4, 'successful outcomes': 0, 'total time': 12, 'average time': '16.0%'}
+Furthest Food
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 6, 'average time': '8.0%'}
+Most Sustaining Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Nearest Forager
+{'times chosen': 4, 'successful outcomes': 0, 'total time': 20, 'average time': '26.666666666666668%'}
+Furthest Forager
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 1, 'average time': '1.3333333333333335%'}
+Most Compatible Forager
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 1, 'average time': '1.3333333333333335%'}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 8, 'times attempted': 8}

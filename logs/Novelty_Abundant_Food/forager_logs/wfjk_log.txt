@@ -1,0 +1,32 @@
+Step 9: Forager wfjk is going to find nearest forager.
+Step 9: wfjk fled hunter zGuy.
+Step 10: wfjk was caught by hunter wYEU.
+
+Attributes
+Agility: 5.96
+Perception: 4.33
+Strength: 5.53
+Endurance: 5.55
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 0, 'total sustenance gained': 0, 'foods tasted': []}
+Offspring Produced
+0
+Nearest Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Furthest Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Most Sustaining Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Nearest Forager
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 4, 'average time': '5.333333333333334%'}
+Furthest Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Most Compatible Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Hunter Encounters
+{'num encounters': 2, 'times fought': 2, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 1, 'times lost': 1}
+Ravine Encounters
+{'times jumped': 0, 'times attempted': 0}

@@ -1,0 +1,48 @@
+Step 0: Forager x3Ea is going to find nearest food.
+Step 0: x3Ea (M: 5.50) and WQY9 (F: 7.00) are compatible.
+Step 0: x3Ea and WQY9 produced offspring LzPW.
+Step 4: x3Ea fails to cross ravine.
+Step 6: x3Ea fails to cross ravine.
+Step 11: x3Ea ate the flower.
+Step 18: x3Ea (M: 5.50) and WQY9 (F: 7.00) are compatible.
+Step 18: x3Ea and WQY9 produced offspring DyA8.
+Step 21: x3Ea ate the flower.
+Step 24: x3Ea (M: 5.50) and WQY9 (F: 7.00) are compatible.
+Step 24: x3Ea and WQY9 produced offspring tbGQ.
+Step 33: x3Ea ate the apple.
+Step 35: x3Ea ate the apple.
+Step 37: x3Ea ate the melon.
+Step 39: x3Ea fails to cross ravine.
+Step 40: x3Ea fails to cross ravine.
+Step 41: x3Ea fails to cross ravine.
+Step 42: x3Ea fails to cross ravine.
+Step 46: x3Ea ate the melon.
+
+Attributes
+Agility: 2.00
+Perception: 1.00
+Strength: 1.00
+Endurance: 1.00
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 6, 'total sustenance gained': 2.4000000000000004, 'foods tasted': ['flower', 'flower', 'apple', 'apple', 'melon', 'melon']}
+Offspring Produced
+3
+Nearest Food
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 50, 'average time': '66.66666666666666%'}
+Furthest Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Most Sustaining Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Nearest Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Furthest Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Most Compatible Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 0, 'times attempted': 6}

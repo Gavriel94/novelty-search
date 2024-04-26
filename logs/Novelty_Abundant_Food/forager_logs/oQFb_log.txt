@@ -1,0 +1,54 @@
+Step 0: Forager oQFb is going to find furthest forager.
+Step 3: oQFb fails to cross ravine.
+Step 4: oQFb fails to cross ravine.
+Step 8: oQFb (F: 7.00) and S6aC (M: 7.00) are compatible.
+Step 8: oQFb and S6aC produced offspring xDzB.
+Step 10: Forager oQFb is going to find nearest forager.
+Step 10: oQFb fails to cross ravine.
+Step 12: oQFb fails to cross ravine.
+Step 13: oQFb (7.00) and e6Ex (15.63) are not compatible.
+Step 14: Forager oQFb is going to find furthest food.
+Step 16: oQFb (F) and Qb54 (F) are not compatible.
+Step 17: Forager oQFb is going to find furthest forager.
+Step 17: Forager oQFb found furthest forager.
+Step 17: Forager oQFb is going to find most sustaining food.
+Step 17: oQFb (7.00) and e6Ex (15.63) are not compatible.
+Step 18: Forager oQFb is going to find furthest food.
+Step 22: oQFb ate the pumpkin.
+Step 25: oQFb ate the mushroom.
+Step 28: oQFb ate the melon.
+Step 32: oQFb ate the shrub.
+Step 35: oQFb ate the mushroom.
+Step 36: oQFb ate the apple.
+Step 38: oQFb ate the shrub.
+Step 44: oQFb ate the apple.
+Step 49: oQFb ate the carrot.
+
+Attributes
+Agility: 1.00
+Perception: 2.00
+Strength: 1.00
+Endurance: 2.00
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 9, 'total sustenance gained': 3.5999999999999996, 'foods tasted': ['pumpkin', 'mushroom', 'melon', 'shrub', 'mushroom', 'apple', 'shrub', 'apple', 'carrot']}
+Offspring Produced
+1
+Nearest Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Furthest Food
+{'times chosen': 3, 'successful outcomes': 0, 'total time': 35, 'average time': '46.666666666666664%'}
+Most Sustaining Food
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Nearest Forager
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 4, 'average time': '5.333333333333334%'}
+Furthest Forager
+{'times chosen': 2, 'successful outcomes': 1, 'total time': 11, 'average time': '13.333333333333334%'}
+Most Compatible Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 0, 'times attempted': 4}

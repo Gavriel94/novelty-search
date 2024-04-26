@@ -1,0 +1,47 @@
+Step 30: Forager 8a5L is going to find most compatible forager.
+Step 31: 8a5L (22.85) and YX8S (5.50) are not compatible.
+Step 32: Forager 8a5L is going to find nearest forager.
+Step 41: 8a5L ate the apple.
+Step 45: 8a5L (22.85) and mgdS (13.49) are not compatible.
+Step 46: Forager 8a5L is going to find nearest food.
+Step 46: 8a5L successfully crossed ravine.
+Step 47: 8a5L successfully crossed ravine.
+Step 49: 8a5L successfully crossed ravine.
+Step 54: 8a5L successfully crossed ravine.
+Step 55: 8a5L successfully crossed ravine.
+Step 57: 8a5L successfully crossed ravine.
+Step 61: 8a5L (22.85) and URhb (14.22) are not compatible.
+Step 62: Forager 8a5L is going to find furthest food.
+Step 65: 8a5L successfully crossed ravine.
+Step 67: 8a5L ate the carrot.
+Step 68: 8a5L successfully crossed ravine.
+Step 71: 8a5L ate the mushroom.
+
+Attributes
+Agility: 8.88
+Perception: 8.32
+Strength: 7.36
+Endurance: 8.70
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 3, 'total sustenance gained': 1.0, 'foods tasted': ['apple', 'carrot', 'mushroom']}
+Offspring Produced
+0
+Nearest Food
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 16, 'average time': '21.333333333333336%'}
+Furthest Food
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 13, 'average time': '17.333333333333336%'}
+Most Sustaining Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Nearest Forager
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 14, 'average time': '18.666666666666668%'}
+Furthest Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Most Compatible Forager
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 2, 'average time': '2.666666666666667%'}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 1, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 8, 'times attempted': 8}

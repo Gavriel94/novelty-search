@@ -1,0 +1,47 @@
+Step 37: Forager cL2X is going to find nearest food.
+Step 38: cL2X ate the pumpkin.
+Step 39: cL2X (F) and rjGn (F) are not compatible.
+Step 40: Forager cL2X is going to find most compatible forager.
+Step 48: cL2X (F) and 5Zp6 (F) are not compatible.
+Step 49: Forager cL2X is going to find most sustaining food.
+Step 49: cL2X successfully crossed ravine.
+Step 53: cL2X ate the shrub.
+Step 67: cL2X (24.69) and sCHz (14.62) are not compatible.
+Step 68: Forager cL2X is going to find most sustaining food.
+Step 68: cL2X (24.69) and sCHz (14.62) are not compatible.
+Step 69: Forager cL2X is going to find furthest food.
+Step 70: cL2X (24.69) and sCHz (14.62) are not compatible.
+Step 71: Forager cL2X is going to find nearest food.
+Step 72: cL2X (F: 24.69) and 7tWe (M: 28.00) are compatible.
+Step 72: cL2X and 7tWe produced offspring b8nk.
+Step 73: cL2X (F: 24.69) and xL4F (M: 24.68) are compatible.
+Step 73: cL2X and xL4F produced offspring uuJm.
+
+Attributes
+Agility: 8.59
+Perception: 9.01
+Strength: 8.18
+Endurance: 8.57
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 2, 'total sustenance gained': 1.0, 'foods tasted': ['pumpkin', 'shrub']}
+Offspring Produced
+2
+Nearest Food
+{'times chosen': 3, 'successful outcomes': 0, 'total time': 7, 'average time': '9.333333333333334%'}
+Furthest Food
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 2, 'average time': '2.666666666666667%'}
+Most Sustaining Food
+{'times chosen': 4, 'successful outcomes': 0, 'total time': 20, 'average time': '26.666666666666668%'}
+Nearest Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Furthest Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Most Compatible Forager
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 9, 'average time': '12.0%'}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 1, 'times attempted': 1}

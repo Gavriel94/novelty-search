@@ -9,31 +9,36 @@ from assets.environment.simulation import SimulationAnalytics
 
 def load_default_inhabitants():
     return [
-        Ravine(grid_width=DEFAULT_GRID_WIDTH),
-        Ravine(grid_width=DEFAULT_GRID_WIDTH),
-        Ravine(grid_width=DEFAULT_GRID_WIDTH),
-        Forager(sex='M'),
-        Forager(sex='M'),
-        Forager(sex='F'),
-        Forager(sex='F'),
-        Hunter(),
-        Hunter(),
-        Hunter(),
-        Food(),
-        Food(),
-        Food(),
-        Food(),
-        Food(),
-        Food()
-    ]
+    Ravine(grid_width=DEFAULT_GRID_WIDTH),
+    Ravine(grid_width=DEFAULT_GRID_WIDTH),
+    Ravine(grid_width=DEFAULT_GRID_WIDTH),
+    Forager(sex='M'),
+    Forager(sex='M'),
+    Forager(sex='F'),
+    Forager(sex='F'),
+    Hunter(),
+    Hunter(),
+    Hunter(),
+    Hunter(),
+    Hunter(),
+    Hunter(),
+    Hunter(),
+    Hunter(),
+    Food(),
+    Food(),
+    Food(),
+    Food(),
+    Food(),
+    Food(),
+]
 
 DEFAULT_GRID_WIDTH = 15
 DEFAULT_GRID_HEIGHT = 15
-DEFAULT_SIMULATION_STEPS = 45
+DEFAULT_SIMULATION_STEPS = 75
 
 if len(sys.argv) < 8:
     # load default simulation config
-    run_name = 'run'
+    run_name = 'Random_Many_Hunters'
     simulation = Simulation(DEFAULT_GRID_WIDTH, DEFAULT_GRID_HEIGHT, run_name)
     environment = load_default_inhabitants()
     simulation_steps = DEFAULT_SIMULATION_STEPS
@@ -68,8 +73,8 @@ simulation.run(steps=simulation_steps, replace=False, display=True)
 simulation.save_forager_logs(run_name=run_name)
 
 analytics = SimulationAnalytics(simulation=simulation)
-# analytics.chart_compare_decisions()
-# analytics.chart_simulation_metrics()
-# analytics.chart_gene_changes()
-# analytics.chart_motivations()
-# analytics.chart_lifetime_lengths()
+analytics.chart_compare_decisions()
+analytics.chart_simulation_metrics()
+analytics.chart_gene_changes()
+analytics.chart_motivations()
+analytics.chart_lifetime_lengths()

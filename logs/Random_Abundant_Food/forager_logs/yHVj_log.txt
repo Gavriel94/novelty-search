@@ -1,0 +1,55 @@
+Step 21: Forager yHVj is going to find furthest food.
+Step 22: yHVj ate the melon.
+Step 25: yHVj ate the apple.
+Step 28: yHVj ate the mushroom.
+Step 29: yHVj (M) and C4fz (M) are not compatible.
+Step 30: Forager yHVj is going to find furthest food.
+Step 31: yHVj ate the mushroom.
+Step 32: yHVj ate the carrot.
+Step 33: yHVj ate the carrot.
+Step 34: yHVj ate the pumpkin.
+Step 35: yHVj fled hunter 4pai.
+Step 35: yHVj ate the pumpkin.
+Step 36: yHVj ate the melon.
+Step 37: yHVj ate the shrub.
+Step 39: yHVj ate the mushroom.
+Step 40: yHVj ate the shrub.
+Step 41: yHVj ate the apple.
+Step 42: yHVj ate the apple.
+Step 43: yHVj ate the carrot.
+Step 44: yHVj fled hunter 4pai.
+Step 44: yHVj ate the apple.
+Step 45: yHVj ate the flower.
+Step 46: yHVj ate the mushroom.
+Step 47: yHVj ate the melon.
+Step 48: yHVj ate the apple.
+Step 49: yHVj ate the melon.
+
+Attributes
+Agility: 7.91
+Perception: 8.82
+Strength: 7.65
+Endurance: 8.77
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 21, 'total sustenance gained': 9.200000000000001, 'foods tasted': ['melon', 'apple', 'mushroom', 'mushroom', 'carrot', 'carrot', 'pumpkin', 'pumpkin', 'melon', 'shrub', 'mushroom', 'shrub', 'apple', 'apple', 'carrot', 'apple', 'flower', 'mushroom', 'melon', 'apple', 'melon']}
+Offspring Produced
+0
+Nearest Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Furthest Food
+{'times chosen': 3, 'successful outcomes': 0, 'total time': 50, 'average time': '66.66666666666666%'}
+Most Sustaining Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Nearest Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Furthest Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Most Compatible Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Hunter Encounters
+{'num encounters': 2, 'times fought': 2, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 2, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 0, 'times attempted': 0}

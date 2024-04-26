@@ -1,5 +1,5 @@
 # true for novelty search, false for random decisions (true/false)
-novelty_search = true
+novelty_search = false
 
 # Initial hunger (valid range 0-10)
 hunger = 3

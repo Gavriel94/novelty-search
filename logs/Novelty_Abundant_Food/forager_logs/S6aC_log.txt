@@ -1,0 +1,48 @@
+Step 0: Forager S6aC is going to find furthest forager.
+Step 8: S6aC fails to cross ravine.
+Step 9: S6aC (M: 7.00) and oQFb (F: 7.00) are compatible.
+Step 9: S6aC and oQFb produced offspring e6Ex.
+Step 10: S6aC (M: 7.00) and oQFb (F: 7.00) are compatible.
+Step 10: S6aC and oQFb produced offspring qoDn.
+Step 11: Forager S6aC found furthest forager.
+Step 11: Forager S6aC is going to find nearest forager.
+Step 12: Forager S6aC is going to find furthest forager.
+Step 13: Forager S6aC is going to find furthest food.
+Step 17: S6aC ate the pumpkin.
+Step 19: S6aC ate the carrot.
+Step 21: S6aC ate the flower.
+Step 26: S6aC ate the pumpkin.
+Step 31: S6aC ate the melon.
+Step 34: S6aC ate the mushroom.
+Step 36: S6aC ate the apple.
+Step 39: S6aC ate the shrub.
+Step 42: S6aC ate the flower.
+
+Attributes
+Agility: 2.00
+Perception: 2.00
+Strength: 1.00
+Endurance: 1.00
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 9, 'total sustenance gained': 3.8000000000000003, 'foods tasted': ['pumpkin', 'carrot', 'flower', 'pumpkin', 'melon', 'mushroom', 'apple', 'shrub', 'flower']}
+Offspring Produced
+2
+Nearest Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Furthest Food
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 37, 'average time': '49.333333333333336%'}
+Most Sustaining Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Nearest Forager
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Furthest Forager
+{'times chosen': 2, 'successful outcomes': 1, 'total time': 13, 'average time': '17.333333333333336%'}
+Most Compatible Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 0, 'times attempted': 1}

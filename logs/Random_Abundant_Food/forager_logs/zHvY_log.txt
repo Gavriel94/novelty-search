@@ -1,0 +1,54 @@
+Step 0: Forager zHvY is going to find most compatible forager.
+Step 1: zHvY fails to cross ravine.
+Step 2: zHvY fails to cross ravine.
+Step 3: zHvY fails to cross ravine.
+Step 8: zHvY fails to cross ravine.
+Step 9: zHvY fails to cross ravine.
+Step 10: zHvY fails to cross ravine.
+Step 11: zHvY fails to cross ravine.
+Step 12: zHvY fails to cross ravine.
+Step 19: zHvY (M) and C4fz (M) are not compatible.
+Step 20: Forager zHvY is going to find most sustaining food.
+Step 20: zHvY fails to cross ravine.
+Step 24: zHvY fails to cross ravine.
+Step 25: zHvY fails to cross ravine.
+Step 28: zHvY (M) and C4fz (M) are not compatible.
+Step 29: Forager zHvY is going to find nearest forager.
+Step 29: zHvY fails to cross ravine.
+Step 30: zHvY fails to cross ravine.
+Step 35: zHvY (M) and d4uG (M) are not compatible.
+Step 36: Forager zHvY is going to find most sustaining food.
+Step 36: zHvY fails to cross ravine.
+Step 45: zHvY fails to cross ravine.
+Step 47: zHvY ate the shrub.
+Step 48: zHvY ate the melon.
+Step 49: zHvY (7.00) and qDJN (15.07) are not compatible.
+
+Attributes
+Agility: 2.00
+Perception: 2.00
+Strength: 1.00
+Endurance: 2.00
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 2, 'total sustenance gained': 1.0, 'foods tasted': ['shrub', 'melon']}
+Offspring Produced
+0
+Nearest Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Furthest Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Most Sustaining Food
+{'times chosen': 4, 'successful outcomes': 0, 'total time': 23, 'average time': '30.666666666666664%'}
+Nearest Forager
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 7, 'average time': '9.333333333333334%'}
+Furthest Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Most Compatible Forager
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 20, 'average time': '26.666666666666668%'}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 0, 'times attempted': 15}

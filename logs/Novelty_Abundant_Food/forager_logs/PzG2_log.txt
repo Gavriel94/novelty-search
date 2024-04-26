@@ -1,0 +1,51 @@
+Step 32: Forager PzG2 is going to find most sustaining food.
+Step 32: PzG2 ate the melon.
+Step 33: PzG2 ate the melon.
+Step 42: PzG2 ate the pumpkin.
+Step 43: PzG2 ate the shrub.
+Step 47: PzG2 (23.06) and qoDn (15.53) are not compatible.
+Step 48: Forager PzG2 is going to find most compatible forager.
+Step 49: PzG2 ate the pumpkin.
+Step 50: PzG2 (23.06) and oQFb (7.00) are not compatible.
+Step 51: Forager PzG2 is going to find furthest food.
+Step 51: PzG2 (23.06) and oQFb (7.00) are not compatible.
+Step 52: Forager PzG2 is going to find furthest forager.
+Step 52: PzG2 (23.06) and oQFb (7.00) are not compatible.
+Step 53: Forager PzG2 is going to find nearest forager.
+Step 55: PzG2 (M: 23.06) and rigs (F: 24.01) are compatible.
+Step 55: PzG2 and rigs produced offspring KFZm.
+Step 57: Forager PzG2 is going to find nearest food.
+Step 58: Forager PzG2 is going to find furthest forager.
+Step 59: Forager PzG2 is going to find furthest food.
+Step 62: PzG2 ate the apple.
+Step 68: PzG2 ate the carrot.
+Step 70: PzG2 ate the pumpkin.
+
+Attributes
+Agility: 7.95
+Perception: 7.66
+Strength: 8.56
+Endurance: 9.24
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 8, 'total sustenance gained': 4.9, 'foods tasted': ['melon', 'melon', 'pumpkin', 'shrub', 'pumpkin', 'apple', 'carrot', 'pumpkin']}
+Offspring Produced
+1
+Nearest Food
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 1, 'average time': '1.3333333333333335%'}
+Furthest Food
+{'times chosen': 3, 'successful outcomes': 0, 'total time': 17, 'average time': '22.666666666666664%'}
+Most Sustaining Food
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 15, 'average time': '20.0%'}
+Nearest Forager
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 4, 'average time': '5.333333333333334%'}
+Furthest Forager
+{'times chosen': 3, 'successful outcomes': 0, 'total time': 2, 'average time': '2.666666666666667%'}
+Most Compatible Forager
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 3, 'average time': '4.0%'}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 0, 'times attempted': 0}

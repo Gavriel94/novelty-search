@@ -1,0 +1,52 @@
+Step 26: Forager WJbi is going to find most sustaining food.
+Step 35: WJbi ate the shrub.
+Step 37: WJbi (M: 15.44) and 5Zp6 (F: 15.04) are compatible.
+Step 37: WJbi and 5Zp6 produced offspring cL2X.
+Step 39: Forager WJbi is going to find nearest food.
+Step 39: WJbi ate the shrub.
+Step 46: WJbi (M: 15.44) and EcyT (F: 16.50) are compatible.
+Step 46: WJbi and EcyT produced offspring xL4F.
+Step 58: WJbi successfully crossed ravine.
+Step 60: WJbi (15.44) and rjGn (7.00) are not compatible.
+Step 61: Forager WJbi is going to find nearest food.
+Step 61: WJbi (15.44) and rjGn (7.00) are not compatible.
+Step 62: Forager WJbi is going to find nearest food.
+Step 62: WJbi (15.44) and rjGn (7.00) are not compatible.
+Step 63: Forager WJbi is going to find most sustaining food.
+Step 63: WJbi (15.44) and rjGn (7.00) are not compatible.
+Step 64: Forager WJbi is going to find nearest forager.
+Step 64: WJbi (15.44) and rjGn (7.00) are not compatible.
+Step 65: Forager WJbi is going to find furthest food.
+Step 66: WJbi successfully crossed ravine.
+Step 71: WJbi ate the carrot.
+Step 73: WJbi (15.44) and PPqH (24.66) are not compatible.
+Step 74: Forager WJbi is going to find most sustaining food.
+
+Attributes
+Agility: 5.76
+Perception: 5.56
+Strength: 4.10
+Endurance: 4.61
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 3, 'total sustenance gained': 0.8, 'foods tasted': ['shrub', 'shrub', 'carrot']}
+Offspring Produced
+2
+Nearest Food
+{'times chosen': 6, 'successful outcomes': 0, 'total time': 24, 'average time': '32.0%'}
+Furthest Food
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 9, 'average time': '12.0%'}
+Most Sustaining Food
+{'times chosen': 4, 'successful outcomes': 0, 'total time': 15, 'average time': '20.0%'}
+Nearest Forager
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 1, 'average time': '1.3333333333333335%'}
+Furthest Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Most Compatible Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 2, 'times attempted': 2}

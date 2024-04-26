@@ -1,0 +1,50 @@
+Step 1: Forager ABgj is going to find furthest food.
+Step 1: ABgj successfully crossed ravine.
+Step 3: ABgj ate the melon.
+Step 7: ABgj ate the shrub.
+Step 11: ABgj ate the pumpkin.
+Step 13: ABgj ate the carrot.
+Step 15: ABgj ate the apple.
+Step 18: ABgj ate the melon.
+Step 21: ABgj (F: 15.92) and d4uG (M: 15.91) are compatible.
+Step 21: ABgj and d4uG produced offspring kh3B.
+Step 23: Forager ABgj is going to find most compatible forager.
+Step 27: Forager ABgj is going to find nearest forager.
+Step 34: ABgj successfully crossed ravine.
+Step 36: ABgj successfully crossed ravine.
+Step 37: ABgj successfully crossed ravine.
+Step 40: ABgj successfully crossed ravine.
+Step 42: ABgj successfully crossed ravine.
+Step 48: Forager ABgj found nearest forager.
+Step 48: Forager ABgj is going to find most sustaining food.
+Step 48: ABgj (15.92) and yHVj (23.88) are not compatible.
+Step 49: Forager ABgj is going to find nearest food.
+
+Attributes
+Agility: 4.18
+Perception: 5.79
+Strength: 4.23
+Endurance: 5.24
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 6, 'total sustenance gained': 3.3, 'foods tasted': ['melon', 'shrub', 'pumpkin', 'carrot', 'apple', 'melon']}
+Offspring Produced
+1
+Nearest Food
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 2, 'average time': '2.666666666666667%'}
+Furthest Food
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 22, 'average time': '29.333333333333332%'}
+Most Sustaining Food
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Nearest Forager
+{'times chosen': 1, 'successful outcomes': 1, 'total time': 22, 'average time': '28.000000000000004%'}
+Furthest Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Most Compatible Forager
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 4, 'average time': '5.333333333333334%'}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 6, 'times attempted': 6}

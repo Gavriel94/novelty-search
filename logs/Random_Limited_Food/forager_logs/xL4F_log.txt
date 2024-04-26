@@ -1,0 +1,51 @@
+Step 46: Forager xL4F is going to find nearest forager.
+Step 47: xL4F (M) and T2gL (M) are not compatible.
+Step 48: Forager xL4F is going to find most compatible forager.
+Step 50: xL4F (24.68) and EcyT (16.50) are not compatible.
+Step 51: Forager xL4F is going to find nearest food.
+Step 51: xL4F successfully crossed ravine.
+Step 57: xL4F (24.68) and EcyT (16.50) are not compatible.
+Step 58: Forager xL4F is going to find nearest forager.
+Step 59: xL4F (24.68) and ZzPy (15.38) are not compatible.
+Step 60: Forager xL4F is going to find furthest forager.
+Step 60: xL4F (24.68) and ZzPy (15.38) are not compatible.
+Step 61: Forager xL4F is going to find nearest food.
+Step 63: xL4F (24.68) and ZzPy (15.38) are not compatible.
+Step 64: Forager xL4F is going to find most sustaining food.
+Step 65: xL4F (24.68) and ZzPy (15.38) are not compatible.
+Step 66: Forager xL4F is going to find most compatible forager.
+Step 66: xL4F (24.68) and ZzPy (15.38) are not compatible.
+Step 67: Forager xL4F is going to find most compatible forager.
+Step 67: xL4F (24.68) and ZzPy (15.38) are not compatible.
+Step 68: Forager xL4F is going to find nearest food.
+Step 69: xL4F (24.68) and MCo9 (6.50) are not compatible.
+Step 70: Forager xL4F is going to find nearest food.
+
+Attributes
+Agility: 9.40
+Perception: 9.42
+Strength: 7.56
+Endurance: 8.57
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 0, 'total sustenance gained': 0, 'foods tasted': []}
+Offspring Produced
+0
+Nearest Food
+{'times chosen': 7, 'successful outcomes': 0, 'total time': 17, 'average time': '22.666666666666664%'}
+Furthest Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Most Sustaining Food
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 2, 'average time': '2.666666666666667%'}
+Nearest Forager
+{'times chosen': 4, 'successful outcomes': 0, 'total time': 4, 'average time': '5.333333333333334%'}
+Furthest Forager
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 1, 'average time': '1.3333333333333335%'}
+Most Compatible Forager
+{'times chosen': 6, 'successful outcomes': 0, 'total time': 5, 'average time': '6.666666666666667%'}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 1, 'times attempted': 1}

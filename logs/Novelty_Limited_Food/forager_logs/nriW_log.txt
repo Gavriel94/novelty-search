@@ -1,0 +1,59 @@
+Step 46: Forager nriW is going to find most compatible forager.
+Step 50: nriW successfully crossed ravine.
+Step 57: nriW (15.88) and RvJR (6.50) are not compatible.
+Step 58: Forager nriW is going to find most sustaining food.
+Step 58: nriW (15.88) and RvJR (6.50) are not compatible.
+Step 59: Forager nriW is going to find nearest food.
+Step 59: nriW (15.88) and RvJR (6.50) are not compatible.
+Step 60: Forager nriW is going to find most sustaining food.
+Step 60: nriW (15.88) and RvJR (6.50) are not compatible.
+Step 61: Forager nriW is going to find nearest forager.
+Step 61: nriW (15.88) and RvJR (6.50) are not compatible.
+Step 62: Forager nriW is going to find furthest forager.
+Step 62: nriW (15.88) and RvJR (6.50) are not compatible.
+Step 63: Forager nriW is going to find furthest food.
+Step 63: nriW (15.88) and RvJR (6.50) are not compatible.
+Step 64: Forager nriW is going to find furthest forager.
+Step 64: nriW (15.88) and RvJR (6.50) are not compatible.
+Step 65: Forager nriW is going to find furthest forager.
+Step 65: nriW (15.88) and RvJR (6.50) are not compatible.
+Step 66: Forager nriW is going to find furthest forager.
+Step 66: nriW (15.88) and RvJR (6.50) are not compatible.
+Step 67: Forager nriW is going to find furthest forager.
+Step 67: nriW (15.88) and RvJR (6.50) are not compatible.
+Step 68: Forager nriW is going to find furthest food.
+Step 68: nriW (15.88) and RvJR (6.50) are not compatible.
+Step 69: Forager nriW is going to find furthest forager.
+Step 69: nriW (15.88) and RvJR (6.50) are not compatible.
+Step 70: Forager nriW is going to find nearest food.
+Step 71: nriW fails to cross ravine.
+Step 73: nriW fails to cross ravine.
+
+Attributes
+Agility: 4.48
+Perception: 4.94
+Strength: 5.48
+Endurance: 4.88
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 0, 'total sustenance gained': 0, 'foods tasted': []}
+Offspring Produced
+0
+Nearest Food
+{'times chosen': 3, 'successful outcomes': 0, 'total time': 6, 'average time': '8.0%'}
+Furthest Food
+{'times chosen': 4, 'successful outcomes': 0, 'total time': 2, 'average time': '2.666666666666667%'}
+Most Sustaining Food
+{'times chosen': 4, 'successful outcomes': 0, 'total time': 2, 'average time': '2.666666666666667%'}
+Nearest Forager
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 1, 'average time': '1.3333333333333335%'}
+Furthest Forager
+{'times chosen': 12, 'successful outcomes': 0, 'total time': 6, 'average time': '8.0%'}
+Most Compatible Forager
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 12, 'average time': '16.0%'}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 1, 'times attempted': 3}

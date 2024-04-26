@@ -1,0 +1,43 @@
+Step 25: Forager GoYp is going to find most compatible forager.
+Step 40: GoYp (23.00) and tbGQ (14.95) are not compatible.
+Step 41: Forager GoYp is going to find nearest food.
+Step 43: GoYp (23.00) and tbGQ (14.95) are not compatible.
+Step 44: Forager GoYp is going to find nearest forager.
+Step 52: GoYp successfully crossed ravine.
+Step 56: Forager GoYp found nearest forager.
+Step 56: Forager GoYp is going to find furthest forager.
+Step 56: GoYp (F) and DyA8 (F) are not compatible.
+Step 57: Forager GoYp is going to find nearest forager.
+Step 57: GoYp (F) and DyA8 (F) are not compatible.
+Step 58: Forager GoYp is going to find most sustaining food.
+Step 63: GoYp successfully crossed ravine.
+Step 71: GoYp beat hunter vT7C.
+
+Attributes
+Agility: 9.47
+Perception: 8.05
+Strength: 7.93
+Endurance: 8.21
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 0, 'total sustenance gained': 0, 'foods tasted': []}
+Offspring Produced
+0
+Nearest Food
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 3, 'average time': '4.0%'}
+Furthest Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Most Sustaining Food
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 17, 'average time': '22.666666666666664%'}
+Nearest Forager
+{'times chosen': 3, 'successful outcomes': 1, 'total time': 14, 'average time': '18.666666666666668%'}
+Furthest Forager
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Most Compatible Forager
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 16, 'average time': '21.333333333333336%'}
+Hunter Encounters
+{'num encounters': 1, 'times fought': 1, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 1, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 2, 'times attempted': 2}

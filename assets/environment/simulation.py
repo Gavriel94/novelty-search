@@ -45,7 +45,6 @@ class Simulation():
         self.total_sustenance_gained = 0
         self.total_foragers_lost = 0
         self.total_hunters_lost = 0
-        self.total_foragers_eol = 0
         
         self.simulation_metrics = {
             'total_mating_attempts' : [],
@@ -53,7 +52,6 @@ class Simulation():
             'total_sustenance_gained' : [],
             'total_foragers_lost' : [],
             'total_hunters_lost' : [],
-            'total_foragers_eol': []
         }
         self.total_motivations = {
             'nearest food': 0,
@@ -77,7 +75,7 @@ class Simulation():
 
         Args:
             steps (int): Number of simulation steps.
-            replace (bool): Replace objects that are removed. 
+            replace (bool): Replace removed objects. Food is always replaced. 
             display (bool): Output information to file at each time step.
             run_name (str): Name of directory to store informaton.
 
@@ -102,7 +100,11 @@ class Simulation():
                 print('*' + '*' * 52 + '*')
                 print(f"{'Step'} {step:<45}\n")
                 self.__display_simulation()
-                self.__gather_gene_trend_data()
+                try:
+                    self.__gather_gene_trend_data()
+                except ZeroDivisionError:
+                    print('All foragers have been lost!')
+                    return
                 # hunters move
                 for hunter in self.hunters:
                     if not hunter.alive:
@@ -130,10 +132,6 @@ class Simulation():
                     if forager.steps_alive >= self.forager_age_limit:
                         # Forager dies of old age to make room for offspring
                         forager.alive = False
-                    self.total_foragers_eol += 1
-                    self.simulation_metrics['total_foragers_eol'].append(
-                        (step, self.total_foragers_eol)
-                    )
                     
                     if not forager.alive:
                         continue
@@ -678,13 +676,10 @@ class SimulationAnalytics:
         values = list(self.__grid.simulation_metrics.values())
         final_values = []
         for value in values:
-            if value == 'total_foragers_eol':
-                continue
+            if len(value) > 1:
+                final_values.append(value[-1][1])
             else:
-                if len(value) > 1:
-                    final_values.append(value[-1][1])
-                else:
-                    final_values.append(0)
+                final_values.append(0)
         plt.figure(figsize=(16, 6))
         plt.bar(keys, final_values)
         plt.title('Simulation Metrics')
@@ -731,7 +726,6 @@ class SimulationAnalytics:
         """
         lifetimes = [(forager.id, forager.steps_alive) for forager in self.__foragers]
         lifetimes_asc = sorted(lifetimes, key=lambda x: [1], reverse=True)
-        print(lifetimes_asc)
         life_lengths = []
         for f in lifetimes_asc:
             life_lengths.append(f[1])

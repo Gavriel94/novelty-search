@@ -1,0 +1,49 @@
+Step 16: Forager EcyT is going to find furthest food.
+Step 28: EcyT ate the mushroom.
+Step 34: EcyT successfully crossed ravine.
+Step 35: EcyT (F) and ob4s (F) are not compatible.
+Step 36: Forager EcyT is going to find nearest forager.
+Step 39: EcyT (F) and ob4s (F) are not compatible.
+Step 40: Forager EcyT is going to find furthest forager.
+Step 40: EcyT (F) and 5Zp6 (F) are not compatible.
+Step 41: Forager EcyT is going to find nearest food.
+Step 42: EcyT successfully crossed ravine.
+Step 44: EcyT (F: 16.50) and sCHz (M: 14.62) are compatible.
+Step 44: EcyT and sCHz produced offspring CcPz.
+Step 45: EcyT successfully crossed ravine.
+Step 53: EcyT successfully crossed ravine.
+Step 57: EcyT (16.50) and uCsn (28.00) are not compatible.
+Step 58: Forager EcyT is going to find most compatible forager.
+Step 58: EcyT (F) and MCo9 (F) are not compatible.
+Step 59: Forager EcyT is going to find most compatible forager.
+Step 59: EcyT (F) and MCo9 (F) are not compatible.
+Step 60: Forager EcyT is going to find nearest food.
+
+Attributes
+Agility: 5.07
+Perception: 5.67
+Strength: 5.00
+Endurance: 4.92
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 1, 'total sustenance gained': 0.3, 'foods tasted': ['mushroom']}
+Offspring Produced
+1
+Nearest Food
+{'times chosen': 3, 'successful outcomes': 0, 'total time': 23, 'average time': '30.666666666666664%'}
+Furthest Food
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 20, 'average time': '26.666666666666668%'}
+Most Sustaining Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Nearest Forager
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 4, 'average time': '5.333333333333334%'}
+Furthest Forager
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 1, 'average time': '1.3333333333333335%'}
+Most Compatible Forager
+{'times chosen': 4, 'successful outcomes': 0, 'total time': 2, 'average time': '2.666666666666667%'}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 4, 'times attempted': 4}

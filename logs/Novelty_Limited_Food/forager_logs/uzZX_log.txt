@@ -1,0 +1,81 @@
+Step 34: Forager uzZX is going to find nearest food.
+Step 36: uzZX (F) and uzZX (F) are not compatible.
+Step 37: Forager uzZX is going to find nearest forager.
+Step 38: uzZX successfully crossed ravine.
+Step 41: uzZX (F) and aY77 (F) are not compatible.
+Step 42: Forager uzZX is going to find most sustaining food.
+Step 45: uzZX (25.19) and RvJR (6.50) are not compatible.
+Step 46: Forager uzZX is going to find most sustaining food.
+Step 48: uzZX (F) and aY77 (F) are not compatible.
+Step 49: Forager uzZX is going to find furthest forager.
+Step 49: uzZX (25.19) and RvJR (6.50) are not compatible.
+Step 50: Forager uzZX is going to find most compatible forager.
+Step 52: uzZX (25.19) and RvJR (6.50) are not compatible.
+Step 53: Forager uzZX is going to find furthest food.
+Step 53: uzZX (25.19) and RvJR (6.50) are not compatible.
+Step 54: Forager uzZX is going to find furthest food.
+Step 54: uzZX (25.19) and RvJR (6.50) are not compatible.
+Step 55: Forager uzZX is going to find furthest forager.
+Step 55: uzZX (25.19) and RvJR (6.50) are not compatible.
+Step 56: Forager uzZX is going to find most compatible forager.
+Step 56: uzZX (25.19) and RvJR (6.50) are not compatible.
+Step 57: Forager uzZX is going to find furthest food.
+Step 57: uzZX (25.19) and RvJR (6.50) are not compatible.
+Step 58: Forager uzZX is going to find most compatible forager.
+Step 58: uzZX (25.19) and RvJR (6.50) are not compatible.
+Step 59: Forager uzZX is going to find furthest food.
+Step 59: uzZX (25.19) and RvJR (6.50) are not compatible.
+Step 60: Forager uzZX is going to find most sustaining food.
+Step 60: uzZX (25.19) and RvJR (6.50) are not compatible.
+Step 61: Forager uzZX is going to find most compatible forager.
+Step 61: uzZX (25.19) and RvJR (6.50) are not compatible.
+Step 62: Forager uzZX is going to find furthest forager.
+Step 62: uzZX (25.19) and RvJR (6.50) are not compatible.
+Step 63: Forager uzZX is going to find most compatible forager.
+Step 63: uzZX (25.19) and RvJR (6.50) are not compatible.
+Step 64: Forager uzZX is going to find nearest food.
+Step 64: uzZX (25.19) and RvJR (6.50) are not compatible.
+Step 65: Forager uzZX is going to find furthest food.
+Step 65: uzZX (25.19) and RvJR (6.50) are not compatible.
+Step 66: Forager uzZX is going to find furthest food.
+Step 66: uzZX (25.19) and RvJR (6.50) are not compatible.
+Step 67: Forager uzZX is going to find nearest food.
+Step 67: uzZX (25.19) and RvJR (6.50) are not compatible.
+Step 68: Forager uzZX is going to find furthest food.
+Step 68: uzZX (25.19) and RvJR (6.50) are not compatible.
+Step 69: Forager uzZX is going to find furthest food.
+Step 69: uzZX (25.19) and RvJR (6.50) are not compatible.
+Step 70: Forager uzZX is going to find nearest forager.
+Step 71: uzZX successfully crossed ravine.
+Step 72: uzZX successfully crossed ravine.
+Step 73: uzZX successfully crossed ravine.
+Step 74: uzZX successfully crossed ravine.
+
+Attributes
+Agility: 8.42
+Perception: 8.26
+Strength: 9.79
+Endurance: 8.10
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 0, 'total sustenance gained': 0, 'foods tasted': []}
+Offspring Produced
+0
+Nearest Food
+{'times chosen': 6, 'successful outcomes': 0, 'total time': 5, 'average time': '6.666666666666667%'}
+Furthest Food
+{'times chosen': 16, 'successful outcomes': 0, 'total time': 8, 'average time': '10.666666666666668%'}
+Most Sustaining Food
+{'times chosen': 6, 'successful outcomes': 0, 'total time': 8, 'average time': '10.666666666666668%'}
+Nearest Forager
+{'times chosen': 3, 'successful outcomes': 0, 'total time': 10, 'average time': '13.333333333333334%'}
+Furthest Forager
+{'times chosen': 6, 'successful outcomes': 0, 'total time': 3, 'average time': '4.0%'}
+Most Compatible Forager
+{'times chosen': 10, 'successful outcomes': 0, 'total time': 7, 'average time': '9.333333333333334%'}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 5, 'times attempted': 5}

@@ -1,0 +1,58 @@
+Step 0: Forager RvJR is going to find furthest forager.
+Step 2: RvJR (M: 6.50) and aY77 (F: 8.00) are compatible.
+Step 2: RvJR and aY77 produced offspring JMjY.
+Step 4: Forager RvJR is going to find nearest food.
+Step 6: RvJR (6.50) and kxMU (16.18) are not compatible.
+Step 7: Forager RvJR is going to find nearest forager.
+Step 8: Forager RvJR is going to find nearest forager.
+Step 9: Forager RvJR is going to find furthest food.
+Step 16: RvJR fails to cross ravine.
+Step 19: RvJR fails to cross ravine.
+Step 20: RvJR fails to cross ravine.
+Step 26: RvJR fails to cross ravine.
+Step 27: RvJR (M) and RvJR (M) are not compatible.
+Step 28: Forager RvJR is going to find furthest forager.
+Step 28: RvJR (M) and qNfv (M) are not compatible.
+Step 29: Forager RvJR is going to find most compatible forager.
+Step 29: RvJR fails to cross ravine.
+Step 30: RvJR fails to cross ravine.
+Step 31: RvJR fails to cross ravine.
+Step 34: RvJR ate the pumpkin.
+Step 35: RvJR fails to cross ravine.
+Step 36: RvJR fails to cross ravine.
+Step 37: RvJR fails to cross ravine.
+Step 38: RvJR fails to cross ravine.
+Step 46: RvJR (M: 6.50) and aY77 (F: 8.00) are compatible.
+Step 46: RvJR and aY77 produced offspring nriW.
+Step 48: Forager RvJR found most compatible forager.
+Step 48: Forager RvJR is going to find most compatible forager.
+Step 49: Forager RvJR is going to find most sustaining food.
+
+Attributes
+Agility: 1.00
+Perception: 1.00
+Strength: 2.00
+Endurance: 1.00
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 1, 'total sustenance gained': 0.8, 'foods tasted': ['pumpkin']}
+Offspring Produced
+2
+Nearest Food
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 3, 'average time': '4.0%'}
+Furthest Food
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 19, 'average time': '25.333333333333336%'}
+Most Sustaining Food
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 1, 'average time': '1.3333333333333335%'}
+Nearest Forager
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 2, 'average time': '2.666666666666667%'}
+Furthest Forager
+{'times chosen': 3, 'successful outcomes': 0, 'total time': 5, 'average time': '6.666666666666667%'}
+Most Compatible Forager
+{'times chosen': 2, 'successful outcomes': 1, 'total time': 20, 'average time': '25.333333333333336%'}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 0, 'times attempted': 11}

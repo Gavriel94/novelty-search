@@ -1,0 +1,59 @@
+Step 20: Forager bt5v is going to find nearest food.
+Step 20: bt5v fails to cross ravine.
+Step 22: bt5v fails to cross ravine.
+Step 24: bt5v fails to cross ravine.
+Step 26: bt5v fails to cross ravine.
+Step 27: bt5v fails to cross ravine.
+Step 28: bt5v (F: 15.36) and tbGQ (M: 14.95) are compatible.
+Step 28: bt5v and tbGQ produced offspring Ahjd.
+Step 30: Forager bt5v is going to find furthest forager.
+Step 30: Forager bt5v found furthest forager.
+Step 30: Forager bt5v is going to find most compatible forager.
+Step 30: bt5v (F: 15.36) and tbGQ (M: 14.95) are compatible.
+Step 30: bt5v and tbGQ produced offspring gWK4.
+Step 35: bt5v (15.36) and x3Ea (5.50) are not compatible.
+Step 36: Forager bt5v is going to find furthest forager.
+Step 38: Forager bt5v found furthest forager.
+Step 38: Forager bt5v is going to find nearest food.
+Step 38: bt5v (15.36) and x3Ea (5.50) are not compatible.
+Step 39: Forager bt5v is going to find nearest food.
+Step 39: bt5v fails to cross ravine.
+Step 40: bt5v fails to cross ravine.
+Step 41: bt5v fails to cross ravine.
+Step 42: bt5v fails to cross ravine.
+Step 44: bt5v fails to cross ravine.
+Step 45: bt5v fails to cross ravine.
+Step 54: bt5v ate the shrub.
+Step 63: bt5v fails to cross ravine.
+Step 65: bt5v fails to cross ravine.
+Step 67: bt5v fails to cross ravine.
+Step 69: bt5v fails to cross ravine.
+
+Attributes
+Agility: 5.61
+Perception: 5.18
+Strength: 4.59
+Endurance: 5.31
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 1, 'total sustenance gained': 0.2, 'foods tasted': ['shrub']}
+Offspring Produced
+2
+Nearest Food
+{'times chosen': 4, 'successful outcomes': 0, 'total time': 41, 'average time': '54.666666666666664%'}
+Furthest Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Most Sustaining Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Nearest Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Furthest Forager
+{'times chosen': 2, 'successful outcomes': 2, 'total time': 4, 'average time': '4.0%'}
+Most Compatible Forager
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 5, 'average time': '6.666666666666667%'}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 0, 'times attempted': 15}

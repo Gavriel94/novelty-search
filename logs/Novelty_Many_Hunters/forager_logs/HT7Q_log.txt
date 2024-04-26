@@ -1,0 +1,57 @@
+Step 0: Forager HT7Q is going to find most compatible forager.
+Step 3: HT7Q fails to cross ravine.
+Step 4: HT7Q (5.50) and cmfN (8.00) are not compatible.
+Step 5: Forager HT7Q is going to find most sustaining food.
+Step 5: HT7Q (5.50) and cmfN (8.00) are not compatible.
+Step 6: Forager HT7Q is going to find most sustaining food.
+Step 6: HT7Q (5.50) and cmfN (8.00) are not compatible.
+Step 7: Forager HT7Q is going to find most sustaining food.
+Step 7: HT7Q (5.50) and cmfN (8.00) are not compatible.
+Step 8: Forager HT7Q is going to find furthest forager.
+Step 8: HT7Q (5.50) and cmfN (8.00) are not compatible.
+Step 9: Forager HT7Q is going to find furthest forager.
+Step 10: HT7Q (M: 5.50) and YX8S (F: 5.50) are compatible.
+Step 10: HT7Q and YX8S produced offspring oBGY.
+Step 12: Forager HT7Q is going to find furthest forager.
+Step 13: Forager HT7Q is going to find furthest forager.
+Step 14: Forager HT7Q is going to find furthest food.
+Step 14: HT7Q ate the mushroom.
+Step 20: HT7Q ate the pumpkin.
+Step 33: HT7Q ate the shrub.
+Step 35: HT7Q (M) and FqtD (M) are not compatible.
+Step 36: Forager HT7Q is going to find furthest food.
+Step 39: HT7Q (M) and 8a5L (M) are not compatible.
+Step 40: Forager HT7Q is going to find nearest food.
+Step 45: HT7Q (M) and FqtD (M) are not compatible.
+Step 46: Forager HT7Q is going to find nearest food.
+Step 46: HT7Q (M) and FqtD (M) are not compatible.
+Step 47: Forager HT7Q is going to find furthest food.
+
+Attributes
+Agility: 2.00
+Perception: 1.00
+Strength: 1.00
+Endurance: 1.00
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 3, 'total sustenance gained': 1.3, 'foods tasted': ['mushroom', 'pumpkin', 'shrub']}
+Offspring Produced
+1
+Nearest Food
+{'times chosen': 4, 'successful outcomes': 0, 'total time': 7, 'average time': '9.333333333333334%'}
+Furthest Food
+{'times chosen': 5, 'successful outcomes': 0, 'total time': 29, 'average time': '38.666666666666664%'}
+Most Sustaining Food
+{'times chosen': 6, 'successful outcomes': 0, 'total time': 3, 'average time': '4.0%'}
+Nearest Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Furthest Forager
+{'times chosen': 5, 'successful outcomes': 0, 'total time': 6, 'average time': '8.0%'}
+Most Compatible Forager
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 5, 'average time': '6.666666666666667%'}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 0, 'times attempted': 1}

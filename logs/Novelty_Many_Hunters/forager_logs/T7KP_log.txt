@@ -1,0 +1,42 @@
+Step 39: Forager T7KP is going to find most compatible forager.
+Step 39: T7KP successfully crossed ravine.
+Step 47: T7KP (14.69) and U4y2 (23.61) are not compatible.
+Step 48: Forager T7KP is going to find furthest food.
+Step 53: T7KP ate the melon.
+Step 62: T7KP ate the flower.
+Step 67: T7KP fails to cross ravine.
+Step 68: T7KP fails to cross ravine.
+Step 69: T7KP fails to cross ravine.
+Step 70: T7KP fails to cross ravine.
+Step 72: T7KP (M: 14.69) and URhb (F: 14.22) are compatible.
+Step 72: T7KP and URhb produced offspring ho5o.
+Step 74: Forager T7KP is going to find furthest food.
+
+Attributes
+Agility: 5.38
+Perception: 4.57
+Strength: 4.84
+Endurance: 4.83
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 2, 'total sustenance gained': 0.9, 'foods tasted': ['melon', 'flower']}
+Offspring Produced
+1
+Nearest Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Furthest Food
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 27, 'average time': '36.0%'}
+Most Sustaining Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Nearest Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Furthest Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Most Compatible Forager
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 9, 'average time': '12.0%'}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 1, 'times attempted': 5}

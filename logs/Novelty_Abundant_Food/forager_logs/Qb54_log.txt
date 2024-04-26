@@ -1,0 +1,57 @@
+Step 0: Forager Qb54 is going to find most compatible forager.
+Step 1: Qb54 fails to cross ravine.
+Step 9: Qb54 (F: 6.50) and CrDf (M: 6.50) are compatible.
+Step 9: Qb54 and CrDf produced offspring wfjk.
+Step 10: Qb54 (F: 6.50) and CrDf (M: 6.50) are compatible.
+Step 10: Qb54 and CrDf produced offspring k3dw.
+Step 15: Forager Qb54 is going to find most sustaining food.
+Step 26: Qb54 ate the flower.
+Step 31: Qb54 (F) and qoDn (F) are not compatible.
+Step 32: Forager Qb54 is going to find furthest forager.
+Step 32: Qb54 (F) and k3dw (F) are not compatible.
+Step 33: Forager Qb54 is going to find most sustaining food.
+Step 33: Qb54 (F) and qoDn (F) are not compatible.
+Step 34: Forager Qb54 is going to find furthest food.
+Step 34: Qb54 (F) and k3dw (F) are not compatible.
+Step 35: Forager Qb54 is going to find nearest food.
+Step 37: Qb54 fails to cross ravine.
+Step 38: Qb54 fails to cross ravine.
+Step 39: Qb54 fails to cross ravine.
+Step 41: Qb54 fails to cross ravine.
+Step 42: Qb54 (6.50) and 9q89 (14.27) are not compatible.
+Step 43: Forager Qb54 is going to find nearest food.
+Step 43: Qb54 (6.50) and 9q89 (14.27) are not compatible.
+Step 44: Forager Qb54 is going to find nearest food.
+Step 45: Qb54 fails to cross ravine.
+Step 46: Qb54 (F) and qoDn (F) are not compatible.
+Step 47: Forager Qb54 is going to find nearest forager.
+Step 48: Qb54 fails to cross ravine.
+
+Attributes
+Agility: 2.00
+Perception: 1.00
+Strength: 2.00
+Endurance: 2.00
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 1, 'total sustenance gained': 0.1, 'foods tasted': ['flower']}
+Offspring Produced
+2
+Nearest Food
+{'times chosen': 6, 'successful outcomes': 0, 'total time': 12, 'average time': '16.0%'}
+Furthest Food
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 1, 'average time': '1.3333333333333335%'}
+Most Sustaining Food
+{'times chosen': 4, 'successful outcomes': 0, 'total time': 18, 'average time': '24.0%'}
+Nearest Forager
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 3, 'average time': '4.0%'}
+Furthest Forager
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 1, 'average time': '1.3333333333333335%'}
+Most Compatible Forager
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 15, 'average time': '20.0%'}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 0, 'times attempted': 7}

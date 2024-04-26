@@ -1,0 +1,61 @@
+Step 0: Forager iHDC is going to find most compatible forager.
+Step 0: iHDC fails to cross ravine.
+Step 1: iHDC fails to cross ravine.
+Step 2: iHDC fails to cross ravine.
+Step 3: iHDC fails to cross ravine.
+Step 4: iHDC fails to cross ravine.
+Step 5: iHDC fails to cross ravine.
+Step 9: iHDC (F) and JMjY (F) are not compatible.
+Step 10: Forager iHDC is going to find most compatible forager.
+Step 10: iHDC (F) and JMjY (F) are not compatible.
+Step 11: Forager iHDC is going to find furthest food.
+Step 11: iHDC (8.00) and qNfv (15.28) are not compatible.
+Step 12: Forager iHDC is going to find most sustaining food.
+Step 12: iHDC fails to cross ravine.
+Step 13: iHDC fails to cross ravine.
+Step 14: iHDC fails to cross ravine.
+Step 20: iHDC fails to cross ravine.
+Step 21: iHDC fails to cross ravine.
+Step 22: iHDC fails to cross ravine.
+Step 26: iHDC (F: 8.00) and RvJR (M: 6.50) are compatible.
+Step 26: iHDC and RvJR produced offspring TR9H.
+Step 28: iHDC fails to cross ravine.
+Step 29: iHDC fails to cross ravine.
+Step 30: iHDC fails to cross ravine.
+Step 33: iHDC fails to cross ravine.
+Step 34: iHDC fails to cross ravine.
+Step 35: iHDC fails to cross ravine.
+Step 37: iHDC fails to cross ravine.
+Step 45: iHDC (F) and aY77 (F) are not compatible.
+Step 46: Forager iHDC is going to find furthest forager.
+Step 46: iHDC (F) and aY77 (F) are not compatible.
+Step 47: Forager iHDC is going to find nearest food.
+
+Attributes
+Agility: 2.00
+Perception: 2.00
+Strength: 2.00
+Endurance: 2.00
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 0, 'total sustenance gained': 0, 'foods tasted': []}
+Offspring Produced
+1
+Nearest Food
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 3, 'average time': '4.0%'}
+Furthest Food
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 1, 'average time': '1.3333333333333335%'}
+Most Sustaining Food
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 34, 'average time': '45.33333333333333%'}
+Nearest Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Furthest Forager
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 1, 'average time': '1.3333333333333335%'}
+Most Compatible Forager
+{'times chosen': 4, 'successful outcomes': 0, 'total time': 11, 'average time': '14.666666666666666%'}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 0, 'times attempted': 19}

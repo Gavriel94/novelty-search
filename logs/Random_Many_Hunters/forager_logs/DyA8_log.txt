@@ -1,0 +1,45 @@
+Step 18: Forager DyA8 is going to find most compatible forager.
+Step 20: DyA8 (F) and cqLU (F) are not compatible.
+Step 21: Forager DyA8 is going to find furthest food.
+Step 24: DyA8 ate the carrot.
+Step 28: DyA8 ate the carrot.
+Step 35: DyA8 ate the carrot.
+Step 37: DyA8 ate the carrot.
+Step 39: DyA8 ate the mushroom.
+Step 42: DyA8 ate the apple.
+Step 44: DyA8 ate the mushroom.
+Step 47: DyA8 ate the flower.
+Step 48: DyA8 (F) and DyA8 (F) are not compatible.
+Step 49: Forager DyA8 is going to find most sustaining food.
+Step 53: DyA8 successfully crossed ravine.
+Step 55: DyA8 successfully crossed ravine.
+Step 66: DyA8 ate the flower.
+
+Attributes
+Agility: 5.78
+Perception: 4.77
+Strength: 4.90
+Endurance: 5.30
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 9, 'total sustenance gained': 2.7, 'foods tasted': ['carrot', 'carrot', 'carrot', 'carrot', 'mushroom', 'apple', 'mushroom', 'flower', 'flower']}
+Offspring Produced
+0
+Nearest Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Furthest Food
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 28, 'average time': '37.333333333333336%'}
+Most Sustaining Food
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 19, 'average time': '25.333333333333336%'}
+Nearest Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Furthest Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Most Compatible Forager
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 3, 'average time': '4.0%'}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 2, 'times attempted': 2}

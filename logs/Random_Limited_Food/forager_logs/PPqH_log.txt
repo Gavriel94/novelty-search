@@ -1,0 +1,40 @@
+Step 38: Forager PPqH is going to find nearest food.
+Step 42: PPqH fled hunter 4cST.
+Step 46: PPqH (24.66) and WJbi (15.44) are not compatible.
+Step 46: Forager PPqH is going to find furthest food.
+Step 49: PPqH ate the melon.
+Step 51: PPqH ate the flower.
+Step 56: PPqH ate the melon.
+Step 58: PPqH successfully crossed ravine.
+Step 60: PPqH ate the apple.
+Step 64: PPqH (F: 24.66) and uhSf (M: 23.61) are compatible.
+Step 64: PPqH and uhSf produced offspring zgwd.
+
+Attributes
+Agility: 8.56
+Perception: 9.10
+Strength: 8.01
+Endurance: 8.61
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 4, 'total sustenance gained': 2.0, 'foods tasted': ['melon', 'flower', 'melon', 'apple']}
+Offspring Produced
+1
+Nearest Food
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 13, 'average time': '17.333333333333336%'}
+Furthest Food
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 37, 'average time': '49.333333333333336%'}
+Most Sustaining Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Nearest Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Furthest Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Most Compatible Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Hunter Encounters
+{'num encounters': 1, 'times fought': 1, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 1, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 1, 'times attempted': 1}

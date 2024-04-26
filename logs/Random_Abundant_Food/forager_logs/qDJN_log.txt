@@ -1,0 +1,47 @@
+Step 40: Forager qDJN is going to find nearest food.
+Step 41: qDJN fails to cross ravine.
+Step 42: qDJN fails to cross ravine.
+Step 43: qDJN fails to cross ravine.
+Step 47: qDJN fails to cross ravine.
+Step 49: qDJN fails to cross ravine.
+Step 50: qDJN fails to cross ravine.
+Step 51: qDJN successfully crossed ravine.
+Step 52: qDJN fails to cross ravine.
+Step 53: qDJN fails to cross ravine.
+Step 54: qDJN fails to cross ravine.
+Step 55: qDJN fails to cross ravine.
+Step 56: qDJN fails to cross ravine.
+Step 57: qDJN fails to cross ravine.
+Step 58: qDJN fails to cross ravine.
+Step 60: qDJN fails to cross ravine.
+Step 69: qDJN ate the pumpkin.
+Step 73: qDJN ate the melon.
+
+Attributes
+Agility: 4.06
+Perception: 5.36
+Strength: 4.04
+Endurance: 5.30
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 2, 'total sustenance gained': 1.6, 'foods tasted': ['pumpkin', 'melon']}
+Offspring Produced
+0
+Nearest Food
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 35, 'average time': '46.666666666666664%'}
+Furthest Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Most Sustaining Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Nearest Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Furthest Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Most Compatible Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 1, 'times attempted': 15}

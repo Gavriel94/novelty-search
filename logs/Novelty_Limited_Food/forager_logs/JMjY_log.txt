@@ -1,0 +1,51 @@
+Step 2: Forager JMjY is going to find furthest forager.
+Step 2: JMjY successfully crossed ravine.
+Step 4: JMjY (17.00) and RvJR (6.50) are not compatible.
+Step 5: Forager JMjY is going to find furthest food.
+Step 9: JMjY (F) and iHDC (F) are not compatible.
+Step 10: Forager JMjY is going to find furthest forager.
+Step 10: JMjY (F) and iHDC (F) are not compatible.
+Step 11: Forager JMjY is going to find most sustaining food.
+Step 11: JMjY successfully crossed ravine.
+Step 16: JMjY ate the mushroom.
+Step 28: JMjY ate the mushroom.
+Step 30: JMjY ate the mushroom.
+Step 34: JMjY (17.00) and RvJR (6.50) are not compatible.
+Step 35: Forager JMjY is going to find furthest forager.
+Step 35: JMjY (F) and aY77 (F) are not compatible.
+Step 36: Forager JMjY is going to find most sustaining food.
+Step 37: JMjY (17.00) and RvJR (6.50) are not compatible.
+Step 38: Forager JMjY is going to find nearest food.
+Step 47: JMjY (F) and aY77 (F) are not compatible.
+Step 48: Forager JMjY is going to find nearest forager.
+Step 49: JMjY fails to cross ravine.
+Step 51: JMjY fails to cross ravine.
+
+Attributes
+Agility: 4.87
+Perception: 5.41
+Strength: 5.89
+Endurance: 4.69
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 3, 'total sustenance gained': 0.8999999999999999, 'foods tasted': ['mushroom', 'mushroom', 'mushroom']}
+Offspring Produced
+0
+Nearest Food
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 10, 'average time': '13.333333333333334%'}
+Furthest Food
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 5, 'average time': '6.666666666666667%'}
+Most Sustaining Food
+{'times chosen': 4, 'successful outcomes': 0, 'total time': 26, 'average time': '34.66666666666667%'}
+Nearest Forager
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 4, 'average time': '5.333333333333334%'}
+Furthest Forager
+{'times chosen': 6, 'successful outcomes': 0, 'total time': 5, 'average time': '6.666666666666667%'}
+Most Compatible Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 2, 'times attempted': 4}

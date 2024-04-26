@@ -859,7 +859,11 @@ class ForagerActions():
             if food['key_attribute'] < food_sus:
                 food_sus = food['key_attribute']
                 food_locations.append(food)
-        output = food_locations[-1]['location']
+        if len(food_locations) > 0:
+            output = food_locations[-1]['location']
+        else: 
+            output = food_locations[0]['location']
+            
         if output == None:
             raise ValueError(f'Output: {output}')
         return output

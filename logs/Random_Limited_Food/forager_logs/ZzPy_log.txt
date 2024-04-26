@@ -1,0 +1,60 @@
+Step 30: Forager ZzPy is going to find most compatible forager.
+Step 32: ZzPy successfully crossed ravine.
+Step 33: ZzPy (F) and MCo9 (F) are not compatible.
+Step 34: Forager ZzPy is going to find most sustaining food.
+Step 34: ZzPy (F: 15.38) and sCHz (M: 14.62) are compatible.
+Step 34: ZzPy and sCHz produced offspring uhSf.
+Step 35: ZzPy successfully crossed ravine.
+Step 37: ZzPy (15.38) and 65kk (7.00) are not compatible.
+Step 38: Forager ZzPy is going to find nearest forager.
+Step 40: ZzPy (F) and rjGn (F) are not compatible.
+Step 41: Forager ZzPy is going to find nearest food.
+Step 49: ZzPy ate the flower.
+Step 53: ZzPy successfully crossed ravine.
+Step 59: ZzPy (15.38) and uCsn (28.00) are not compatible.
+Step 60: Forager ZzPy is going to find furthest forager.
+Step 60: ZzPy (15.38) and xL4F (24.68) are not compatible.
+Step 61: Forager ZzPy is going to find most compatible forager.
+Step 62: ZzPy (F) and MCo9 (F) are not compatible.
+Step 63: Forager ZzPy is going to find most sustaining food.
+Step 65: ZzPy (15.38) and 7tWe (28.00) are not compatible.
+Step 66: Forager ZzPy is going to find most compatible forager.
+Step 66: ZzPy (F) and MCo9 (F) are not compatible.
+Step 67: Forager ZzPy is going to find most compatible forager.
+Step 67: ZzPy (F) and MCo9 (F) are not compatible.
+Step 68: Forager ZzPy is going to find furthest forager.
+Step 68: ZzPy (15.38) and xL4F (24.68) are not compatible.
+Step 69: Forager ZzPy is going to find nearest forager.
+Step 71: ZzPy successfully crossed ravine.
+Step 73: ZzPy (F) and rjGn (F) are not compatible.
+Step 74: Forager ZzPy is going to find furthest forager.
+Step 74: ZzPy (F) and rjGn (F) are not compatible.
+
+Attributes
+Agility: 5.56
+Perception: 5.12
+Strength: 4.71
+Endurance: 4.69
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 1, 'total sustenance gained': 0.1, 'foods tasted': ['flower']}
+Offspring Produced
+1
+Nearest Food
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 19, 'average time': '25.333333333333336%'}
+Furthest Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Most Sustaining Food
+{'times chosen': 4, 'successful outcomes': 0, 'total time': 7, 'average time': '9.333333333333334%'}
+Nearest Forager
+{'times chosen': 4, 'successful outcomes': 0, 'total time': 8, 'average time': '10.666666666666668%'}
+Furthest Forager
+{'times chosen': 6, 'successful outcomes': 0, 'total time': 3, 'average time': '4.0%'}
+Most Compatible Forager
+{'times chosen': 8, 'successful outcomes': 0, 'total time': 8, 'average time': '10.666666666666668%'}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 4, 'times attempted': 4}

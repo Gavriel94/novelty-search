@@ -1,0 +1,42 @@
+Step 0: Forager C4fz is going to find most compatible forager.
+Step 1: C4fz ate the mushroom.
+Step 2: C4fz (M: 7.00) and QQSh (F: 7.00) are compatible.
+Step 2: C4fz and QQSh produced offspring d4uG.
+Step 4: Forager C4fz is going to find most sustaining food.
+Step 5: C4fz fails to cross ravine.
+Step 6: C4fz fails to cross ravine.
+Step 7: C4fz fails to cross ravine.
+Step 8: C4fz fails to cross ravine.
+Step 13: C4fz ate the flower.
+Step 19: C4fz fails to cross ravine.
+Step 20: C4fz fails to cross ravine.
+Step 31: C4fz ate the flower.
+
+Attributes
+Agility: 1.00
+Perception: 2.00
+Strength: 1.00
+Endurance: 1.00
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 3, 'total sustenance gained': 0.5, 'foods tasted': ['mushroom', 'flower', 'flower']}
+Offspring Produced
+1
+Nearest Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Furthest Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Most Sustaining Food
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 46, 'average time': '61.33333333333333%'}
+Nearest Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Furthest Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Most Compatible Forager
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 4, 'average time': '5.333333333333334%'}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 0, 'times attempted': 6}

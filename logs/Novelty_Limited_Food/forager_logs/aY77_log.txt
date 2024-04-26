@@ -1,0 +1,53 @@
+Step 0: Forager aY77 is going to find most compatible forager.
+Step 1: aY77 (F: 8.00) and hCoa (M: 6.50) are compatible.
+Step 1: aY77 and hCoa produced offspring qNfv.
+Step 3: Forager aY77 is going to find nearest forager.
+Step 4: Forager aY77 is going to find most sustaining food.
+Step 7: aY77 (F: 8.00) and RvJR (M: 6.50) are compatible.
+Step 7: aY77 and RvJR produced offspring QYFo.
+Step 9: Forager aY77 is going to find nearest food.
+Step 17: aY77 fails to cross ravine.
+Step 18: aY77 fails to cross ravine.
+Step 19: aY77 fails to cross ravine.
+Step 21: aY77 fails to cross ravine.
+Step 23: aY77 fails to cross ravine.
+Step 25: aY77 fails to cross ravine.
+Step 27: aY77 fails to cross ravine.
+Step 28: aY77 (F) and aY77 (F) are not compatible.
+Step 29: Forager aY77 is going to find furthest forager.
+Step 32: aY77 fails to cross ravine.
+Step 33: aY77 fails to cross ravine.
+Step 35: aY77 fails to cross ravine.
+Step 36: aY77 fails to cross ravine.
+Step 48: aY77 (F) and JMjY (F) are not compatible.
+Step 49: Forager aY77 is going to find furthest food.
+Step 49: aY77 fails to cross ravine.
+
+Attributes
+Agility: 1.00
+Perception: 2.00
+Strength: 2.00
+Endurance: 2.00
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 0, 'total sustenance gained': 0, 'foods tasted': []}
+Offspring Produced
+2
+Nearest Food
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 20, 'average time': '26.666666666666668%'}
+Furthest Food
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 2, 'average time': '2.666666666666667%'}
+Most Sustaining Food
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 4, 'average time': '5.333333333333334%'}
+Nearest Forager
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 1, 'average time': '1.3333333333333335%'}
+Furthest Forager
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 20, 'average time': '26.666666666666668%'}
+Most Compatible Forager
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 3, 'average time': '4.0%'}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 0, 'times attempted': 12}

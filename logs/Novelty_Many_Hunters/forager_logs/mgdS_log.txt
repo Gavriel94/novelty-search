@@ -1,0 +1,46 @@
+Step 45: Forager mgdS is going to find furthest food.
+Step 46: mgdS ate the mushroom.
+Step 50: mgdS ate the pumpkin.
+Step 53: mgdS (F) and 74FL (F) are not compatible.
+Step 54: Forager mgdS is going to find nearest forager.
+Step 54: mgdS (F) and vv4X (F) are not compatible.
+Step 55: Forager mgdS is going to find furthest forager.
+Step 55: mgdS (F) and vv4X (F) are not compatible.
+Step 56: Forager mgdS is going to find furthest forager.
+Step 56: mgdS (F) and vv4X (F) are not compatible.
+Step 57: Forager mgdS is going to find most sustaining food.
+Step 59: mgdS fled hunter Jmxs.
+Step 65: mgdS ate the flower.
+Step 66: mgdS ate the flower.
+Step 68: mgdS successfully crossed ravine.
+Step 70: mgdS (13.49) and DFuc (28.00) are not compatible.
+Step 71: Forager mgdS is going to find most compatible forager.
+
+Attributes
+Agility: 5.51
+Perception: 4.20
+Strength: 4.18
+Endurance: 4.78
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 4, 'total sustenance gained': 1.3000000000000003, 'foods tasted': ['mushroom', 'pumpkin', 'flower', 'flower']}
+Offspring Produced
+0
+Nearest Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Furthest Food
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 9, 'average time': '12.0%'}
+Most Sustaining Food
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 26, 'average time': '34.66666666666667%'}
+Nearest Forager
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 1, 'average time': '1.3333333333333335%'}
+Furthest Forager
+{'times chosen': 4, 'successful outcomes': 0, 'total time': 2, 'average time': '2.666666666666667%'}
+Most Compatible Forager
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 8, 'average time': '10.666666666666668%'}
+Hunter Encounters
+{'num encounters': 1, 'times fought': 1, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 1, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 1, 'times attempted': 1}

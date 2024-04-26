@@ -1,0 +1,38 @@
+Step 0: Forager rjGn is going to find nearest forager.
+Step 16: rjGn (F: 7.00) and 65kk (M: 7.00) are compatible.
+Step 16: rjGn and 65kk produced offspring EcyT.
+Step 26: rjGn (F: 7.00) and 65kk (M: 7.00) are compatible.
+Step 26: rjGn and 65kk produced offspring sCHz.
+Step 28: Forager rjGn is going to find most compatible forager.
+Step 30: Forager rjGn is going to find nearest food.
+Step 39: rjGn (7.00) and T2gL (23.83) are not compatible.
+Step 40: Forager rjGn is going to find furthest food.
+
+Attributes
+Agility: 2.00
+Perception: 2.00
+Strength: 1.00
+Endurance: 1.00
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 0, 'total sustenance gained': 0, 'foods tasted': []}
+Offspring Produced
+2
+Nearest Food
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 10, 'average time': '13.333333333333334%'}
+Furthest Food
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 11, 'average time': '14.666666666666666%'}
+Most Sustaining Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Nearest Forager
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 27, 'average time': '36.0%'}
+Furthest Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Most Compatible Forager
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 2, 'average time': '2.666666666666667%'}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 0, 'times attempted': 0}

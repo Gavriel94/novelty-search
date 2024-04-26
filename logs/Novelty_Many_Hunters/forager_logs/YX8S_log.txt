@@ -1,0 +1,71 @@
+Step 0: Forager YX8S is going to find most compatible forager.
+Step 3: YX8S (F) and cmfN (F) are not compatible.
+Step 4: Forager YX8S is going to find furthest food.
+Step 4: YX8S (F) and cmfN (F) are not compatible.
+Step 5: Forager YX8S is going to find most compatible forager.
+Step 5: YX8S (F) and cmfN (F) are not compatible.
+Step 6: Forager YX8S is going to find furthest forager.
+Step 6: YX8S (F) and cmfN (F) are not compatible.
+Step 7: Forager YX8S is going to find furthest forager.
+Step 7: YX8S (F: 5.50) and ezRR (M: 7.00) are compatible.
+Step 7: YX8S and ezRR produced offspring URhb.
+Step 9: Forager YX8S is going to find most sustaining food.
+Step 10: Forager YX8S is going to find most sustaining food.
+Step 10: YX8S (F: 5.50) and ezRR (M: 7.00) are compatible.
+Step 10: YX8S and ezRR produced offspring 2G3T.
+Step 12: Forager YX8S is going to find nearest food.
+Step 13: Forager YX8S is going to find most compatible forager.
+Step 13: YX8S (F: 5.50) and HT7Q (M: 5.50) are compatible.
+Step 13: YX8S and HT7Q produced offspring TwEv.
+Step 14: YX8S (5.50) and FqtD (14.32) are not compatible.
+Step 15: Forager YX8S is going to find nearest forager.
+Step 18: YX8S (F) and URhb (F) are not compatible.
+Step 19: Forager YX8S is going to find nearest food.
+Step 19: YX8S (F) and URhb (F) are not compatible.
+Step 20: Forager YX8S is going to find most sustaining food.
+Step 23: YX8S (F: 5.50) and ezRR (M: 7.00) are compatible.
+Step 23: YX8S and ezRR produced offspring 74FL.
+Step 25: YX8S fails to cross ravine.
+Step 26: YX8S fails to cross ravine.
+Step 27: YX8S fails to cross ravine.
+Step 28: YX8S (5.50) and oBGY (14.02) are not compatible.
+Step 29: Forager YX8S is going to find furthest forager.
+Step 29: YX8S (5.50) and oBGY (14.02) are not compatible.
+Step 30: Forager YX8S is going to find furthest forager.
+Step 30: YX8S (5.50) and oBGY (14.02) are not compatible.
+Step 31: Forager YX8S is going to find most compatible forager.
+Step 39: YX8S (F: 5.50) and HT7Q (M: 5.50) are compatible.
+Step 39: YX8S and HT7Q produced offspring T7KP.
+Step 45: YX8S (F: 5.50) and HT7Q (M: 5.50) are compatible.
+Step 45: YX8S and HT7Q produced offspring mgdS.
+Step 47: Forager YX8S is going to find most sustaining food.
+Step 51: YX8S ate the pumpkin.
+
+Attributes
+Agility: 2.00
+Perception: 1.00
+Strength: 1.00
+Endurance: 2.00
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 1, 'total sustenance gained': 0.8, 'foods tasted': ['pumpkin']}
+Offspring Produced
+6
+Nearest Food
+{'times chosen': 3, 'successful outcomes': 0, 'total time': 2, 'average time': '2.666666666666667%'}
+Furthest Food
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 1, 'average time': '1.3333333333333335%'}
+Most Sustaining Food
+{'times chosen': 5, 'successful outcomes': 0, 'total time': 17, 'average time': '22.666666666666664%'}
+Nearest Forager
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 4, 'average time': '5.333333333333334%'}
+Furthest Forager
+{'times chosen': 7, 'successful outcomes': 0, 'total time': 5, 'average time': '6.666666666666667%'}
+Most Compatible Forager
+{'times chosen': 7, 'successful outcomes': 0, 'total time': 21, 'average time': '28.000000000000004%'}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 0, 'times attempted': 3}

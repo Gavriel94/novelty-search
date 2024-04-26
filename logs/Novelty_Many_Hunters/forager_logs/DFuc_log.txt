@@ -1,0 +1,35 @@
+Step 62: Forager DFuc is going to find nearest food.
+Step 66: DFuc successfully crossed ravine.
+Step 67: DFuc successfully crossed ravine.
+Step 69: DFuc successfully crossed ravine.
+Step 70: DFuc successfully crossed ravine.
+Step 74: DFuc successfully crossed ravine.
+
+Attributes
+Agility: 10.00
+Perception: 10.00
+Strength: 10.00
+Endurance: 10.00
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 0, 'total sustenance gained': 0, 'foods tasted': []}
+Offspring Produced
+0
+Nearest Food
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 13, 'average time': '17.333333333333336%'}
+Furthest Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Most Sustaining Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Nearest Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Furthest Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Most Compatible Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 5, 'times attempted': 5}

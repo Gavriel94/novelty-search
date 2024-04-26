@@ -1,0 +1,44 @@
+Step 38: Forager rigs is going to find most sustaining food.
+Step 39: rigs ate the shrub.
+Step 49: rigs ate the mushroom.
+Step 50: rigs ate the flower.
+Step 52: rigs successfully crossed ravine.
+Step 55: rigs (F: 24.01) and PzG2 (M: 23.06) are compatible.
+Step 55: rigs and PzG2 produced offspring xbri.
+Step 57: Forager rigs is going to find furthest forager.
+Step 58: Forager rigs is going to find furthest food.
+Step 58: rigs successfully crossed ravine.
+Step 61: rigs ate the melon.
+Step 62: rigs ate the carrot.
+Step 67: rigs ate the mushroom.
+Step 71: rigs ate the melon.
+Step 73: rigs ate the pumpkin.
+
+Attributes
+Agility: 8.39
+Perception: 8.18
+Strength: 8.74
+Endurance: 8.54
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 8, 'total sustenance gained': 3.6999999999999993, 'foods tasted': ['shrub', 'mushroom', 'flower', 'melon', 'carrot', 'mushroom', 'melon', 'pumpkin']}
+Offspring Produced
+1
+Nearest Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Furthest Food
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 17, 'average time': '22.666666666666664%'}
+Most Sustaining Food
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 19, 'average time': '25.333333333333336%'}
+Nearest Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Furthest Forager
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 1, 'average time': '1.3333333333333335%'}
+Most Compatible Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 2, 'times attempted': 2}

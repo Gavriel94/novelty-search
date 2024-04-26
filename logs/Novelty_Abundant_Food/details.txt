@@ -1,0 +1,29 @@
+[
+    Ravine(grid_width=DEFAULT_GRID_WIDTH),
+    Ravine(grid_width=DEFAULT_GRID_WIDTH),
+    Ravine(grid_width=DEFAULT_GRID_WIDTH),
+    Forager(sex='M'),
+    Forager(sex='M'),
+    Forager(sex='F'),
+    Forager(sex='F'),
+    Hunter(),
+    Hunter(),
+    Hunter(),
+    Hunter(),
+    Food(),
+    Food(),
+    Food(),
+    Food(),
+    Food(),
+    Food(),
+    Food(),
+    Food(),
+    Food(),
+    Food(),
+    Food(),
+    Food(),
+]
+
+DEFAULT_GRID_WIDTH = 15
+DEFAULT_GRID_HEIGHT = 15
+DEFAULT_SIMULATION_STEPS = 75

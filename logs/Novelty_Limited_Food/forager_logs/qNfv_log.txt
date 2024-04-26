@@ -1,0 +1,51 @@
+Step 1: Forager qNfv is going to find most sustaining food.
+Step 3: qNfv ate the flower.
+Step 8: qNfv fails to cross ravine.
+Step 11: qNfv fails to cross ravine.
+Step 12: qNfv fails to cross ravine.
+Step 18: qNfv ate the mushroom.
+Step 21: qNfv fails to cross ravine.
+Step 22: qNfv fails to cross ravine.
+Step 23: qNfv fails to cross ravine.
+Step 24: qNfv fails to cross ravine.
+Step 29: qNfv successfully crossed ravine.
+Step 35: qNfv fails to cross ravine.
+Step 37: qNfv ate the flower.
+Step 38: qNfv successfully crossed ravine.
+Step 39: qNfv successfully crossed ravine.
+Step 40: qNfv successfully crossed ravine.
+Step 41: qNfv successfully crossed ravine.
+Step 43: qNfv successfully crossed ravine.
+Step 45: qNfv successfully crossed ravine.
+Step 47: qNfv successfully crossed ravine.
+Step 48: qNfv successfully crossed ravine.
+Step 49: qNfv successfully crossed ravine.
+
+Attributes
+Agility: 4.35
+Perception: 4.60
+Strength: 5.39
+Endurance: 5.29
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 3, 'total sustenance gained': 0.5, 'foods tasted': ['flower', 'mushroom', 'flower']}
+Offspring Produced
+0
+Nearest Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Furthest Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Most Sustaining Food
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 50, 'average time': '66.66666666666666%'}
+Nearest Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Furthest Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Most Compatible Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 10, 'times attempted': 18}

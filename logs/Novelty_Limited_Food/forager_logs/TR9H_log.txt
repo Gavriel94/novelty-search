@@ -1,0 +1,62 @@
+Step 26: Forager TR9H is going to find most compatible forager.
+Step 26: TR9H successfully crossed ravine.
+Step 31: TR9H successfully crossed ravine.
+Step 32: TR9H ate the pumpkin.
+Step 34: TR9H (M: 16.05) and JMjY (F: 17.00) are compatible.
+Step 34: TR9H and JMjY produced offspring uzZX.
+Step 43: TR9H (16.05) and aY77 (8.00) are not compatible.
+Step 44: Forager TR9H is going to find most compatible forager.
+Step 46: TR9H (16.05) and aY77 (8.00) are not compatible.
+Step 47: Forager TR9H is going to find nearest food.
+Step 47: TR9H fails to cross ravine.
+Step 48: TR9H (16.05) and aY77 (8.00) are not compatible.
+Step 49: Forager TR9H is going to find furthest forager.
+Step 49: TR9H (M) and RvJR (M) are not compatible.
+Step 50: Forager TR9H is going to find nearest forager.
+Step 51: TR9H fails to cross ravine.
+Step 52: TR9H fails to cross ravine.
+Step 55: TR9H (M: 16.05) and nriW (F: 15.88) are compatible.
+Step 55: TR9H and nriW produced offspring 6PAz.
+Step 56: TR9H fails to cross ravine.
+Step 57: TR9H fails to cross ravine.
+Step 58: TR9H fails to cross ravine.
+Step 59: TR9H fails to cross ravine.
+Step 60: TR9H fails to cross ravine.
+Step 61: TR9H fails to cross ravine.
+Step 62: TR9H fails to cross ravine.
+Step 65: Forager TR9H found nearest forager.
+Step 65: Forager TR9H is going to find most sustaining food.
+Step 65: TR9H (M: 16.05) and nriW (F: 15.88) are compatible.
+Step 65: TR9H and nriW produced offspring nQmX.
+Step 67: TR9H fails to cross ravine.
+Step 70: TR9H ate the melon.
+Step 73: TR9H ate the apple.
+
+Attributes
+Agility: 4.98
+Perception: 4.81
+Strength: 5.83
+Endurance: 5.47
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 3, 'total sustenance gained': 1.9000000000000001, 'foods tasted': ['pumpkin', 'melon', 'apple']}
+Offspring Produced
+3
+Nearest Food
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 2, 'average time': '2.666666666666667%'}
+Furthest Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Most Sustaining Food
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 9, 'average time': '12.0%'}
+Nearest Forager
+{'times chosen': 1, 'successful outcomes': 1, 'total time': 16, 'average time': '20.0%'}
+Furthest Forager
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 1, 'average time': '1.3333333333333335%'}
+Most Compatible Forager
+{'times chosen': 4, 'successful outcomes': 0, 'total time': 21, 'average time': '28.000000000000004%'}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 2, 'times attempted': 13}

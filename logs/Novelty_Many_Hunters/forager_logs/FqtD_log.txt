@@ -1,0 +1,55 @@
+Step 8: Forager FqtD is going to find furthest food.
+Step 9: FqtD ate the carrot.
+Step 11: FqtD successfully crossed ravine.
+Step 20: FqtD ate the melon.
+Step 22: FqtD ate the shrub.
+Step 27: FqtD ate the shrub.
+Step 29: FqtD ate the shrub.
+Step 30: FqtD (M) and HT7Q (M) are not compatible.
+Step 31: Forager FqtD is going to find furthest food.
+Step 34: FqtD ate the carrot.
+Step 38: FqtD ate the pumpkin.
+Step 40: FqtD fails to cross ravine.
+Step 41: FqtD (M) and FqtD (M) are not compatible.
+Step 42: Forager FqtD is going to find nearest food.
+Step 46: FqtD (M) and FqtD (M) are not compatible.
+Step 47: Forager FqtD is going to find nearest food.
+Step 48: FqtD (M) and T7KP (M) are not compatible.
+Step 49: Forager FqtD is going to find most sustaining food.
+Step 54: FqtD (M) and DjiV (M) are not compatible.
+Step 55: Forager FqtD is going to find furthest forager.
+Step 55: Forager FqtD found furthest forager.
+Step 55: Forager FqtD is going to find most compatible forager.
+Step 55: FqtD (14.32) and U4y2 (23.61) are not compatible.
+Step 56: Forager FqtD is going to find most compatible forager.
+Step 57: FqtD ate the melon.
+Step 58: FqtD (M) and HT7Q (M) are not compatible.
+
+Attributes
+Agility: 4.69
+Perception: 4.68
+Strength: 4.30
+Endurance: 5.29
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 8, 'total sustenance gained': 3.8, 'foods tasted': ['carrot', 'melon', 'shrub', 'shrub', 'shrub', 'carrot', 'pumpkin', 'melon']}
+Offspring Produced
+0
+Nearest Food
+{'times chosen': 4, 'successful outcomes': 0, 'total time': 6, 'average time': '8.0%'}
+Furthest Food
+{'times chosen': 4, 'successful outcomes': 0, 'total time': 34, 'average time': '45.33333333333333%'}
+Most Sustaining Food
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 6, 'average time': '8.0%'}
+Nearest Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Furthest Forager
+{'times chosen': 1, 'successful outcomes': 1, 'total time': 1, 'average time': 0}
+Most Compatible Forager
+{'times chosen': 4, 'successful outcomes': 0, 'total time': 3, 'average time': '4.0%'}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 1, 'times attempted': 2}

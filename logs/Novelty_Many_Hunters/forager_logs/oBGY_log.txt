@@ -1,0 +1,52 @@
+Step 10: Forager oBGY is going to find nearest forager.
+Step 13: oBGY (M) and WFNX (M) are not compatible.
+Step 14: Forager oBGY is going to find furthest forager.
+Step 14: oBGY (M) and WFNX (M) are not compatible.
+Step 15: Forager oBGY is going to find nearest food.
+Step 17: oBGY ate the shrub.
+Step 23: oBGY (M) and WFNX (M) are not compatible.
+Step 24: Forager oBGY is going to find nearest forager.
+Step 26: oBGY successfully crossed ravine.
+Step 27: oBGY (14.02) and YX8S (5.50) are not compatible.
+Step 28: Forager oBGY is going to find most compatible forager.
+Step 28: oBGY (14.02) and YX8S (5.50) are not compatible.
+Step 29: Forager oBGY is going to find nearest food.
+Step 29: oBGY (14.02) and YX8S (5.50) are not compatible.
+Step 30: Forager oBGY is going to find furthest forager.
+Step 30: oBGY (M: 14.02) and URhb (F: 14.22) are compatible.
+Step 30: oBGY and URhb produced offspring 8a5L.
+Step 32: Forager oBGY is going to find most sustaining food.
+Step 33: oBGY successfully crossed ravine.
+Step 37: oBGY ate the flower.
+Step 38: oBGY (M: 14.02) and 74FL (F: 14.87) are compatible.
+Step 38: oBGY and 74FL produced offspring DjiV.
+Step 53: oBGY ate the flower.
+
+Attributes
+Agility: 5.88
+Perception: 4.47
+Strength: 4.31
+Endurance: 5.12
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 3, 'total sustenance gained': 0.4, 'foods tasted': ['shrub', 'flower', 'flower']}
+Offspring Produced
+2
+Nearest Food
+{'times chosen': 4, 'successful outcomes': 0, 'total time': 10, 'average time': '13.333333333333334%'}
+Furthest Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Most Sustaining Food
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 28, 'average time': '37.333333333333336%'}
+Nearest Forager
+{'times chosen': 4, 'successful outcomes': 0, 'total time': 8, 'average time': '10.666666666666668%'}
+Furthest Forager
+{'times chosen': 3, 'successful outcomes': 0, 'total time': 3, 'average time': '4.0%'}
+Most Compatible Forager
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 1, 'average time': '1.3333333333333335%'}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 2, 'times attempted': 2}

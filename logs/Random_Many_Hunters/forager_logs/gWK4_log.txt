@@ -1,0 +1,47 @@
+Step 30: Forager gWK4 is going to find nearest forager.
+Step 34: gWK4 (23.12) and tbGQ (14.95) are not compatible.
+Step 35: Forager gWK4 is going to find most compatible forager.
+Step 36: gWK4 successfully crossed ravine.
+Step 38: gWK4 (23.12) and x3Ea (5.50) are not compatible.
+Step 39: Forager gWK4 is going to find nearest forager.
+Step 39: Forager gWK4 found nearest forager.
+Step 39: Forager gWK4 is going to find most compatible forager.
+Step 39: gWK4 (F) and Ahjd (F) are not compatible.
+Step 40: Forager gWK4 is going to find furthest food.
+Step 40: gWK4 successfully crossed ravine.
+Step 43: gWK4 ate the apple.
+Step 49: gWK4 successfully crossed ravine.
+Step 51: gWK4 ate the melon.
+Step 54: gWK4 ate the apple.
+Step 55: gWK4 ate the shrub.
+Step 60: gWK4 ate the apple.
+Step 62: gWK4 ate the apple.
+
+Attributes
+Agility: 8.60
+Perception: 8.16
+Strength: 7.87
+Endurance: 8.88
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 6, 'total sustenance gained': 2.2, 'foods tasted': ['apple', 'melon', 'apple', 'shrub', 'apple', 'apple']}
+Offspring Produced
+0
+Nearest Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Furthest Food
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 35, 'average time': '46.666666666666664%'}
+Most Sustaining Food
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Nearest Forager
+{'times chosen': 3, 'successful outcomes': 1, 'total time': 6, 'average time': '6.666666666666667%'}
+Furthest Forager
+{'times chosen': 0, 'successful outcomes': 0, 'total time': 0, 'average time': 0}
+Most Compatible Forager
+{'times chosen': 4, 'successful outcomes': 0, 'total time': 4, 'average time': '5.333333333333334%'}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 3, 'times attempted': 3}

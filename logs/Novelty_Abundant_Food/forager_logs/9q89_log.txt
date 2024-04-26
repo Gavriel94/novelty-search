@@ -1,0 +1,50 @@
+Step 11: Forager 9q89 is going to find furthest forager.
+Step 23: 9q89 (14.27) and oQFb (7.00) are not compatible.
+Step 24: Forager 9q89 is going to find nearest forager.
+Step 32: 9q89 (M: 14.27) and qoDn (F: 15.53) are compatible.
+Step 32: 9q89 and qoDn produced offspring PzG2.
+Step 34: Forager 9q89 is going to find furthest forager.
+Step 35: Forager 9q89 is going to find furthest forager.
+Step 36: Forager 9q89 is going to find furthest forager.
+Step 40: Forager 9q89 is going to find furthest food.
+Step 40: 9q89 (14.27) and Qb54 (6.50) are not compatible.
+Step 41: Forager 9q89 is going to find most compatible forager.
+Step 42: 9q89 (14.27) and Qb54 (6.50) are not compatible.
+Step 43: Forager 9q89 is going to find nearest food.
+Step 43: 9q89 fails to cross ravine.
+Step 44: 9q89 (M) and 9q89 (M) are not compatible.
+Step 45: Forager 9q89 is going to find most sustaining food.
+Step 48: 9q89 fails to cross ravine.
+Step 50: 9q89 fails to cross ravine.
+Step 52: 9q89 ate the shrub.
+Step 55: 9q89 (14.27) and oQFb (7.00) are not compatible.
+Step 56: Forager 9q89 is going to find nearest food.
+
+Attributes
+Agility: 5.03
+Perception: 4.00
+Strength: 5.27
+Endurance: 5.11
+
+Total Motivation Metrics
+
+Food Encounters
+{'num encounters': 1, 'total sustenance gained': 0.2, 'foods tasted': ['shrub']}
+Offspring Produced
+1
+Nearest Food
+{'times chosen': 3, 'successful outcomes': 0, 'total time': 7, 'average time': '9.333333333333334%'}
+Furthest Food
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 1, 'average time': '1.3333333333333335%'}
+Most Sustaining Food
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 11, 'average time': '14.666666666666666%'}
+Nearest Forager
+{'times chosen': 1, 'successful outcomes': 0, 'total time': 10, 'average time': '13.333333333333334%'}
+Furthest Forager
+{'times chosen': 5, 'successful outcomes': 0, 'total time': 19, 'average time': '25.333333333333336%'}
+Most Compatible Forager
+{'times chosen': 2, 'successful outcomes': 0, 'total time': 2, 'average time': '2.666666666666667%'}
+Hunter Encounters
+{'num encounters': 0, 'times fought': 0, 'times fled': 0, 'times hidden': 0, 'times zig zagged': 0, 'times camouflaged': 0, 'times won': 0, 'times lost': 0}
+Ravine Encounters
+{'times jumped': 0, 'times attempted': 3}
