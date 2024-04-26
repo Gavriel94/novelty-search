@@ -13,7 +13,7 @@ Optional arguments can be passed to change the simulation setup:
 - number of steps
 - run name
 
-The default simulation configuration reproduced in the CLI is `python novelty_search.py 4 4 4 6 20 20 200 my_run`.
+The default simulation configuration reproduced in the CLI is `python novelty_search.py 4 3 3 6 15 15 75 my_run`.
 
 `run name` determines the name of the directy within `logs/` where all the data about the simulation is stored. This includes the environment, foragers decisions and forager logs. Each foragers log is also isolated and stored seperately in `logs/forager/run_name`. Logs are only stored for foragers which are alive at the end of the simulation.
 

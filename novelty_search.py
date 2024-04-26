@@ -19,11 +19,6 @@ def load_default_inhabitants():
     Hunter(),
     Hunter(),
     Hunter(),
-    Hunter(),
-    Hunter(),
-    Hunter(),
-    Hunter(),
-    Hunter(),
     Food(),
     Food(),
     Food(),
@@ -38,7 +33,7 @@ DEFAULT_SIMULATION_STEPS = 75
 
 if len(sys.argv) < 8:
     # load default simulation config
-    run_name = 'Random_Many_Hunters'
+    run_name = 'run_name'
     simulation = Simulation(DEFAULT_GRID_WIDTH, DEFAULT_GRID_HEIGHT, run_name)
     environment = load_default_inhabitants()
     simulation_steps = DEFAULT_SIMULATION_STEPS
