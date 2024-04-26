@@ -19,7 +19,7 @@ class Simulation():
     """
     The environment in which foragers search for food.
     """
-    def __init__(self, width: int, height: int) -> None:
+    def __init__(self, width: int, height: int, run_name: str) -> None:
         self.width = width
         self.height = height
         self.grid = [[None for _ in range(width)] for _ in range(height)]
@@ -29,7 +29,8 @@ class Simulation():
         self.hunters: list[Hunter] = []
         self.grid_history = []
         self.num_steps = 0
-        self.forager_age_limit = 25
+        self.forager_age_limit = 50
+        self.run_name = run_name
         
         # attributes used for analysis
         self.gene_trends = {
@@ -66,8 +67,7 @@ class Simulation():
     def run(self, 
             steps: int, 
             replace: bool, 
-            display: bool,
-            run_name: str) -> None:
+            display: bool) -> None:
         """
         Runs the simulation.
         
@@ -89,12 +89,12 @@ class Simulation():
         self.num_steps = steps
         
         # write all information to file instead of stdout
-        if os.path.exists(f'logs/{run_name}/simulation'):
-            shutil.rmtree(f'logs/{run_name}/simulation')
+        if os.path.exists(f'logs/{self.run_name}/simulation'):
+            shutil.rmtree(f'logs/{self.run_name}/simulation')
         
-        os.makedirs(f'logs/{run_name}/simulation/')
+        os.makedirs(f'logs/{self.run_name}/simulation/')
         
-        with open(f'logs/{run_name}/simulation/log.txt', 'w') as file:
+        with open(f'logs/{self.run_name}/simulation/log.txt', 'w') as file:
             stdout = sys.stdout
             sys.stdout = file
             
@@ -130,11 +130,7 @@ class Simulation():
                     if forager.steps_alive >= self.forager_age_limit:
                         # Forager dies of old age to make room for offspring
                         forager.alive = False
-                    self.total_foragers_lost += 1
                     self.total_foragers_eol += 1
-                    self.simulation_metrics['total_foragers_lost'].append(
-                        (step, self.total_foragers_lost)
-                    )
                     self.simulation_metrics['total_foragers_eol'].append(
                         (step, self.total_foragers_eol)
                     )
@@ -642,6 +638,12 @@ class SimulationAnalytics:
     def __init__(self, simulation: Simulation) -> None:
         self.__grid = simulation
         self.__foragers = [forager for forager in self.__grid.foragers]
+        self.save_directory = f'logs/{self.__grid.run_name}/charts'
+        
+        if os.path.exists(self.save_directory):
+            shutil.rmtree(self.save_directory)
+        
+        os.makedirs(self.save_directory)
         
     def chart_compare_decisions(self) -> None:
         """
@@ -654,7 +656,11 @@ class SimulationAnalytics:
             num_novel += forager.num_novel_decisions
             num_decisions += forager.num_decisions
         num_decisions = num_decisions - num_novel
-        plt.bar(['Novel Decisions', 'Repeated Decisions'], [num_novel, num_decisions])
+        plt.bar(['Novel', 'Repeated'], [num_novel, num_decisions])
+        plt.title('Types of Decisions Made')
+        plt.xlabel('Decision')
+        plt.ylabel('No. of Decisions')
+        plt.savefig(f'{self.save_directory}/compare_decisions.png')
         plt.show()
     
     def chart_simulation_metrics(self) -> None:
@@ -668,15 +674,23 @@ class SimulationAnalytics:
         - total foragers lost after reaching their age limit
         """
         keys = list(self.__grid.simulation_metrics.keys())
-        key_labels = [label.split('_').title() for label in keys]
+        # key_labels = [label.split('_').title() for label in keys]
         values = list(self.__grid.simulation_metrics.values())
         final_values = []
         for value in values:
-            if len(value) > 1:
-                final_values.append(value[-1][1])
+            if value == 'total_foragers_eol':
+                continue
             else:
-                final_values.append(0)
-        plt.bar(key_labels, final_values)
+                if len(value) > 1:
+                    final_values.append(value[-1][1])
+                else:
+                    final_values.append(0)
+        plt.figure(figsize=(16, 6))
+        plt.bar(keys, final_values)
+        plt.title('Simulation Metrics')
+        plt.ylabel('Metric Value')
+        plt.xlabel('Metric')
+        plt.savefig(f'{self.save_directory}/simulation_metrics.png')
         plt.show()
         
     def chart_gene_changes(self) -> None:
@@ -694,6 +708,7 @@ class SimulationAnalytics:
         plt.xlabel('Step')
         plt.ylabel('Gene Value')
         plt.legend(legend_labels)
+        plt.savefig(f'{self.save_directory}/gene_changes.png')
         plt.show()
     
     def chart_motivations(self) -> None:
@@ -702,7 +717,12 @@ class SimulationAnalytics:
         """
         keys = list(self.__grid.total_motivations.keys())
         values  = list(self.__grid.total_motivations.values())
+        plt.figure(figsize=(16, 6))
         plt.bar(keys, values)
+        plt.title('Motivations Chosen')
+        plt.ylabel('No. of Times')
+        plt.xlabel('Motivation')
+        plt.savefig(f'{self.save_directory}/motivations.png')
         plt.show()
     
     def chart_lifetime_lengths(self) -> None:
@@ -715,7 +735,12 @@ class SimulationAnalytics:
         life_lengths = []
         for f in lifetimes_asc:
             life_lengths.append(f[1])
+        plt.title('Forager Lifetimes')
+        plt.xlabel('Forager Number')
+        plt.ylabel('Lifetime Length')
         plt.bar(range(len(self.__foragers)), life_lengths)
+        plt.xticks(range(len(self.__foragers)), range(1, len(self.__foragers) + 1))
+        plt.savefig(f'{self.save_directory}/lifetime_lengths.png')
         plt.show()
     
     def stdout_eol_foragers(self) -> None:
