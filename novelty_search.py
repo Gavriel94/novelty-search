@@ -67,4 +67,3 @@ simulation.run(steps=simulation_steps, replace=True, display=True)
 simulation.save_forager_logs(run_name='Novelty_Run_1')
 
 analytics = SimulationAnalytics(simulation=simulation)
-analytics.

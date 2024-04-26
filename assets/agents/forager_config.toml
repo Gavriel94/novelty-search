@@ -11,12 +11,11 @@ bravery = 3
 # Higher compat_diff makes the foragers less "fussy" when finding potential mates 
 compat_diff = 0.3 # 0 <= x <= 1
 
-# How much to reduce the weight of succesful choice (valid range 0-1)
+# How much to reduce the weight of a previously succesful choice (valid range 0-1)
 # this encourages foragers to explore new choices
 decay_factor = 0.98
 
-# The effect hunger has on the other attributes. (valid range 0-1)
-# A higher hunger combinator makes more drastic changes
+# How much hungrier and braver a forager gets each step it doesn't eat (valid range 0-1)
 hunger_combinator = 0.1
 
 # How much bias is added to choices (valid range 0-1)

@@ -619,7 +619,6 @@ class MoveError(Exception):
         self.message = 'Invalid forager move.\n'
         super().__init__(self.message)
 
-# TODO document this
 # region Analytics
 class SimulationAnalytics:
     """
