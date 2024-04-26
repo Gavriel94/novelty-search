@@ -24,3 +24,5 @@ The script which runs the simulation is `novelty_search.py`. In this file you ca
 In `simulation.run()` the arguments `replace` and `display` can be toggled to replace lost foragers/hunters and to display all details during the simulation to stdout. 
 
 Once you've run the simulation checks the `logs/run_name` directory to find the output, the forager logs and the charts detailing it!
+
+The venv (`as_venv`) was built on ARM64 architecture. `requirements.txt` has been provided to make it easy to install dependencies if you would like to test out the simulator on another architecture.
